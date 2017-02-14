@@ -14,3 +14,4 @@
 void on_error(int log,char* err);
 int ini_server(int port);
 int daemon(char* service);
+////Prueba

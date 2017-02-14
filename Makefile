@@ -24,5 +24,5 @@ clean:
 
 tar:
 		@ echo "Comprimiendo el archivo"
-		tar czvf G-2311-03-P1.tar.gz ../G-2311-03-P1 --exclude G-2311-03-P1.tar.gz
+		tar czvf G-2311-03-P1.tar.gz ../ICR --exclude G-2311-03-P1.tar.gz --.git
 		@ echo "Archivo comprimido ..."
