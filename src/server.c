@@ -15,4 +15,5 @@ int main(int argc, char *argv[]) {
         //Accept and incoming connection
         syslog(LOG_INFO, "Waiting for incoming connections...");
         return 0;
+        
 }
