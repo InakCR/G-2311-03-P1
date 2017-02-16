@@ -1,3 +1,3 @@
-G - 2311 - 03 - P1
-e266980 # Aracil Orduña , Enrique
-e266446 # Cadalso Reymundo , Iñaki
+G-2311-03-P1
+266980#Aracil Orduña , Enrique
+266446#Cadalso Reymundo , Iñaki
