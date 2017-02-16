@@ -10,56 +10,53 @@ GROUP = G-2311-03-P1
 CC = gcc
 #Librerias
 LDFLAGS = -lm
-CFLAGS = -ggdb -Wall
+CCLAGS = -ggdb -Wall
 #Ficheros
 EXEC = serv
 SOURCE_FILES =
 
 all: servidor
+
 libreria: $(LIB)lib.a
 
-	$(LIB)lib.a: $(OBJ)libs.o
-		$(ADDLIB) -rv $@ $^
-		@echo "Libreria lib.a generada ..."
+$(LIB)lib.a: $(OBJ)lib.o
+	ar -rv $@ $^
+	@echo "Libreria lib.a generada ..."
 
-	##############################
-	## EJECUTABLES
-	##############################
-	servidor: $(OBJ)server.o $(OBJ)comandos.o $(OBJ)channels.o $(OBJ)client.o  $(LIB)lib.a
-		$(CC) $(CCFLAGS) $^ $(FLAGS) -o $@ -lircredes
-		@echo "Ejecutable servidor creado ..."
+##############################
+## EJECUTABLES
+##############################
+servidor: $(OBJ)server.o $(OBJ)commands.o $(OBJ)channels.o $(OBJ)clients.o  $(LIB)lib.a
+	$(CC) $(CCFLAGS) $^ -o  $@ -lircredes
+	@echo "Ejecutable servidor creado ..."
 
-	##############################
-	## OBJETOS
-	##############################
-	$(OBJ)server.o: $(SRC)server.c
-		@ echo "Generando objeto ..."
-		@ echo "servidor.o ..."
-		$(CC) $(CCFLAGS) $(FLAGS) -o $@ -c $^
+$(OBJ)server.o: $(SRC)server.c
+	@echo "Generando objeto ..."
+	@echo "servidor.o ..."
+	$(CC) $(CCFLAGS) -o $@ -c $^
 
-	$(OBJ)comandos.o: $(SRC)comandos.c
-		@ echo "Generando objeto ..."
-		@ echo "comandos.o ..."
-		$(CC) $(CCFLAGS) $(FLAGS) -o $@ -c $^
+$(OBJ)commands.o: $(SRC)commands.c
+	@ echo "Generando objeto ..."
+	@ echo "comandos.o ..."
+	$(CC) $(CCFLAGS) -o $@ -c $^
 
-	$(OBJ)libs.o: $(SRCLIB)libs.c
-		@ echo "Generando objeto ..."
-		@ echo "libs.o ..."
-		$(CC) $(CCFLAGS) $(FLAGS) -o $@ -c $^
+$(OBJ)lib.o: $(SRCLIB)lib.c
+	@ echo "Generando objeto ..."
+	@ echo "libs.o ..."
+	$(CC) $(CCFLAGS) -o $@ -c $^
 
-	$(OBJ)channels.o: $(SRC)channels.c
-		@ echo "Generando objeto ..."
-		@ echo "channels.o ..."
-		$(CC) $(CCFLAGS) $(FLAGS) -o $@ -c $^
+$(OBJ)channels.o: $(SRC)channels.c
+	@ echo "Generando objeto ..."
+	@ echo "channels.o ..."
+	$(CC) $(CCFLAGS) -o $@ -c $^
 
-	$(OBJ)client.o: $(SRC)client.c
-		@ echo "Generando objeto ..."
-		@ echo "client.o ..."
-		$(CC) $(CCFLAGS) $(FLAGS) -o $@ -c $^
+$(OBJ)clients.o: $(SRC)clients.c
+	@ echo "Generando objeto ..."
+	@ echo "client.o ..."
+	$(CC) $(CCFLAGS) -o $@ -c $^
 
-$(EXEC): $(OBJ)*.o
 clean:
-	rm -f *.o $(EXEC)
+	rm -f *.o includes/*.gch $(EXEC)
 
 tar:
 		@ echo "Comprimiendo el archivo"
