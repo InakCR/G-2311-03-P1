@@ -15,6 +15,12 @@ int main(int argc, char *argv[]) {
   // Accept and incoming connection
   syslog(LOG_INFO, "Waiting for incoming connections...");
   while (1) {
+    // FD/
+    // tv.sec
+    // select
+    // Accept
+    // pthread conexion cliente
+    // wuile recv -send
   }
   return 0;
 }
