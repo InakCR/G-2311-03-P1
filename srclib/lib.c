@@ -2,13 +2,12 @@
 #include "../includes/lib.h"
 
 void on_error(int logPri,char* err){
-        syslog(logPri, err);
+        syslog(logPri,"%s",err);
         exit(1);
 }
 int ini_server(int port){
         struct sockaddr_in server;
         int sockserv,opt_val = 1;
-        char mssyslog[100];
 
         syslog(LOG_INFO, "Creating socketServer");
 
@@ -31,8 +30,7 @@ int ini_server(int port){
                 on_error(LOG_ERR,"Error listening clients");
         }
 
-        sprintf(mssyslog,"Server is listening on %d\n", port);
-        syslog(LOG_INFO, mssyslog);
+        syslog(LOG_INFO, "Server is listening on %d",port);
 
         return sockserv;
 }
@@ -80,5 +78,33 @@ int daemonizar(char* service) {
         closelog();
 
         return EXIT_SUCCESS;
+}
+int accept_conex(int sock) {
 
+        int length, socketClient;
+        struct sockaddr_in client;
+
+        length = sizeof(struct sockaddr_in);
+
+        // Accept connection from an incoming client
+        if ((socketClient = accept(sock, (struct sockaddr *)&client, (socklen_t*)&length)))
+                on_error(LOG_ERR,"Error accept conexion cliente");
+
+
+        return socketClient;
+
+}
+void* deal_cliente(void* sock){
+        int read,err,socket;
+        char buf[BUFFER_SIZE];
+        socket =*((int*)(&sock));
+        while(1) {
+                int read = recv(socket, buf, BUFFER_SIZE, 0);
+
+                if (!read) break; // socket cerrado
+                if (read < 0) on_error(LOG_ERR,"Client read failed");
+
+                err = send(socket, buf, read, 0);
+                if (err < 0) on_error(LOG_ERR,"Client write failed");
+        }
 }
