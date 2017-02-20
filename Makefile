@@ -12,10 +12,10 @@ CC = gcc
 LDFLAGS = -lm
 CCLAGS = -ggdb -Wall
 #Ficheros
-EXEC = serv
+EXEC = servidor
 SOURCE_FILES =
 
-all: servidor
+all: $(EXEC)
 
 libreria: $(LIB)lib.a
 
@@ -23,10 +23,7 @@ $(LIB)lib.a: $(OBJ)lib.o
 	ar -rv $@ $^
 	@echo "Libreria lib.a generada ..."
 
-##############################
-## EJECUTABLES
-##############################
-servidor: $(OBJ)server.o $(OBJ)commands.o $(OBJ)channels.o $(OBJ)clients.o  $(LIB)lib.a
+$(EXEC): $(OBJ)server.o $(OBJ)commands.o $(OBJ)channels.o $(OBJ)clients.o  $(LIB)lib.a
 	$(CC) $(CCFLAGS) $^ -o  $@ -lircredes
 	@echo "Ejecutable servidor creado ..."
 
@@ -56,7 +53,7 @@ $(OBJ)clients.o: $(SRC)clients.c
 	$(CC) $(CCFLAGS) -o $@ -c $^
 
 clean:
-	rm -f *.o includes/*.gch $(EXEC)
+	rm -f obj/*.o includes/*.gch $(EXEC)
 
 tar:
 		@ echo "Comprimiendo el archivo"
