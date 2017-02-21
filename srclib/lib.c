@@ -3,7 +3,7 @@
 
 void on_error(int logPri, char *err) {
   syslog(logPri, "%s", err);
-  exit(1);
+  exit(EXIT_FAILURE);
 }
 int ini_server(int port) {
   struct sockaddr_in server;
@@ -41,9 +41,9 @@ int daemonizar(char *service) {
 
   pid = fork();
   if (pid < 0)
-    exit(1);
+    exit(EXIT_FAILURE);
   if (pid > 0)
-    exit(0);
+    exit(EXIT_SUCCESS);
 
   // resetting File Creation Mask
   umask(0);
