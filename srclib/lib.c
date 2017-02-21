@@ -113,3 +113,14 @@ void *deal_cliente(void *sock) {
       on_error(LOG_ERR, "Client write failed");
   }
 }
+
+/*Función que recibe un comando del cliente y realiza la acción correspondiente
+Recibe el socket al que escuchar como argumento*/
+int recibir(int sock){
+
+  char command[BUFFER_SIZE];
+
+  /*Recibimos el comando*/
+  recv(sock, command, BUFFER_SIZE, 0)
+
+}
