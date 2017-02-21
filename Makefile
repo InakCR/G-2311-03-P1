@@ -43,8 +43,9 @@ $(OBJ)clients.o: $(SRC)clients.c
 	$(CC) $(CCFLAGS) -o $@ -c $^
 
 clean:
-	rm -f lib/lib.a obj/*.o includes/*.gch $(EXEC)
-
+		rm -f lib/lib.a obj/*.o includes/*.gch $(EXEC)
+dox:
+		doxygen Doxyfile
 tar:
 		@ echo "Comprimiendo el archivo"
 		tar --exclude .git -czvf $(GROUP).tar.gz ../$(GROUP) --exclude $(GROUP).tar.gz

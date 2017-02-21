@@ -1,0 +1,191 @@
+\hypertarget{lib_8h}{\section{Referencia del Archivo includes/lib.h}
+\label{lib_8h}\index{includes/lib.\-h@{includes/lib.\-h}}
+}
+
+
+Libreria de funciones para la creacion y uso de un servidor basado en I\-R\-C.  
+
+
+{\ttfamily \#include $<$stdio.\-h$>$}\\*
+{\ttfamily \#include $<$stdlib.\-h$>$}\\*
+{\ttfamily \#include $<$sys/types.\-h$>$}\\*
+{\ttfamily \#include $<$sys/socket.\-h$>$}\\*
+{\ttfamily \#include $<$netinet/in.\-h$>$}\\*
+{\ttfamily \#include $<$unistd.\-h$>$}\\*
+{\ttfamily \#include $<$redes2/irc.\-h$>$}\\*
+{\ttfamily \#include $<$string.\-h$>$}\\*
+{\ttfamily \#include $<$signal.\-h$>$}\\*
+{\ttfamily \#include $<$sys/stat.\-h$>$}\\*
+{\ttfamily \#include $<$syslog.\-h$>$}\\*
+{\ttfamily \#include $<$netdb.\-h$>$}\\*
+{\ttfamily \#include $<$fcntl.\-h$>$}\\*
+{\ttfamily \#include $<$stdarg.\-h$>$}\\*
+{\ttfamily \#include $<$memory.\-h$>$}\\*
+{\ttfamily \#include $<$stropts.\-h$>$}\\*
+{\ttfamily \#include $<$sys/resource.\-h$>$}\\*
+{\ttfamily \#include $<$arpa/inet.\-h$>$}\\*
+{\ttfamily \#include $<$sys/select.\-h$>$}\\*
+{\ttfamily \#include $<$sys/time.\-h$>$}\\*
+{\ttfamily \#include $<$pthread.\-h$>$}\\*
+\subsection*{'defines'}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{lib_8h_a6b20d41d6252e9871430c242cb1a56e7}{\#define \hyperlink{lib_8h_a6b20d41d6252e9871430c242cb1a56e7}{B\-U\-F\-F\-E\-R\-\_\-\-S\-I\-Z\-E}~1024}\label{lib_8h_a6b20d41d6252e9871430c242cb1a56e7}
+
+\begin{DoxyCompactList}\small\item\em tamaño maximo que puede tener un buffer. \end{DoxyCompactList}\item 
+\hypertarget{lib_8h_a0a8f91f93d75a07f0ae45077db45b3eb}{\#define \hyperlink{lib_8h_a0a8f91f93d75a07f0ae45077db45b3eb}{M\-A\-X\-\_\-\-C\-L\-I\-E\-N\-T\-S}~20}\label{lib_8h_a0a8f91f93d75a07f0ae45077db45b3eb}
+
+\begin{DoxyCompactList}\small\item\em numero de clientes maximo que soporta el servidor. \end{DoxyCompactList}\item 
+\hypertarget{lib_8h_a4aaf73541f20734d49b8ef8d8fa2c71c}{\#define \hyperlink{lib_8h_a4aaf73541f20734d49b8ef8d8fa2c71c}{M\-A\-X\-\_\-\-M\-N\-S}~2000}\label{lib_8h_a4aaf73541f20734d49b8ef8d8fa2c71c}
+
+\begin{DoxyCompactList}\small\item\em numero maximo de milisegundos. \end{DoxyCompactList}\item 
+\hypertarget{lib_8h_a7206e1a3cf67c8d51a3732252593a0fb}{\#define \hyperlink{lib_8h_a7206e1a3cf67c8d51a3732252593a0fb}{N\-U\-M\-\_\-\-B\-Y\-T\-E\-S}~8192}\label{lib_8h_a7206e1a3cf67c8d51a3732252593a0fb}
+
+\begin{DoxyCompactList}\small\item\em tamaño maximo de bytes. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Funciones}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{lib_8h_a012a42789702bbc7231b1bdc9525d10a}{on\-\_\-error} (int log, char $\ast$err)
+\begin{DoxyCompactList}\small\item\em on\-\_\-error. \end{DoxyCompactList}\item 
+int \hyperlink{lib_8h_afad89c527f7c93fba616b864bf8eab5e}{ini\-\_\-server} (int port)
+\begin{DoxyCompactList}\small\item\em ini\-\_\-server. \end{DoxyCompactList}\item 
+int \hyperlink{lib_8h_ac2657fe7d1317d9dc08db190848d21b6}{daemonizar} (char $\ast$service)
+\begin{DoxyCompactList}\small\item\em daemonizar. \end{DoxyCompactList}\item 
+int \hyperlink{lib_8h_a47ad4e1a2682ba490d3f70d75c005f52}{accept\-\_\-conex} (int sock)
+\begin{DoxyCompactList}\small\item\em accept\-\_\-conex. \end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{lib_8h_a178212a93b636bb0f3c1fd2e691cca54}{deal\-\_\-cliente} (void $\ast$sock)
+\begin{DoxyCompactList}\small\item\em deal\-\_\-cliente. \end{DoxyCompactList}\item 
+int \hyperlink{lib_8h_a44f478e0e7fbb863cb613c30401ffbd1}{recibir} (int sock)
+\begin{DoxyCompactList}\small\item\em accept\-\_\-conex. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Descripción detallada}
+Libreria de funciones para la creacion y uso de un servidor basado en I\-R\-C. \begin{DoxyAuthor}{Autor}
+Iñaki Cadalso \href{mailto:innaki.cadalso@estudiante.uam.es}{\tt innaki.\-cadalso@estudiante.\-uam.\-es}, Enrique Aracil \href{mailto:enrique.aracil@estudiante.uam.es}{\tt enrique.\-aracil@estudiante.\-uam.\-es} Grupo 2311 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Versión}
+1.\-0 
+\end{DoxyVersion}
+\begin{DoxyDate}{Fecha}
+13-\/02-\/2017 
+\end{DoxyDate}
+
+
+\subsection{Documentación de las funciones}
+\hypertarget{lib_8h_a47ad4e1a2682ba490d3f70d75c005f52}{\index{lib.\-h@{lib.\-h}!accept\-\_\-conex@{accept\-\_\-conex}}
+\index{accept\-\_\-conex@{accept\-\_\-conex}!lib.h@{lib.\-h}}
+\subsubsection[{accept\-\_\-conex}]{\setlength{\rightskip}{0pt plus 5cm}int accept\-\_\-conex (
+\begin{DoxyParamCaption}
+\item[{int}]{sock}
+\end{DoxyParamCaption}
+)}}\label{lib_8h_a47ad4e1a2682ba490d3f70d75c005f52}
+
+
+accept\-\_\-conex. 
+
+Descripcion\-: Acepta la conexion por parte de un cliente 
+\begin{DoxyParams}{Parámetros}
+{\em sock} & socket del servidor. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Devuelve}
+int\-: socket de conexion al cliente si todo fue correcto, E\-X\-I\-T\-\_\-\-F\-A\-I\-L\-U\-R\-E en caso de error. 
+\end{DoxyReturn}
+\hypertarget{lib_8h_ac2657fe7d1317d9dc08db190848d21b6}{\index{lib.\-h@{lib.\-h}!daemonizar@{daemonizar}}
+\index{daemonizar@{daemonizar}!lib.h@{lib.\-h}}
+\subsubsection[{daemonizar}]{\setlength{\rightskip}{0pt plus 5cm}int daemonizar (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{service}
+\end{DoxyParamCaption}
+)}}\label{lib_8h_ac2657fe7d1317d9dc08db190848d21b6}
+
+
+daemonizar. 
+
+Descripcion\-: Convierte el proceso a depender de ini (daemon) 
+\begin{DoxyParams}{Parámetros}
+{\em service} & Nombre de servicion a daemonizar. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Devuelve}
+int\-: E\-X\-I\-T\-\_\-\-S\-U\-C\-C\-E\-S\-S si todo fue correcto, E\-X\-I\-T\-\_\-\-F\-A\-I\-L\-U\-R\-E en caso de error. 
+\end{DoxyReturn}
+\hypertarget{lib_8h_a178212a93b636bb0f3c1fd2e691cca54}{\index{lib.\-h@{lib.\-h}!deal\-\_\-cliente@{deal\-\_\-cliente}}
+\index{deal\-\_\-cliente@{deal\-\_\-cliente}!lib.h@{lib.\-h}}
+\subsubsection[{deal\-\_\-cliente}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ deal\-\_\-cliente (
+\begin{DoxyParamCaption}
+\item[{void $\ast$}]{sock}
+\end{DoxyParamCaption}
+)}}\label{lib_8h_a178212a93b636bb0f3c1fd2e691cca54}
+
+
+deal\-\_\-cliente. 
+
+Descripcion\-: Trata con el cliente recibiendo sus mensajes y contestandole 
+\begin{DoxyParams}{Parámetros}
+{\em sock} & Socket de la conexion cliente. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Devuelve}
+void 
+\end{DoxyReturn}
+\hypertarget{lib_8h_afad89c527f7c93fba616b864bf8eab5e}{\index{lib.\-h@{lib.\-h}!ini\-\_\-server@{ini\-\_\-server}}
+\index{ini\-\_\-server@{ini\-\_\-server}!lib.h@{lib.\-h}}
+\subsubsection[{ini\-\_\-server}]{\setlength{\rightskip}{0pt plus 5cm}int ini\-\_\-server (
+\begin{DoxyParamCaption}
+\item[{int}]{port}
+\end{DoxyParamCaption}
+)}}\label{lib_8h_afad89c527f7c93fba616b864bf8eab5e}
+
+
+ini\-\_\-server. 
+
+Descripcion\-: Inicializa un socket y lo deja escuchando 
+\begin{DoxyParams}{Parámetros}
+{\em port} & Puerto donde escucha el servidor. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Devuelve}
+int\-: E\-X\-I\-T\-\_\-\-S\-U\-C\-C\-E\-S\-S si todo fue correcto, E\-X\-I\-T\-\_\-\-F\-A\-I\-L\-U\-R\-E en caso de error. 
+\end{DoxyReturn}
+\hypertarget{lib_8h_a012a42789702bbc7231b1bdc9525d10a}{\index{lib.\-h@{lib.\-h}!on\-\_\-error@{on\-\_\-error}}
+\index{on\-\_\-error@{on\-\_\-error}!lib.h@{lib.\-h}}
+\subsubsection[{on\-\_\-error}]{\setlength{\rightskip}{0pt plus 5cm}void on\-\_\-error (
+\begin{DoxyParamCaption}
+\item[{int}]{log, }
+\item[{char $\ast$}]{err}
+\end{DoxyParamCaption}
+)}}\label{lib_8h_a012a42789702bbc7231b1bdc9525d10a}
+
+
+on\-\_\-error. 
+
+Descripcion\-: Imprime el mensaje dado en el syslog y finaliza el proceso. 
+\begin{DoxyParams}{Parámetros}
+{\em log} & Nivel de prioridad del log. \\
+\hline
+{\em err} & mensaje a imprimir. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Devuelve}
+void 
+\end{DoxyReturn}
+\hypertarget{lib_8h_a44f478e0e7fbb863cb613c30401ffbd1}{\index{lib.\-h@{lib.\-h}!recibir@{recibir}}
+\index{recibir@{recibir}!lib.h@{lib.\-h}}
+\subsubsection[{recibir}]{\setlength{\rightskip}{0pt plus 5cm}int recibir (
+\begin{DoxyParamCaption}
+\item[{int}]{sock}
+\end{DoxyParamCaption}
+)}}\label{lib_8h_a44f478e0e7fbb863cb613c30401ffbd1}
+
+
+accept\-\_\-conex. 
+
+Descripcion\-: Recibe un comman do por parte del cliente y lo realiza ne el servidor 
+\begin{DoxyParams}{Parámetros}
+{\em sock} & socket del servidor. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Devuelve}
+int\-: socket de conexion al cliente si todo fue correcto, E\-X\-I\-T\-\_\-\-F\-A\-I\-L\-U\-R\-E en caso de error. 
+\end{DoxyReturn}

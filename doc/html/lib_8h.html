@@ -1,0 +1,340 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.6"/>
+<title>Servidor Redes2: Referencia del Archivo includes/lib.h</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { searchBox.OnSelectItem(0); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td style="padding-left: 0.5em;">
+   <div id="projectname">Servidor Redes2
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generado por Doxygen 1.8.6 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'Buscar');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>Página&#160;principal</span></a></li>
+      <li class="current"><a href="files.html"><span>Archivos</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="Buscar" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="files.html"><span>Lista&#160;de&#160;archivos</span></a></li>
+      <li><a href="globals.html"><span>Globales</span></a></li>
+    </ul>
+  </div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Todo</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Archivos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Funciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>&apos;defines&apos;</a></div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_09e761304027c904456130627fd4dcf5.html">includes</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#define-members">'defines'</a> &#124;
+<a href="#func-members">Funciones</a>  </div>
+  <div class="headertitle">
+<div class="title">Referencia del Archivo lib.h</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>Libreria de funciones para la creacion y uso de un servidor basado en IRC.  
+<a href="#details">Más...</a></p>
+<div class="textblock"><code>#include &lt;stdio.h&gt;</code><br/>
+<code>#include &lt;stdlib.h&gt;</code><br/>
+<code>#include &lt;sys/types.h&gt;</code><br/>
+<code>#include &lt;sys/socket.h&gt;</code><br/>
+<code>#include &lt;netinet/in.h&gt;</code><br/>
+<code>#include &lt;unistd.h&gt;</code><br/>
+<code>#include &lt;redes2/irc.h&gt;</code><br/>
+<code>#include &lt;string.h&gt;</code><br/>
+<code>#include &lt;signal.h&gt;</code><br/>
+<code>#include &lt;sys/stat.h&gt;</code><br/>
+<code>#include &lt;syslog.h&gt;</code><br/>
+<code>#include &lt;netdb.h&gt;</code><br/>
+<code>#include &lt;fcntl.h&gt;</code><br/>
+<code>#include &lt;stdarg.h&gt;</code><br/>
+<code>#include &lt;memory.h&gt;</code><br/>
+<code>#include &lt;stropts.h&gt;</code><br/>
+<code>#include &lt;sys/resource.h&gt;</code><br/>
+<code>#include &lt;arpa/inet.h&gt;</code><br/>
+<code>#include &lt;sys/select.h&gt;</code><br/>
+<code>#include &lt;sys/time.h&gt;</code><br/>
+<code>#include &lt;pthread.h&gt;</code><br/>
+</div>
+<p><a href="lib_8h_source.html">Ir al código fuente de este archivo.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+'defines'</h2></td></tr>
+<tr class="memitem:a6b20d41d6252e9871430c242cb1a56e7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6b20d41d6252e9871430c242cb1a56e7"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lib_8h.html#a6b20d41d6252e9871430c242cb1a56e7">BUFFER_SIZE</a>&#160;&#160;&#160;1024</td></tr>
+<tr class="memdesc:a6b20d41d6252e9871430c242cb1a56e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">tamaño maximo que puede tener un buffer. <br/></td></tr>
+<tr class="separator:a6b20d41d6252e9871430c242cb1a56e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a8f91f93d75a07f0ae45077db45b3eb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0a8f91f93d75a07f0ae45077db45b3eb"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lib_8h.html#a0a8f91f93d75a07f0ae45077db45b3eb">MAX_CLIENTS</a>&#160;&#160;&#160;20</td></tr>
+<tr class="memdesc:a0a8f91f93d75a07f0ae45077db45b3eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">numero de clientes maximo que soporta el servidor. <br/></td></tr>
+<tr class="separator:a0a8f91f93d75a07f0ae45077db45b3eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4aaf73541f20734d49b8ef8d8fa2c71c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4aaf73541f20734d49b8ef8d8fa2c71c"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lib_8h.html#a4aaf73541f20734d49b8ef8d8fa2c71c">MAX_MNS</a>&#160;&#160;&#160;2000</td></tr>
+<tr class="memdesc:a4aaf73541f20734d49b8ef8d8fa2c71c"><td class="mdescLeft">&#160;</td><td class="mdescRight">numero maximo de milisegundos. <br/></td></tr>
+<tr class="separator:a4aaf73541f20734d49b8ef8d8fa2c71c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7206e1a3cf67c8d51a3732252593a0fb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7206e1a3cf67c8d51a3732252593a0fb"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lib_8h.html#a7206e1a3cf67c8d51a3732252593a0fb">NUM_BYTES</a>&#160;&#160;&#160;8192</td></tr>
+<tr class="memdesc:a7206e1a3cf67c8d51a3732252593a0fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">tamaño maximo de bytes. <br/></td></tr>
+<tr class="separator:a7206e1a3cf67c8d51a3732252593a0fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Funciones</h2></td></tr>
+<tr class="memitem:a012a42789702bbc7231b1bdc9525d10a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lib_8h.html#a012a42789702bbc7231b1bdc9525d10a">on_error</a> (int log, char *err)</td></tr>
+<tr class="memdesc:a012a42789702bbc7231b1bdc9525d10a"><td class="mdescLeft">&#160;</td><td class="mdescRight">on_error.  <a href="#a012a42789702bbc7231b1bdc9525d10a">Más...</a><br/></td></tr>
+<tr class="separator:a012a42789702bbc7231b1bdc9525d10a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afad89c527f7c93fba616b864bf8eab5e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lib_8h.html#afad89c527f7c93fba616b864bf8eab5e">ini_server</a> (int port)</td></tr>
+<tr class="memdesc:afad89c527f7c93fba616b864bf8eab5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">ini_server.  <a href="#afad89c527f7c93fba616b864bf8eab5e">Más...</a><br/></td></tr>
+<tr class="separator:afad89c527f7c93fba616b864bf8eab5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2657fe7d1317d9dc08db190848d21b6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lib_8h.html#ac2657fe7d1317d9dc08db190848d21b6">daemonizar</a> (char *service)</td></tr>
+<tr class="memdesc:ac2657fe7d1317d9dc08db190848d21b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">daemonizar.  <a href="#ac2657fe7d1317d9dc08db190848d21b6">Más...</a><br/></td></tr>
+<tr class="separator:ac2657fe7d1317d9dc08db190848d21b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47ad4e1a2682ba490d3f70d75c005f52"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lib_8h.html#a47ad4e1a2682ba490d3f70d75c005f52">accept_conex</a> (int sock)</td></tr>
+<tr class="memdesc:a47ad4e1a2682ba490d3f70d75c005f52"><td class="mdescLeft">&#160;</td><td class="mdescRight">accept_conex.  <a href="#a47ad4e1a2682ba490d3f70d75c005f52">Más...</a><br/></td></tr>
+<tr class="separator:a47ad4e1a2682ba490d3f70d75c005f52"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a178212a93b636bb0f3c1fd2e691cca54"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lib_8h.html#a178212a93b636bb0f3c1fd2e691cca54">deal_cliente</a> (void *sock)</td></tr>
+<tr class="memdesc:a178212a93b636bb0f3c1fd2e691cca54"><td class="mdescLeft">&#160;</td><td class="mdescRight">deal_cliente.  <a href="#a178212a93b636bb0f3c1fd2e691cca54">Más...</a><br/></td></tr>
+<tr class="separator:a178212a93b636bb0f3c1fd2e691cca54"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44f478e0e7fbb863cb613c30401ffbd1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lib_8h.html#a44f478e0e7fbb863cb613c30401ffbd1">recibir</a> (int sock)</td></tr>
+<tr class="memdesc:a44f478e0e7fbb863cb613c30401ffbd1"><td class="mdescLeft">&#160;</td><td class="mdescRight">accept_conex.  <a href="#a44f478e0e7fbb863cb613c30401ffbd1">Más...</a><br/></td></tr>
+<tr class="separator:a44f478e0e7fbb863cb613c30401ffbd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Descripción detallada</h2>
+<div class="textblock"><p>Libreria de funciones para la creacion y uso de un servidor basado en IRC. </p>
+<dl class="section author"><dt>Autor</dt><dd>Iñaki Cadalso <a href="#" onclick="location.href='mai'+'lto:'+'inn'+'ak'+'i.c'+'ad'+'als'+'o@'+'est'+'ud'+'ian'+'te'+'.ua'+'m.'+'es'; return false;">innak<span style="display: none;">.nosp@m.</span>i.ca<span style="display: none;">.nosp@m.</span>dalso<span style="display: none;">.nosp@m.</span>@est<span style="display: none;">.nosp@m.</span>udian<span style="display: none;">.nosp@m.</span>te.u<span style="display: none;">.nosp@m.</span>am.es</a>, Enrique Aracil <a href="#" onclick="location.href='mai'+'lto:'+'enr'+'iq'+'ue.'+'ar'+'aci'+'l@'+'est'+'ud'+'ian'+'te'+'.ua'+'m.'+'es'; return false;">enriq<span style="display: none;">.nosp@m.</span>ue.a<span style="display: none;">.nosp@m.</span>racil<span style="display: none;">.nosp@m.</span>@est<span style="display: none;">.nosp@m.</span>udian<span style="display: none;">.nosp@m.</span>te.u<span style="display: none;">.nosp@m.</span>am.es</a> Grupo 2311 </dd></dl>
+<dl class="section version"><dt>Versión</dt><dd>1.0 </dd></dl>
+<dl class="section date"><dt>Fecha</dt><dd>13-02-2017 </dd></dl>
+</div><h2 class="groupheader">Documentación de las funciones</h2>
+<a class="anchor" id="a47ad4e1a2682ba490d3f70d75c005f52"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int accept_conex </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>sock</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>accept_conex. </p>
+<p>Descripcion: Acepta la conexion por parte de un cliente </p>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sock</td><td>socket del servidor. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Devuelve</dt><dd>int: socket de conexion al cliente si todo fue correcto, EXIT_FAILURE en caso de error. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ac2657fe7d1317d9dc08db190848d21b6"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int daemonizar </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>service</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>daemonizar. </p>
+<p>Descripcion: Convierte el proceso a depender de ini (daemon) </p>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">service</td><td>Nombre de servicion a daemonizar. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Devuelve</dt><dd>int: EXIT_SUCCESS si todo fue correcto, EXIT_FAILURE en caso de error. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a178212a93b636bb0f3c1fd2e691cca54"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void* deal_cliente </td>
+          <td>(</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>sock</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>deal_cliente. </p>
+<p>Descripcion: Trata con el cliente recibiendo sus mensajes y contestandole </p>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sock</td><td>Socket de la conexion cliente. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Devuelve</dt><dd>void </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="afad89c527f7c93fba616b864bf8eab5e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int ini_server </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>port</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>ini_server. </p>
+<p>Descripcion: Inicializa un socket y lo deja escuchando </p>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">port</td><td>Puerto donde escucha el servidor. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Devuelve</dt><dd>int: EXIT_SUCCESS si todo fue correcto, EXIT_FAILURE en caso de error. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a012a42789702bbc7231b1bdc9525d10a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void on_error </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>log</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>err</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>on_error. </p>
+<p>Descripcion: Imprime el mensaje dado en el syslog y finaliza el proceso. </p>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">log</td><td>Nivel de prioridad del log. </td></tr>
+    <tr><td class="paramname">err</td><td>mensaje a imprimir. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Devuelve</dt><dd>void </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a44f478e0e7fbb863cb613c30401ffbd1"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int recibir </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>sock</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>accept_conex. </p>
+<p>Descripcion: Recibe un comman do por parte del cliente y lo realiza ne el servidor </p>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sock</td><td>socket del servidor. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Devuelve</dt><dd>int: socket de conexion al cliente si todo fue correcto, EXIT_FAILURE en caso de error. </dd></dl>
+
+</div>
+</div>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generado el Miércoles, 22 de Febrero de 2017 00:46:24 para Servidor Redes2 por &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.6
+</small></address>
+</body>
+</html>
