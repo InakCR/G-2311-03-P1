@@ -116,11 +116,10 @@ void *deal_cliente(void *sock) {
 
 /*Función que recibe un comando del cliente y realiza la acción correspondiente
 Recibe el socket al que escuchar como argumento*/
-int recibir(int sock){
+int recibir(int sock) {
 
   char command[BUFFER_SIZE];
 
   /*Recibimos el comando*/
-  recv(sock, command, BUFFER_SIZE, 0)
-
+  recv(sock, command, BUFFER_SIZE, 0);
 }

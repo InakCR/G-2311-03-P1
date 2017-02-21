@@ -79,3 +79,11 @@ Descripcion: Trata con el cliente recibiendo sus mensajes
 @return void
 */
 void* deal_cliente(void* sock);
+/**
+@brief accept_conex.
+
+Descripcion: Recibe un comman do por parte del cliente y lo realiza ne el servidor
+@param int sock: socket del servidor.
+@return int: socket de conexion al cliente si todo fue correcto, EXIT_FAILURE en caso de error.
+*/
+int recibir(int sock);
