@@ -38,10 +38,7 @@ int main(int argc, char *argv[]) {
     // Accept
     socketClient = accept_conex(socketServer);
     // Tiempo de espera a una peticion
-    setsockopt(socketClient, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout,
-               sizeof(timeout));
-    setsockopt(socketClient, SOL_SOCKET, SO_SNDTIMEO, (char *)&timeout,
-               sizeof(timeout));
+    
     // hilo conexion cliente, atendemos al cliente en el hilo
     pthread_attr_init(&attr);
     err = pthread_create(&ptCliente[ncliente], &attr, deal_cliente,

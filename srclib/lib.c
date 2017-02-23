@@ -100,28 +100,72 @@ void *deal_cliente(void *sock) {
   char buf[BUFFER_SIZE];
   socket = *((int *)(&sock));
   while (1) {
-    int read = recv(socket, buf, BUFFER_SIZE, 0);
 
-    if (read < 0) { // Socket cerrado
-      send(socket, "Timeout\n", 9, 0);
-      syslog(LOG_INFO, "Client close timeout");
-      close(socket);
-      break;
-    }
+    recibir(sock);
 
-    err = send(socket, buf, read, 0);
-    if (err < 0)
-      on_error(LOG_ERR, "Client write failed");
   }
 }
+
 
 /*Función que recibe un comando del cliente y realiza la acción correspondiente
 Recibe el socket al que escuchar como argumento*/
 int recibir(int sock) {
 
   char command[BUFFER_SIZE];
+  char *pipe, *pipeCommand;
+  int n_command = 0;
 
   /*Recibimos el comando*/
-  recv(sock, command, BUFFER_SIZE, 0);
-  return EXIT_SUCCESS;
+  if (recv(sock, command, BUFFER_SIZE, 0) == -1){
+
+    close(sock);
+    on_error(LOG_ERR, "Error al recibir comando.");
+  }
+
+  syslog(LOG_INFO, "Comando recibido: %s", command);
+
+  /*Se llama a IRC_UnPipelineCommands*/
+
+  syslog(LOG_INFO, "Probando UnPipeline...");
+  pipe = IRC_UnPipelineCommands(command, &pipeCommand);
+  syslog(LOG_INFO, "pipe = %s", pipe);
+  syslog(LOG_INFO, "pipeCommand = %s", pipeCommand);
+
+  doCommand(pipeCommand, sock);
+
+  /*if ((pipe = IRC_UnPipelineCommands(command, &pipeCommand)) != NULL) {
+
+    syslog(LOG_INFO, "Comando nº%d", n_command++);
+    doCommand(pipeCommand, sock);
+
+    while ((pipe = IRC_UnPipelineCommands(pipe, &pipeCommand)) != NULL) {
+
+      syslog(LOG_INFO, "Comando nº%d", n_command++);
+      doCommand(pipeCommand, sock);
+    }
+
+    if (pipe == NULL) {
+
+      bzero(command, 512);
+      syslog(LOG_INFO, "Comando nº%d", n_command++);
+      doCommand(pipeCommand, sock);
+    }
+
+  } else {
+
+    if (pipeCommand == NULL) {
+
+      on_error(LOG_ERR, "Se han buscado comandos en cadena vacia.");
+    } else {
+
+      on_error(LOG_ERR, "Comando incompleto.");
+    }
+
+    doCommand(pipeCommand, sock);
+  }*/
+
+  free(pipeCommand);
+  free(pipe);
+
+  return 1;
 }
