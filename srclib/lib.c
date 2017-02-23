@@ -103,6 +103,7 @@ void *deal_cliente(void *sock) {
     int read = recv(socket, buf, BUFFER_SIZE, 0);
 
     if (read < 0) { // Socket cerrado
+      send(socket, "Timeout\n", 9, 0);
       syslog(LOG_INFO, "Client close timeout");
       close(socket);
       break;
@@ -122,4 +123,5 @@ int recibir(int sock) {
 
   /*Recibimos el comando*/
   recv(sock, command, BUFFER_SIZE, 0);
+  return EXIT_SUCCESS;
 }
