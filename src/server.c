@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
     // Accept
     socketClient = accept_conex(socketServer);
     // Tiempo de espera a una peticion
-    
+
     // hilo conexion cliente, atendemos al cliente en el hilo
     pthread_attr_init(&attr);
     err = pthread_create(&ptCliente[ncliente], &attr, deal_cliente,
@@ -47,5 +47,6 @@ int main(int argc, char *argv[]) {
       on_error(LOG_ERR, "Error al crear hilo cliente");
     ncliente++;
   }
+
   return 0;
 }

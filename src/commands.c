@@ -28,8 +28,5 @@ void doCommand(char *string, int sock) {
         case WHOIS:
             syslog(LOG_INFO, "WHO IS");
             break;
-        default:
-            syslog(LOG_INFO, "COMANDO NO RECONOCIDO");
-            break;
     }
 }
