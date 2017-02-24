@@ -96,9 +96,14 @@ int accept_conex(int sock) {
   return socketClient;
 }
 void *deal_cliente(void *sock) {
+
   int read, err, socket;
   char buf[BUFFER_SIZE];
+
   socket = *((int *)(&sock));
+
+  iniClient(socket);
+
   while (1) {
 
     if (recibir(socket) == -1)
@@ -125,7 +130,7 @@ int recibir(int sock) {
 
   if ((pipe = IRC_UnPipelineCommands(command, &pipeCommand)) != NULL) {
 
-    syslog(LOG_INFO, "Bloque de Comandos");
+    syslog(LOG_INFO, "Llega Bloque de Comandos:");
     syslog(LOG_INFO, "Comando nº%d", n_command++);
     doCommand(pipeCommand, sock);
 
@@ -149,7 +154,7 @@ int recibir(int sock) {
       on_error(LOG_ERR, "Se han buscado comandos en cadena vacia.");
     } else {
 
-      syslog(LOG_ERR, "Comando simple");
+      syslog(LOG_ERR, "Comando simple:");
       doCommand(pipeCommand, sock);
     }
 

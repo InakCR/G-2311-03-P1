@@ -3,12 +3,16 @@
 #define STIEMPO 30
 #define MSTIEMPO 30000
 
+int ncliente = 0;
+
 int main(int argc, char *argv[]) {
-  int socketServer, socketClient, err, ncliente, max;
+
+  int socketServer, socketClient, err, max;
   fd_set readfds;
   struct timeval timeout;
   pthread_t ptCliente[MAX_CLIENTS];
   pthread_attr_t attr;
+
   // Crecion de proceso Daemon
   if (daemonizar("REDES2") < 0)
     on_error(LOG_ERR, "Error daemonizar");
@@ -25,6 +29,7 @@ int main(int argc, char *argv[]) {
   max = MAX_CLIENTS;
 
   while (1) {
+
     // Preparando select
     FD_ZERO(&readfds);
     FD_SET(socketServer, &readfds);
@@ -34,7 +39,9 @@ int main(int argc, char *argv[]) {
 
     if (select(max + 1, &readfds, NULL, NULL, NULL) < 0)
       on_error(LOG_ERR, "Error en Select");
+
     syslog(LOG_INFO, "Nuevo Cliente");
+
     // Accept
     socketClient = accept_conex(socketServer);
     // Tiempo de espera a una peticion
@@ -49,4 +56,8 @@ int main(int argc, char *argv[]) {
   }
 
   return 0;
+}
+
+int getNumeroClientes(){
+  return ncliente;
 }
