@@ -3,15 +3,6 @@
 #define MAX_CARACTERS 30
 #define MAX_CHANNELS 20
 
-typedef struct client
-{
-  char nick[MAX_CARACTERS];
-  char name[MAX_CARACTERS];
-  int socket;
-
-} *Client;
-
-Client clients[MAX_CLIENTS];
 
 /**
 @brief iniClient.

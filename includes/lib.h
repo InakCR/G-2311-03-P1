@@ -16,6 +16,7 @@
 #include <netinet/in.h>
 #include <unistd.h>
 #include <redes2/irc.h>
+#include <redes2/irctad.h>
 #include <string.h>
 #include <signal.h>
 #include <sys/stat.h>

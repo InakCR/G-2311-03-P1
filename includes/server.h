@@ -1,7 +1,5 @@
 #include "../includes/clients.h"
 
-#include <redes2/irctad.h>
-
 #define PORT 6667
 
 /**

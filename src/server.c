@@ -3,7 +3,7 @@
 #define STIEMPO 30
 #define MSTIEMPO 30000
 
-int ncliente = 0;
+long ncliente = 0;
 
 int main(int argc, char *argv[]) {
 

@@ -96,13 +96,9 @@ int accept_conex(int sock) {
   return socketClient;
 }
 void *deal_cliente(void *sock) {
-
-  int read, err, socket;
-  char buf[BUFFER_SIZE];
+  int socket;
 
   socket = *((int *)(&sock));
-
-  iniClient(socket);
 
   while (1) {
 
