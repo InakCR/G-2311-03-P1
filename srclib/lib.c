@@ -101,11 +101,11 @@ void *deal_cliente(void *sock) {
   socket = *((int *)(&sock));
   while (1) {
 
-    recibir(sock);
-
+    if (recibir(socket) == -1) {
+      break;
+    }
   }
 }
-
 
 /*Función que recibe un comando del cliente y realiza la acción correspondiente
 Recibe el socket al que escuchar como argumento*/
@@ -116,10 +116,10 @@ int recibir(int sock) {
   int n_command = 0;
 
   /*Recibimos el comando*/
-  if (recv(sock, command, BUFFER_SIZE, 0) == -1){
+  if (recv(sock, command, BUFFER_SIZE, 0) == -1) {
 
     close(sock);
-    on_error(LOG_ERR, "Error al recibir comando.");
+    return -1;
   }
 
   syslog(LOG_INFO, "Comando recibido: %s", command);
@@ -131,7 +131,7 @@ int recibir(int sock) {
   syslog(LOG_INFO, "pipe = %s", pipe);
   syslog(LOG_INFO, "pipeCommand = %s", pipeCommand);
 
-  doCommand(pipeCommand, sock);
+  // doCommand(pipeCommand, sock);
 
   /*if ((pipe = IRC_UnPipelineCommands(command, &pipeCommand)) != NULL) {
 
@@ -164,8 +164,8 @@ int recibir(int sock) {
     doCommand(pipeCommand, sock);
   }*/
 
-  free(pipeCommand);
-  free(pipe);
+  //  free(pipeCommand);
+  //  free(pipe);
 
   return 1;
 }
