@@ -24,7 +24,7 @@ $(LIB)lib.a: $(OBJ)lib.o
 	@echo "Libreria lib.a generada"
 
 $(EXEC): $(OBJ)server.o $(OBJ)commands.o $(OBJ)channels.o $(OBJ)clients.o  $(LIB)lib.a
-	$(CC) $(CCFLAGS) $^ -o  $@ -lircredes
+	$(CC) $(CCFLAGS) $^ -o  $@ -lircredes -lirctad
 	@echo "Ejecutable servidor creado"
 
 $(OBJ)server.o: $(SRC)server.c
@@ -46,6 +46,14 @@ clean:
 		rm -f lib/lib.a obj/*.o includes/*.gch $(EXEC)
 dox:
 		doxygen Doxyfile
+
+prueba:$(OBJ)prueba.o
+	$(CC) $(CCFLAGS) $^ -o  $@ -lircredes -lirctad
+	@echo "Ejecutable servidor creado"
+
+$(OBJ)prueba.o:$(SRC)prueba.c
+	$(CC) $(CCFLAGS) -o $@ -c $^
+
 tar:
 		@ echo "Comprimiendo el archivo"
 		tar --exclude .git -czvf $(GROUP).tar.gz ../$(GROUP) --exclude $(GROUP).tar.gz

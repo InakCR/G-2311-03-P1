@@ -96,9 +96,10 @@ int accept_conex(int sock) {
   return socketClient;
 }
 void *deal_cliente(void *sock) {
-  int read, err, socket;
-  char buf[BUFFER_SIZE];
+  int socket;
+
   socket = *((int *)(&sock));
+
   while (1) {
 
     if (recibir(socket) == -1) {
@@ -106,14 +107,14 @@ void *deal_cliente(void *sock) {
     }
   }
 }
-
-/*Función que recibe un comando del cliente y realiza la acción correspondiente
+/*Función que recibe un comando del cliente y realiza la acción
+correspondiente
 Recibe el socket al que escuchar como argumento*/
 int recibir(int sock) {
 
-  char command[BUFFER_SIZE];
+  char command[BUFFER_SIZE] = "";
   char *pipe, *pipeCommand;
-  int n_command = 0;
+  int n_command = 1;
 
   /*Recibimos el comando*/
   if (recv(sock, command, BUFFER_SIZE, 0) == -1) {
@@ -133,8 +134,9 @@ int recibir(int sock) {
 
   // doCommand(pipeCommand, sock);
 
-  /*if ((pipe = IRC_UnPipelineCommands(command, &pipeCommand)) != NULL) {
+  if ((pipe = IRC_UnPipelineCommands(command, &pipeCommand)) != NULL) {
 
+    syslog(LOG_INFO, "Llega Bloque de Comandos:");
     syslog(LOG_INFO, "Comando nº%d", n_command++);
     doCommand(pipeCommand, sock);
 
@@ -146,7 +148,7 @@ int recibir(int sock) {
 
     if (pipe == NULL) {
 
-      bzero(command, 512);
+      bzero(command, BUFFER_SIZE);
       syslog(LOG_INFO, "Comando nº%d", n_command++);
       doCommand(pipeCommand, sock);
     }
@@ -154,15 +156,14 @@ int recibir(int sock) {
   } else {
 
     if (pipeCommand == NULL) {
-
+      // on_error
       on_error(LOG_ERR, "Se han buscado comandos en cadena vacia.");
     } else {
 
-      on_error(LOG_ERR, "Comando incompleto.");
+      syslog(LOG_ERR, "Comando simple:");
+      doCommand(pipeCommand, sock);
     }
-
-    doCommand(pipeCommand, sock);
-  }*/
+  }
 
   //  free(pipeCommand);
   //  free(pipe);
