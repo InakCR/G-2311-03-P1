@@ -45,8 +45,9 @@ void nick(char *string, int sock) {
     free(prefix);
     free(nick);
     free(msg);
-    on_error(LOG_ERR,
-             "***Error {nick()} No existe una cadena para usar como Nick.");
+    syslog(LOG_ERR,
+           "***Error {nick()} No existe una cadena para usar como Nick.");
+    return;
   } else if (parser == IRC_OK) {
 
     if (UTestNick(nick)) {
