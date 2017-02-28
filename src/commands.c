@@ -1,15 +1,26 @@
 #include "../includes/commands.h"
 char userNick[100];
 void nick(char *string, int sock) {
-  char *prefix, *nick, *msg;
+  char *prefix, *nick, *msg, *ip;
   long parser;
-
+  struct sockaddr_in addr;
+  struct hostent *he;
+  int sclient;
+  sclient = sizeof(addr);
   parser = IRCParse_Nick(string, &prefix, &nick, &msg);
 
+  getpeername(sock, (struct sockaddr *)&addr, &sclient);
+  ip = inet_ntoa(addr.sin_addr);
+
+  // cout << " The IP address from the accept is " << ip << std::endl;
+
+  he = gethostbyaddr((char *)&addr.sin_addr, sizeof(addr.sin_addr), AF_INET);
   syslog(LOG_INFO, "parser = %ld", parser);
   syslog(LOG_INFO, "prefix = %s", prefix);
   syslog(LOG_INFO, "nick = %s", nick);
   syslog(LOG_INFO, "msg = %s", msg);
+  syslog(LOG_INFO, "ip = %s", ip);
+  syslog(LOG_INFO, "host = %s", he->h_name);
 
   strcpy(userNick, nick);
 
@@ -23,10 +34,11 @@ void nick(char *string, int sock) {
 
     // Comprobar que el nick no existe (moviendose por todos los clientes)
 
-    // if (!UTestNick(nick)) {
-    //    syslog(LOG_INFO, " Ya exite el nick: %s", nick);
-    //    return;
-    //  }
+    if (UTestNick(nick)) {
+      syslog(LOG_INFO, " Ya existe el nick: %s", nick);
+    } else {
+      syslog(LOG_INFO, " No existe el nick: %s", nick);
+    }
   }
 
   syslog(LOG_INFO, "Nick pasado correctamente, falta añadirlo al cliente");

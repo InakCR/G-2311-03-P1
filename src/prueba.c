@@ -8,7 +8,13 @@
 void main() {
   char *arraylist, *ejemplo, **arrayNicks;
   long numberOfUsers;
+  long temp;
   int numStrings, i, num;
+  int socket;
+  struct sockaddr *addr;
+
+  getsockname(socket, addr, sizeof(addr));
+
   if (IRCTADUser_New("user", "nick", "realname", NULL, "host", "1.1.1.1",
                      12345) == IRC_OK) {
     printf("11\n");
@@ -32,20 +38,20 @@ void main() {
   if (UTestNick("nick5")) {
     printf("Existe Nick\n");
   }
-  if (IRCTAD_Join("#canal", "nick", "usermode", NULL) == IRC_OK) {
+  if (IRCTAD_Join("#canal", "nick", "+", NULL) == IRC_OK) {
     printf("10\n");
   }
-  if (IRCTAD_Join("#canal", "nick1", "usermode", NULL) == IRC_OK) {
+  if (IRCTAD_Join("#canal", "nick1", "+", NULL) == IRC_OK) {
     printf("9\n");
   }
-  if (IRCTAD_Join("#canal", "nick2", "usermode", NULL) == IRC_OK) {
+  if (IRCTAD_Join("#canal", "nick2", "+", NULL) == IRC_OK) {
     printf("8\n");
   }
-  if (IRCTAD_Join("#canal", "nick3", "usermode", NULL) == IRC_OK) {
+  if (IRCTAD_Join("#canal1", "nick3", "+", NULL) == IRC_OK) {
     printf("7\n");
   }
-  IRCTAD_Part("#canal", "nick3");
-  long temp = IRCTAD_ListNicksOnChannel("#canal", &arraylist, &numberOfUsers);
+  IRCTADUser_ShowAll();
+  temp = IRCTAD_ListNicksOnChannel("#canal", &arraylist, &numberOfUsers);
   if (temp == IRC_OK) {
     printf("1\n");
   } else if (temp == IRCERR_NOENOUGHMEMORY) {
