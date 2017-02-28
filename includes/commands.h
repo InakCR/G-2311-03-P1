@@ -26,6 +26,13 @@ typedef struct hostnameip{
         char *name;
         char *ip;
 } HostNameIp;
+/**
+   @brief hostIp.
+
+   Descripcion: Averigua la ip del socket cliente y su nombre de host.
+   @param sock: Puerto en el que se encuentra el usuario.
+   @return HostNameIp: encaso de acierto la estructura rellena sino, NULL.
+ */
 HostNameIp *hostIp(int sock);
 /**
    @brief nick.

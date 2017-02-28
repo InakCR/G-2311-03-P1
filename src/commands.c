@@ -3,9 +3,10 @@ char userNick[100];
 HostNameIp *hostIp(int sock) {
   int err;
   struct sockaddr_in addr;
+  struct hostent *he;
   socklen_t addr_len = sizeof(addr);
   HostNameIp *hi = NULL;
-  char hbuf[10000], sbuf[1000];
+  char hbuf[1024], sbuf[20];
 
   hi = (HostNameIp *)malloc(sizeof(HostNameIp));
   if (hi == NULL)
@@ -18,19 +19,21 @@ HostNameIp *hostIp(int sock) {
   hi->ip = inet_ntoa(addr.sin_addr);
   syslog(LOG_INFO, "%s\n", hi->ip);
 
-  struct hostent *he;
-struct in_addr ipv4addr;
+  struct in_addr ipv4addr;
+  inet_pton(AF_INET, "74.125.196.105", &ipv4addr); // Google
+  he = gethostbyaddr(&ipv4addr, sizeof ipv4addr, AF_INET);
 
-inet_pton(AF_INET, "74.125.196.105", &ipv4addr);
-he = gethostbyaddr(&ipv4addr, sizeof ipv4addr, AF_INET);
-syslog(LOG_INFO,"Host name: %s\n", he->h_name);
-/*
-  if (getnameinfo((struct sockaddr *)&addr, addr_len, hbuf, sizeof(hbuf), sbuf,
-                  sizeof(sbuf), NI_NUMERICHOST | NI_NUMERICSERV) == 0)
+  // he = gethostbyaddr(&addr.sin_addr, addr_len, AF_INET);
+  if (he == NULL || h_errno == HOST_NOT_FOUND) {
 
-    syslog(LOG_INFO, "host=%s, serv=%s\n", hbuf, sbuf);
-memcpy(hi->name, hbuf);*/
-  memcpy(hi->name, he->h_name);
+    if (getnameinfo((struct sockaddr *)&addr, addr_len, hbuf, sizeof(hbuf),
+                    sbuf, sizeof(sbuf), NI_NUMERICHOST | NI_NUMERICSERV) == 0)
+
+      syslog(LOG_INFO, "host=%s, serv=%s\n", hbuf, sbuf);
+    hi->name = hbuf;
+    return hi;
+  }
+  hi->name = he->h_name;
   return hi;
 }
 void nick(char *string, int sock) {
@@ -41,7 +44,9 @@ void nick(char *string, int sock) {
   hi = hostIp(sock);
 
   parser = IRCParse_Nick(string, &prefix, &nick, &msg);
-
+  if (parser < 0) {
+    return;
+  }
   syslog(LOG_INFO, "parser = %ld", parser);
   syslog(LOG_INFO, "prefix = %s", prefix);
   syslog(LOG_INFO, "nick = %s", nick);
