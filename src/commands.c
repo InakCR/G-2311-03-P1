@@ -5,7 +5,9 @@ void nick(char *string, int sock) {
   char *prefix, *nick, *msg, *ip;
   long parser;
   HostNameIp *hi;
+
   hi = hostIp(sock);
+
   parser = IRCParse_Nick(string, &prefix, &nick, &msg);
 
   syslog(LOG_INFO, "parser = %ld", parser);
@@ -23,8 +25,6 @@ void nick(char *string, int sock) {
     on_error(LOG_ERR,
              "***Error {nick()} No existe una cadena para usar como Nick.");
   } else if (parser == IRC_OK) {
-
-    // Comprobar que el nick no existe (moviendose por todos los clientes)
 
     if (UTestNick(nick)) {
       syslog(LOG_INFO, " Ya existe el nick: %s", nick);

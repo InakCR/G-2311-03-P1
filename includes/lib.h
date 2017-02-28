@@ -30,7 +30,6 @@ que soporta el servidor.
 */
 #define NUM_BYTES 8192
 
-
 /**
 @brief on_error.
 
