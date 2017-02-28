@@ -1,8 +1,31 @@
 #include "../includes/commands.h"
 char userNick[100];
+HostNameIp *hostIp(int sock) {
+  int err;
+  struct sockaddr_in addr;
+  socklen_t addr_len = sizeof(addr);
+  HostNameIp *hi = NULL;
+  char hbuf[10000], sbuf[1000];
 
+  hi = (HostNameIp *)malloc(sizeof(HostNameIp));
+  if (hi == NULL)
+    return NULL;
+  err = getpeername(sock, (struct sockaddr *)&addr, &addr_len);
+  if (err != 0)
+    return NULL;
+  hi->ip = inet_ntoa(addr.sin_addr);
+  syslog(LOG_INFO, "%s\n", hi->ip);
+
+  if (getnameinfo((struct sockaddr *)&addr, addr_len, hbuf, sizeof(hbuf), sbuf,
+                  sizeof(sbuf), NI_NUMERICHOST | NI_NUMERICSERV) == 0)
+
+    syslog(LOG_INFO, "host=%s, serv=%s\n", hbuf, sbuf);
+
+  strcpy(hi->name, hbuf);
+  return hi;
+}
 void nick(char *string, int sock) {
-  char *prefix, *nick, *msg, *ip;
+  char *prefix, *nick, *msg;
   long parser;
   HostNameIp *hi;
 
@@ -15,7 +38,7 @@ void nick(char *string, int sock) {
   syslog(LOG_INFO, "nick = %s", nick);
   syslog(LOG_INFO, "msg = %s", msg);
   syslog(LOG_INFO, "ip = %s", hi->ip);
-  // syslog(LOG_INFO, "host = %s", client->h_name);
+  syslog(LOG_INFO, "host = %s", hi->name);
   strcpy(userNick, nick);
 
   if (parser == IRCERR_NOSTRING) {

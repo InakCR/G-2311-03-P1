@@ -26,6 +26,7 @@ typedef struct hostnameip{
         char *name;
         char *ip;
 } HostNameIp;
+HostNameIp *hostIp(int sock);
 /**
    @brief nick.
 
