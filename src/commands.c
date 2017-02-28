@@ -10,18 +10,27 @@ HostNameIp *hostIp(int sock) {
   hi = (HostNameIp *)malloc(sizeof(HostNameIp));
   if (hi == NULL)
     return NULL;
+
   err = getpeername(sock, (struct sockaddr *)&addr, &addr_len);
   if (err != 0)
     return NULL;
+
   hi->ip = inet_ntoa(addr.sin_addr);
   syslog(LOG_INFO, "%s\n", hi->ip);
 
+  struct hostent *he;
+struct in_addr ipv4addr;
+
+inet_pton(AF_INET, "74.125.196.105", &ipv4addr);
+he = gethostbyaddr(&ipv4addr, sizeof ipv4addr, AF_INET);
+syslog(LOG_INFO,"Host name: %s\n", he->h_name);
+/*
   if (getnameinfo((struct sockaddr *)&addr, addr_len, hbuf, sizeof(hbuf), sbuf,
                   sizeof(sbuf), NI_NUMERICHOST | NI_NUMERICSERV) == 0)
 
     syslog(LOG_INFO, "host=%s, serv=%s\n", hbuf, sbuf);
-
-  strcpy(hi->name, hbuf);
+memcpy(hi->name, hbuf);*/
+  memcpy(hi->name, he->h_name);
   return hi;
 }
 void nick(char *string, int sock) {
