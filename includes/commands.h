@@ -21,6 +21,12 @@
 #include <sys/select.h>
 #include <sys/time.h>
 #include <pthread.h>
+
+typedef struct hostnameip
+   {
+        char *name;
+        char *ip;
+    } HostNameIp;
 /**
 @brief nick.
 

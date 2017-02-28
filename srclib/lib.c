@@ -92,7 +92,6 @@ int accept_conex(int sock) {
   if ((socketClient =
            accept(sock, (struct sockaddr *)&client, (socklen_t *)&length)) < 0)
     on_error(LOG_ERR, "Error accept conexion cliente");
-
   return socketClient;
 }
 void *deal_cliente(void *sock) {
@@ -105,6 +104,26 @@ void *deal_cliente(void *sock) {
     if (recibir(socket) == -1) {
       break;
     }
+  }
+}
+HostNameIp *hostIp(int sock) {
+  struct sockaddr_in addr;
+  struct hostent *clienthost;
+  socklen_t addr_len = sizeof(addr);
+  HostNameIp *hi = NULL;
+  hi = (HostNameIp *)malloc(sizeof(HostNameIp));
+
+  getpeername(sock, (struct sockaddr *)&addr, &addr_len);
+  inet_ntoa(addr.sin_addr, &(hi->ip));
+
+  clienthost = gethostbyaddr((char *)&hi->ip, sizeof(hi->ip), AF_INET);
+  hi->name = clienthost->h_name;
+  if (clienthost == NULL) {
+
+    syslog(LOG_INFO, "client host information not found\n");
+  } else {
+    syslog(LOG_INFO, "Operation from: %s %i\n", clienthost->h_name,
+           (unsigned)ntohs(addr.sin_port));
   }
 }
 /*Función que recibe un comando del cliente y realiza la acción
@@ -157,7 +176,8 @@ int recibir(int sock) {
 
     if (pipeCommand == NULL) {
       // on_error
-      on_error(LOG_ERR, "Se han buscado comandos en cadena vacia.");
+      syslog(LOG_INFO, "Se han buscado comandos en cadena vacia.");
+      return -1;
     } else {
 
       syslog(LOG_ERR, "Comando simple:");
