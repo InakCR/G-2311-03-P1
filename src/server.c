@@ -137,9 +137,3 @@ int recibir(int sock) {
 long getNumeroClientes(){
         return ncliente;
 }
-long getNumeroCanales(){
-        char **list=NULL;
-        long num = 0;
-        IRCTADChan_GetList (&list, &num, NULL);
-        return num;
-}

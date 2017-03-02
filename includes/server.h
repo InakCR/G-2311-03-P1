@@ -25,10 +25,3 @@ Descripcion: Devuelve el número de clintes conectados actualmente al servidor.
 @return int: nClientes.
 */
 long getNumeroClientes();
-/**
-@brief getNumeroCanales.
-
-Descripcion: Devuelve el número de canales activos actualmente en el servidor.
-@return int: num.
-*/
-long getNumeroCanales();

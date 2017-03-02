@@ -26,3 +26,17 @@ void user(char *string, int sock);
    @param sock: Puerto en el que se encuentra el usuario.
  */
 void doCommand(char *string, int sock);
+/**
+@brief getNumeroClientesActuales.
+
+Descripcion: Devuelve el número de clintes conectados actualmente al servidor.
+@return int: nClientes.
+*/
+long getNumeroClientesActuales();
+/**
+@brief getNumeroCanales.
+
+Descripcion: Devuelve el número de canales activos actualmente en el servidor.
+@return int: num.
+*/
+long getNumeroCanales();
