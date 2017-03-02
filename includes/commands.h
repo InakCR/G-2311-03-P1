@@ -1,39 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <unistd.h>
-#include <redes2/irc.h>
-#include <redes2/irctad.h>
-#include <string.h>
-#include <signal.h>
-#include <sys/stat.h>
-#include <syslog.h>
-#include <netdb.h>
-#include <fcntl.h>
-#include <stdarg.h>
-#include <memory.h>
-#include <stropts.h>
-#include <sys/resource.h>
-#include <arpa/inet.h>
-#include <fcntl.h>
-#include <sys/select.h>
-#include <sys/time.h>
-#include <pthread.h>
+#include "../includes/lib.h"
 
-typedef struct hostnameip{
-        char *name;
-        char *ip;
-} HostNameIp;
-/**
-   @brief hostIp.
-
-   Descripcion: Averigua la ip del socket cliente y su nombre de host.
-   @param sock: Puerto en el que se encuentra el usuario.
-   @return HostNameIp: encaso de acierto la estructura rellena sino, NULL.
- */
-HostNameIp *hostIp(int sock);
 /**
    @brief nick.
 
@@ -42,4 +8,21 @@ HostNameIp *hostIp(int sock);
    @param sock: Puerto en el que se encuentra el usuario.
  */
 void nick(char *string, int sock);
+/**
+   @brief doCommand.
+
+   Identifica al usuario a conectarse al servidor, puede o bien crearlo si
+   es su primera conexion o reconocerlo si ya ha estado en el servidor.
+
+   @param string: Cadena que contiene el comando User y sus parametros necesarios.
+   @param sock: Puerto en el que se encuentra el usuario.
+ */
+void user(char *string, int sock);
+/**
+   @brief doCommand.
+
+   Identifica el commando correcto
+   @param string: Cadena que contiene el comando a identificar.
+   @param sock: Puerto en el que se encuentra el usuario.
+ */
 void doCommand(char *string, int sock);

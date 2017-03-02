@@ -1,44 +1,6 @@
 #include "../includes/commands.h"
 
 char userNick[100];
-long nchannels = 0;
-
-HostNameIp *hostIp(int sock) {
-        int err;
-        struct sockaddr_in addr;
-        struct hostent *he;
-        socklen_t addr_len = sizeof(addr);
-        HostNameIp *hi = NULL;
-        char hbuf[1024], sbuf[20];
-
-        hi = (HostNameIp *)malloc(sizeof(HostNameIp));
-        if (hi == NULL)
-                return NULL;
-
-        err = getpeername(sock, (struct sockaddr *)&addr, &addr_len);
-        if (err != 0)
-                return NULL;
-
-        hi->ip = inet_ntoa(addr.sin_addr);
-        syslog(LOG_INFO, "%s\n", hi->ip);
-
-        struct in_addr ipv4addr;
-        inet_pton(AF_INET, "74.125.196.105", &ipv4addr); // Google
-        he = gethostbyaddr(&ipv4addr, sizeof ipv4addr, AF_INET);
-
-        // he = gethostbyaddr(&addr.sin_addr, addr_len, AF_INET);
-        if (he == NULL || h_errno == HOST_NOT_FOUND) {
-
-                if (getnameinfo((struct sockaddr *)&addr, addr_len, hbuf, sizeof(hbuf),
-                                sbuf, sizeof(sbuf), NI_NUMERICHOST | NI_NUMERICSERV) == 0)
-
-                        syslog(LOG_INFO, "host=%s, serv=%s\n", hbuf, sbuf);
-                hi->name = hbuf;
-                return hi;
-        }
-        hi->name = he->h_name;
-        return hi;
-}
 
 
 void nick(char *string, int sock) {
@@ -100,35 +62,43 @@ void user(char *string, int sock) {
                 exit(EXIT_FAILURE);
 
         } else if (parser == IRC_OK) {
-                if(IRCTADUser_New(user, userNick, realname, NULL, hi->name,hi->ip, sock) == IRC_OK) {
+              /*  if(IRCTADUser_New(user, userNick, realname, NULL, hi->name,hi->ip, sock) == IRC_OK) {
                         syslog(LOG_INFO, "%s ,%s",user,userNick);
                 }else{
                         syslog(LOG_INFO, "Usuario no creado");
-                }
+                }*/
         }
+        syslog(LOG_INFO, "user = %ld", user);
+        syslog(LOG_INFO, "nick = %s", userNick);
+        syslog(LOG_INFO, "realname = %s", realname);
+        syslog(LOG_INFO, "ip = %s", hi->ip);
+        syslog(LOG_INFO, "host = %s", hi->name);
+
         IRCMsg_RplWelcome(&command, "REDES2", userNick, user, realname, modehost);
-        send(sock, command, strlen(command), 0);
+        //  send(sock, command, strlen(command), 0);
+        syslog(LOG_INFO, "command");
         IRCMsg_RplYourHost(&command, "REDES2", userNick, serverother, "1.0");
-        send(sock, command, strlen(command), 0);
-
+        //  send(sock, command, strlen(command), 0);
+        syslog(LOG_INFO, "command");
         IRCMsg_RplCreated(&command, "REDES2", userNick);
-        send(sock, command, strlen(command), 0);
-
+        //  send(sock, command, strlen(command), 0);
+        syslog(LOG_INFO, "command");
         IRCMsg_RplLuserClient(&command, "REDES2", userNick, getNumeroClientes(), 0, 1);
-        send(sock, command, strlen(command), 0);
-
+        //  send(sock, command, strlen(command), 0);
+        syslog(LOG_INFO, "command");
+        IRCTADChan_GetList (&list, &num, NULL);
         IRCMsg_RplLuserChannels(&command, "REDES2", userNick, nchannels);
-        send(sock, command, strlen(command), 0);
-
+        //send(sock, command, strlen(command), 0);
+        syslog(LOG_INFO, "command");
         IRCMsg_RplMotdStart(&command, "REDES2", userNick, serverother);
-        send(sock, command, strlen(command), 0);
-
+        //send(sock, command, strlen(command), 0);
+        syslog(LOG_INFO, "command");
         IRCMsg_RplMotd(&command, "REDES2", userNick, "****BIENVENIDO****\n");
-        send(sock, command, strlen(command), 0);
-
+        //send(sock, command, strlen(command), 0);
+        syslog(LOG_INFO, "command");
         IRCMsg_RplEndOfMotd(&command, "REDES2", userNick);
-        send(sock, command, strlen(command), 0);
-
+        //send(sock, command, strlen(command), 0);
+        syslog(LOG_INFO, "command");
         free(prefix);
         free(user);
         free(modehost);
