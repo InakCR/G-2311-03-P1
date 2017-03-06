@@ -26,7 +26,7 @@ void nick(char *string, int sock) {
     exit(EXIT_FAILURE);
   } else if (parser == IRC_OK) {
 
-    if (UTestNick(nick)) {
+    if (UTestNick(nick)) { // MAndar mensaje
       syslog(LOG_INFO, " Ya existe el nick: %s", nick);
     } else {
       syslog(LOG_INFO, " No existe el nick: %s", nick);
@@ -49,7 +49,7 @@ void user(char *string, int sock) {
   parser =
       IRCParse_User(string, &prefix, &user, &modehost, &serverother, &realname);
 
-  if (parser < 0)
+  if (parser < 0) // Controlar este error con una MACRO
     return;
   syslog(LOG_INFO, "ip = %s", hi->ip);
   syslog(LOG_INFO, "host = %s", hi->name);
@@ -63,12 +63,12 @@ void user(char *string, int sock) {
     exit(EXIT_FAILURE);
 
   } else if (parser == IRC_OK) {
-    /*  if(IRCTADUser_New(user, userNick, realname, NULL, hi->name,hi->ip, sock)
-       == IRC_OK) {
-              syslog(LOG_INFO, "%s ,%s",user,userNick);
-       }else{
-              syslog(LOG_INFO, "Usuario no creado");
-       }*/
+    if (IRCTADUser_New(user, userNick, realname, NULL, hi->name, hi->ip,
+                       sock) == IRC_OK) {
+      syslog(LOG_INFO, "%s ,%s", user, userNick);
+    } else {
+      syslog(LOG_INFO, "Usuario no creado");
+    }
   }
   syslog(LOG_INFO, "user = %s", user);
   syslog(LOG_INFO, "nick = %s", userNick);
