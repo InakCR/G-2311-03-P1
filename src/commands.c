@@ -3,21 +3,26 @@
 char *userNick;
 
 void ping(char *string, int sock) {
-  char *prefix, *server, *server2, *msg, *command;
-
+  char *prefix, *server, *server2, *msg = NULL, *command, *receiver;
+  receiver = (char *)malloc(sizeof(5));
+  strcpy(receiver, "PONG");
   if (IRCParse_Ping(string, &prefix, &server, &server2, &msg) == IRC_OK) {
-
-    IRCMsg_Pong(&command, "REDES2", server, server2,
-                msg); // MIRAR ULT PARAMETRO
-    send(sock, command, strlen(command), 0);
-    syslog(LOG_INFO, "Parse Ping - PINGyPONG");
+    if (msg != NULL) {
+      free(receiver);
+      receiver = msg;
+    }
+    if (IRCMsg_Pong(&command, "REDES2", server, server2, receiver) != IRC_OK) {
+      syslog(LOG_ERR, "Error PONG");
+    } else {
+      send(sock, command, strlen(command), 0);
+    }
     free(command);
   }
 
   free(prefix);
   free(server);
   free(server2);
-  free(msg);
+  free(receiver);
 }
 void join(char *string, int sock) {
   char *prefix, *msg, *channel, *key, *command, *topic;
@@ -142,11 +147,6 @@ void user(char *string, int sock) {
       syslog(LOG_INFO, "Usuario no creado");
     }
   }
-  syslog(LOG_INFO, "user = %s", user);
-  syslog(LOG_INFO, "nick = %s", userNick);
-  syslog(LOG_INFO, "realname = %s", realname);
-  syslog(LOG_INFO, "ip = %s", hi->ip);
-  syslog(LOG_INFO, "host = %s", hi->name);
 
   IRCMsg_RplWelcome(&command, "REDES2", userNick, user, realname, modehost);
   send(sock, command, strlen(command), 0);
