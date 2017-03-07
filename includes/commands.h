@@ -40,3 +40,4 @@ Descripcion: Devuelve el número de canales activos actualmente en el servidor.
 @return int: num.
 */
 long getNumeroCanales();
+char *getUsuariosCanal();

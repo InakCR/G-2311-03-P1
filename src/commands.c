@@ -1,7 +1,78 @@
 #include "../includes/commands.h"
 
-char userNick[100];
+char *userNick;
 
+void ping(char *string, int sock) {
+  char *prefix, *server, *server2, *msg, *command;
+
+  if (IRCParse_Ping(string, &prefix, &server, &server2, &msg) == IRC_OK) {
+
+    IRCMsg_Pong(&command, "REDES2", server, server2,
+                msg); // MIRAR ULT PARAMETRO
+    send(sock, command, strlen(command), 0);
+    syslog(LOG_INFO, "Parse Ping - PINGyPONG");
+    free(command);
+  }
+
+  free(prefix);
+  free(server);
+  free(server2);
+  free(msg);
+}
+void join(char *string, int sock) {
+  char *prefix, *msg, *channel, *key, *command, *topic;
+  long parser;
+  parser = IRCParse_Join(string, &prefix, &channel, &key, &msg);
+  if (parser == IRCERR_NOSTRING || parser == IRCERR_ERRONEUSCOMMAND) {
+    free(prefix);
+    free(msg);
+    free(channel);
+    free(key);
+    syslog(LOG_ERR, "***Error No existe una cadena para usar como User.");
+    return;
+  } else if (parser == IRC_OK) {
+
+    parser = IRCTADChan_New(channel, "+", userNick, key, MAX_CLIENTS,
+                            "Nueva creacion");
+    parser = IRCTAD_Join(channel, userNick, NULL, key);
+    // Usermoden o va haber administradores
+    if (parser == IRC_OK) {
+      parser = IRCMsg_Join(&command, "REDES2", NULL, NULL, channel);
+      if (parser == IRC_OK) {
+        send(sock, command, strlen(command), 0);
+        syslog(LOG_INFO, "%s", command);
+
+        IRCTAD_GetTopic(channel, &topic);
+      }
+      parser = IRCMsg_RplTopic(&command, "REDES2", userNick, channel, topic);
+      if (parser == IRC_OK) {
+        send(sock, command, strlen(command), 0);
+        syslog(LOG_INFO, "%s", command);
+      }
+
+      parser = IRCMsg_RplNamReply(&command, "REDES2", userNick, "=", channel,
+                                  getUsuariosCanal());
+      if (parser == IRC_OK) {
+        send(sock, command, strlen(command), 0);
+        syslog(LOG_INFO, "%s", command);
+      }
+      parser = IRCMsg_RplEndOfNames(&command, "REDES2", userNick, channel);
+      if (parser == IRC_OK) {
+        send(sock, command, strlen(command), 0);
+        syslog(LOG_INFO, "%s", command);
+      }
+      free(command);
+    }
+
+  } else {
+    syslog(LOG_ERR, "***Fallo al crear el canal");
+    // Puede devolcer muchos errores
+  }
+  free(prefix);
+  free(msg);
+  free(channel);
+  free(key);
+}
 void nick(char *string, int sock) {
   char *prefix, *nick, *msg;
   long parser;
@@ -15,15 +86,15 @@ void nick(char *string, int sock) {
   syslog(LOG_INFO, "nick = %s", nick);
   syslog(LOG_INFO, "msg = %s", msg);
 
+  userNick = (char *)malloc(sizeof(strlen(nick) + 1));
   strcpy(userNick, nick);
 
   if (parser == IRCERR_NOSTRING) {
     free(prefix);
     free(nick);
     free(msg);
-    syslog(LOG_ERR,
-           "***Error {nick()} No existe una cadena para usar como Nick.");
-    exit(EXIT_FAILURE);
+    syslog(LOG_ERR, "***Error No existe una cadena para usar como Nick.");
+    return;
   } else if (parser == IRC_OK) {
 
     if (UTestNick(nick)) { // MAndar mensaje
@@ -60,7 +131,8 @@ void user(char *string, int sock) {
     free(modehost);
     free(serverother);
     free(realname);
-    exit(EXIT_FAILURE);
+    syslog(LOG_ERR, "***Error No existe una cadena para usar como User.");
+    return;
 
   } else if (parser == IRC_OK) {
     if (IRCTADUser_New(user, userNick, realname, NULL, hi->name, hi->ip,
@@ -124,6 +196,7 @@ void doCommand(char *string, int sock) {
     break;
   case PING:
     syslog(LOG_INFO, "PING");
+    ping(string, sock);
     break;
   case TOPIC:
     syslog(LOG_INFO, "TOPIC");
@@ -133,6 +206,7 @@ void doCommand(char *string, int sock) {
     break;
   case JOIN:
     syslog(LOG_INFO, "JOIN");
+    join(string, sock);
     break;
   case WHOIS:
     syslog(LOG_INFO, "WHO IS");
@@ -145,6 +219,12 @@ long getNumeroClientesActuales() {
   IRCTADUser_GetUserList(&nicklist, &nelements);
   IRCTADUser_FreeList(nicklist, nelements);
   return nelements;
+}
+char *getUsuariosCanal() {
+  long num = 0;
+  char **list;
+  IRCTADChan_GetList(&list, &num, NULL);
+  return *list;
 }
 long getNumeroCanales() {
   char **list = NULL;
