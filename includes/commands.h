@@ -18,6 +18,13 @@ void nick(char *string, int sock);
    @param sock: Puerto en el que se encuentra el usuario.
  */
 void user(char *string, int sock);
+void whois(char *string, int sock);
+void names(char *string, int sock);
+void part(char *string, int sock);
+void kick(char *string, int sock);
+void away(char *string, int sock);
+void quit(char *string, int sock);
+void motd(char *string, int sock);
 /**
    @brief doCommand.
 
@@ -40,4 +47,5 @@ Descripcion: Devuelve el número de canales activos actualmente en el servidor.
 @return int: num.
 */
 long getNumeroCanales();
-char *getUsuariosCanal();
+char *getUsuariosCanal(char * channel);
+char **getListaCanales();

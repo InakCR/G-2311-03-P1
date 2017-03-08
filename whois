@@ -1,0 +1,36 @@
+<< whois
+>> :irc.eps.net 431 degas :No nickname given
+<< WHO #redes2
+>> :irc.eps.net 352 degas #redes2 ~Ina cliente021.wlan.uam.es irc.eps.net degas H :0 Inaki
+>> :irc.eps.net 352 degas #redes2 ~jojo cliente139.wlan.uam.es irc.eps.net Mambru H :0 Mambru@War
+>> :irc.eps.net 352 degas #redes2 ~Hanzo cliente095.wlan.uam.es irc.eps.net Hanzo H :0 Ryuga waka teki o kurau
+>> :irc.eps.net 352 degas #redes2 ~Barragan cliente204.wlan.uam.es irc.eps.net Barraduck H :0 realname
+>> :irc.eps.net 352 degas #redes2 ~Oscar cliente033.wlan.uam.es irc.eps.net Yyandrakk H :0 Oscar
+>> :irc.eps.net 352 degas #redes2 ~logbot 190.red-79-151-107.dynamicip.rima-tde.net irc.eps.net logbot H :0 logbot
+>> :irc.eps.net 352 degas #redes2 ~ykbot 151.182.196.102 irc.eps.net yktgbot H :0 Yyandrakk Telegram IRC Bot
+>> :irc.eps.net 352 degas #redes2 ~raedot metis.ii.uam.es irc.eps.net raedot H :0 raedot
+>> :irc.eps.net 315 degas #redes2 :End of WHO list
+<< PING LAG1488939627964
+>> :irc.eps.net PONG irc.eps.net :LAG1488939627964
+<< whois degas
+>> :irc.eps.net 311 degas degas ~Ina cliente021.wlan.uam.es * :Inaki
+>> :irc.eps.net 312 degas degas irc.eps.net :Servidor de prueba para los alumnos de Arquitectura de Redes 2
+>> :irc.eps.net 319 degas degas :#redes2
+>> :irc.eps.net 378 degas degas :is connecting from *@cliente021.wlan.uam.es 150.244.199.21
+>> :irc.eps.net 379 degas degas :is using modes +
+>> :irc.eps.net 317 degas degas 61 1488986117 :seconds idle, signon time
+>> :irc.eps.net 318 degas degas :End of WHOIS list
+<< PING LAG1488939658009
+>> :irc.eps.net PONG irc.eps.net :LAG1488939658009
+<< WHO #redes2
+>> :irc.eps.net 352 degas #redes2 ~Ina cliente021.wlan.uam.es irc.eps.net degas H :0 Inaki
+>> :irc.eps.net 352 degas #redes2 ~jojo cliente139.wlan.uam.es irc.eps.net Mambru H :0 Mambru@War
+>> :irc.eps.net 352 degas #redes2 ~Hanzo cliente095.wlan.uam.es irc.eps.net Hanzo H :0 Ryuga waka teki o kurau
+>> :irc.eps.net 352 degas #redes2 ~Barragan cliente204.wlan.uam.es irc.eps.net Barraduck H :0 realname
+>> :irc.eps.net 352 degas #redes2 ~Oscar cliente033.wlan.uam.es irc.eps.net Yyandrakk H :0 Oscar
+>> :irc.eps.net 352 degas #redes2 ~logbot 190.red-79-151-107.dynamicip.rima-tde.net irc.eps.net logbot H :0 logbot
+>> :irc.eps.net 352 degas #redes2 ~ykbot 151.182.196.102 irc.eps.net yktgbot H :0 Yyandrakk Telegram IRC Bot
+>> :irc.eps.net 352 degas #redes2 ~raedot metis.ii.uam.es irc.eps.net raedot H :0 raedot
+>> :irc.eps.net 315 degas #redes2 :End of WHO list
+<< PING LAG1488939688054
+>> :irc.eps.net PONG irc.eps.net :LAG1488939688054
