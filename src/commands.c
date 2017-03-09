@@ -36,7 +36,7 @@ void join(char *string, int sock) {
     parser = IRCTAD_Join(channel, userNick, NULL, key);
     // Usermoden o va haber administradores
     if (parser == IRC_OK) {
-      parser = IRCMsg_Join(&command, prefix, NULL, NULL, channel);
+      parser = IRCMsg_Join(&command, userNick, NULL, NULL, channel);
       if (parser == IRC_OK) {
         send(sock, command, strlen(command), 0);
         syslog(LOG_INFO, "%s 1", command);
@@ -216,6 +216,23 @@ void list(char *string, int sock) {
   free(command);
   free(target);
 }
+void who(char *string, int sock) {
+  char *prefix, *target, *mask, *oppar, *command, *list;
+  long num = 0;
+  if (IRCParse_Who(string, &prefix, &mask, &oppar) == IRC_OK) {
+
+    if (IRCTAD_ListNicksOnChannel(mask, &list, &num) == IRC_OK) {
+      if (num > 0) {
+        // 319
+        IRCMsg_RplWhoIsChannels(&command, "REDES2", userNick, mask, list);
+
+        send(sock, command, strlen(command), 0);
+        syslog(LOG_INFO, "%s", command);
+      }
+      syslog(LOG_INFO, "%ld", num);
+    }
+  }
+}
 void whois(char *string, int sock) {
   char *prefix, *target, *maskarray, *command;
   char *user = NULL, *real = NULL, *host = NULL, *IP = NULL, *away = NULL;
@@ -277,8 +294,33 @@ void whois(char *string, int sock) {
   }
 }
 
-void names(char *string, int sock) {}
-void part(char *string, int sock) {}
+void names(char *string, int sock) {
+  char *prefix, *channel, *key, *command, *topic, **list, *target;
+  long parser;
+  int i;
+  if (IRCParse_Names(string, &prefix, &channel, &target) == IRC_OK) {
+    if (channel != NULL) {
+      //  IRCMsg_RplNamReply(&command, char *prefix, char *nick, char
+      //  *type,channel, char *namelist)
+    }
+    //  IRCMsg_RplEndOfNames (&command,"REDES2",)
+  }
+  syslog(LOG_INFO, "%s channel,%s prefix, %s target", channel, prefix, target);
+}
+void part(char *string, int sock) {
+  char *prefix, *channel, *key, *command, *topic, **list, *msg;
+  long parser;
+  int i;
+  if (IRCParse_Part(string, &prefix, &channel, &msg) == IRC_OK) {
+    parser = IRCTAD_Part(channel, userNick);
+    if (parser == IRC_OK) {
+      parser = IRCMsg_Part(&command, userNick, channel, msg);
+      send(sock, command, strlen(command), 0);
+      syslog(LOG_INFO, "%s 1", command);
+    }
+    syslog(LOG_INFO, "%s channel,%s prefix, %s target", channel, prefix, msg);
+  }
+}
 void kick(char *string, int sock) {}
 void away(char *string, int sock) {}
 void quit(char *string, int sock) {}
@@ -316,6 +358,10 @@ void doCommand(char *string, int sock) {
   case WHOIS:
     syslog(LOG_INFO, "WHO IS");
     whois(string, sock);
+    break;
+  case WHO:
+    syslog(LOG_INFO, "WHO");
+    who(string, sock);
     break;
   case NAMES:
     syslog(LOG_INFO, "NAMES");
