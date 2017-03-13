@@ -37,7 +37,7 @@ $(OBJ)lib.o: $(SRCLIB)lib.c
 	$(CC) $(CCFLAGS) -o $@ -c $^
 
 clean:
-		rm -f lib/lib.a obj/*.o includes/*.gch $(EXEC)
+		rm -f lib/lib.a obj/*.o includes/*.gch $(GROUP).tar.gz $(EXEC)
 dox:
 		doxygen Doxyfile
 

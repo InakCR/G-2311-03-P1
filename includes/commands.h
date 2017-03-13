@@ -25,6 +25,8 @@ void kick(char *string, int sock);
 void away(char *string, int sock);
 void quit(char *string, int sock);
 void motd(char *string, int sock);
+void topic(char *string, int sock);
+void msg(char *string, int sock);
 /**
    @brief doCommand.
 
@@ -49,3 +51,4 @@ Descripcion: Devuelve el número de canales activos actualmente en el servidor.
 long getNumeroCanales();
 char *getUsuariosCanal(char * channel);
 char **getListaCanales();
+int getsocket(char *nick);

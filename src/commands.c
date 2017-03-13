@@ -75,7 +75,7 @@ void join(char *string, int sock) {
 void nick(char *string, int sock) {
   char *prefix, *nick, *msg;
   long parser;
-
+  // Changes your online nick name. Alerts others to the change of your nick
   parser = IRCParse_Nick(string, &prefix, &nick, &msg);
   if (parser < 0)
     return;
@@ -180,7 +180,7 @@ void list(char *string, int sock) {
   if (IRCParse_List(string, &prefix, &channel, &target) == IRC_OK) {
     // Miramos que haya canales
     if (getNumeroCanales() > 0) {
-      // Si nos epecifican el canal
+      // Si nos epecifican el canal O MASCARA
       if (channel != NULL) {
         syslog(LOG_INFO, "Canal encontrado");
         IRCTAD_GetTopic(channel, &topic);
@@ -250,25 +250,27 @@ void whois(char *string, int sock) {
                              &creationTS, &actionTS, &away) == IRC_OK) {
       }
       // 311
-      IRCMsg_RplWhoIsUser(&command, "REDES2", userNick, maskarray, user, host,
-                          real);
-      send(sock, command, strlen(command), 0);
-      syslog(LOG_INFO, "%s", command);
-      // 312
-      IRCMsg_RplWhoIsServer(&command, "REDES2", userNick, maskarray, "REDES2",
-                            "No OnE");
-      send(sock, command, strlen(command), 0);
-      syslog(LOG_INFO, "%s", command);
-      // 313
-      IRCMsg_RplWhoIsOperator(&command, "REDES2", userNick, maskarray);
-      send(sock, command, strlen(command), 0);
-      syslog(LOG_INFO, "%s", command);
+      // IRCMsg_RplWhoIsUser(&command, "REDES2", userNick, maskarray, user,
+      // host,
+      //                     real);
+      // send(sock, command, strlen(command), 0);
+      // syslog(LOG_INFO, "%s", command);
+      // // 312
+      // IRCMsg_RplWhoIsServer(&command, "REDES2", userNick, maskarray,
+      // "REDES2",
+      //                       "No OnE");
+      // send(sock, command, strlen(command), 0);
+      // syslog(LOG_INFO, "%s", command);
+      // // 313
+      // IRCMsg_RplWhoIsOperator(&command, "REDES2", userNick, maskarray);
+      // send(sock, command, strlen(command), 0);
+      // syslog(LOG_INFO, "%s", command);
 
       if (IRCTAD_ListChannelsOfUser(user, maskarray, &listChan, &num) ==
           IRC_OK) {
         if (num > 0) {
           // 319
-          IRCMsg_RplWhoIsChannels(&command, "REDES2", userNick, maskarray,
+          IRCMsg_RplWhoIsChannels(&command, "REDES2", userNick, userNick,
                                   listChan);
 
           send(sock, command, strlen(command), 0);
@@ -277,13 +279,13 @@ void whois(char *string, int sock) {
         syslog(LOG_INFO, "%ld", num);
       }
       // 317
-      IRCMsg_RplWhoIsIdle(&command, "REDES2", userNick, maskarray,
-                          (int)actionTS, "seconds idle");
-      send(sock, command, strlen(command), 0);
-      syslog(LOG_INFO, "%s", command);
+      // IRCMsg_RplWhoIsIdle(&command, "REDES2", userNick, maskarray,
+      //                     (int)actionTS, "seconds idle");
+      // send(sock, command, strlen(command), 0);
+      // syslog(LOG_INFO, "%s", command);
 
       // 318
-      IRCMsg_RplEndOfWhoIs(&command, "REDES2", userNick, maskarray);
+      IRCMsg_RplEndOfWhoIs(&command, "REDES2", userNick, userNick);
       send(sock, command, strlen(command), 0);
       syslog(LOG_INFO, "%s", command);
     } else {
@@ -295,15 +297,20 @@ void whois(char *string, int sock) {
 }
 
 void names(char *string, int sock) {
-  char *prefix, *channel, *key, *command, *topic, **list, *target;
-  long parser;
-  int i;
+  char *prefix, *channel, *key, *command, *topic, *list, *target;
+  long parser, num;
+
   if (IRCParse_Names(string, &prefix, &channel, &target) == IRC_OK) {
-    if (channel != NULL) {
-      //  IRCMsg_RplNamReply(&command, char *prefix, char *nick, char
-      //  *type,channel, char *namelist)
+    if (IRCTAD_ListNicksOnChannel(channel, &list, &num) == IRC_OK) {
+      if (num > 0) {
+        IRCMsg_RplNamReply(&command, "REDES2", userNick, "=", channel, list);
+        send(sock, command, strlen(command), 0);
+        syslog(LOG_INFO, "%s", command);
+      }
     }
-    //  IRCMsg_RplEndOfNames (&command,"REDES2",)
+    IRCMsg_RplEndOfNames(&command, "REDES2", userNick, channel);
+    send(sock, command, strlen(command), 0);
+    syslog(LOG_INFO, "%s", command);
   }
   syslog(LOG_INFO, "%s channel,%s prefix, %s target", channel, prefix, target);
 }
@@ -311,6 +318,10 @@ void part(char *string, int sock) {
   char *prefix, *channel, *key, *command, *topic, **list, *msg;
   long parser;
   int i;
+
+  // /PART channel msg
+  //
+  // Leave channel. If no channel given then the channel is the current ones.
   if (IRCParse_Part(string, &prefix, &channel, &msg) == IRC_OK) {
     parser = IRCTAD_Part(channel, userNick);
     if (parser == IRC_OK) {
@@ -323,8 +334,43 @@ void part(char *string, int sock) {
 }
 void kick(char *string, int sock) {}
 void away(char *string, int sock) {}
-void quit(char *string, int sock) {}
+void quit(char *string, int sock) {
+  //   /QUIT reason
+  //
+  // Causes you to disconnect from the server.
+  // If you include a reason, it will be displayed on all channels as you quit
+}
 void motd(char *string, int sock) {}
+void topic(char *string, int sock) {
+  //   /TOPIC topic
+  //
+  // Topic <channel> will display the current topic of the given channel.
+  //  Topic <channel> <topic> will change the topic of the given channel.
+}
+void msg(char *string, int sock) {
+  char *command, *nickorchannel, *msg, **arraylist;
+  long nUsers;
+  if (IRCUserParse_Msg(string, &nickorchannel, &msg) == IRC_OK) {
+    if (IRCTADUser_Test(0, NULL, nickorchannel) == IRC_OK) {
+      if (IRCMsg_Privmsg(&command, "REDES2", nickorchannel, msg) == IRC_OK)
+        send(getsocket(nickorchannel), command, strlen(command), 0);
+    } else if (IRCTAD_TestUserOnChannel(nickorchannel, userNick) == IRC_OK) {
+      // if (IRCTAD_ListNicksOnChannelArray(nickorchannel, &arraylist, &nUsers)
+      // ==
+      //     IRC_OK){
+      //       for(i=0;i<nUsers;i++) {
+      //
+      //       }
+      //     }
+      if (IRCMsg_Privmsg(&command, "REDES2", nickorchannel, msg) == IRC_OK)
+        send(sock, command, strlen(command), 0);
+    } else {
+      // Ni exite Nick no channel
+    }
+  }
+  free(nickorchannel);
+  free(msg);
+}
 void doCommand(char *string, int sock) {
 
   if (string == NULL)
@@ -387,6 +433,10 @@ void doCommand(char *string, int sock) {
     syslog(LOG_INFO, "MOTD");
     motd(string, sock);
     break;
+  case PRIVMSG:
+    syslog(LOG_INFO, "MSG");
+    msg(string, sock);
+    break;
   }
 }
 long getNumeroClientesActuales() {
@@ -414,4 +464,15 @@ long getNumeroCanales() {
   IRCTADChan_GetList(&list, &num, NULL);
   IRCTADUser_FreeList(list, num);
   return num;
+}
+int getsocket(char *nick) {
+  long id, creationTS, actionTS;
+  char *user, *real, *host, *IP, *away;
+  int socket;
+
+  if (IRCTADUser_GetData(&id, &user, &nick, &real, &host, &IP, &socket,
+                         &creationTS, &actionTS, &away) == IRC_OK) {
+    return socket;
+  }
+  return 0;
 }
