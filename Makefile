@@ -5,6 +5,7 @@ MAN = ./man/
 OBJ = ./obj/
 SRCLIB = ./srclib/
 SRC = ./src/
+DIRS = obj lib
 GROUP = G-2311-03-P1
 #Compilador
 CC = gcc -pthread
@@ -15,7 +16,10 @@ CCLAGS = -ggdb -Wall
 EXEC = servidor
 SOURCE_FILES =
 
-all: $(EXEC)
+all: dirs $(EXEC)
+
+dirs:
+	mkdir -p $(DIRS)
 
 libreria: $(LIB)lib.a
 
