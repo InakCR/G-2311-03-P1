@@ -49,6 +49,9 @@ Descripcion: Devuelve el número de canales activos actualmente en el servidor.
 @return int: num.
 */
 long getNumeroCanales();
+int *getSocketsUsuarios();
+char **getNickUsuarios();
 char *getUsuariosCanal(char * channel);
 char **getListaCanales();
 int getsocket(char *nick);
+int setNick(char *nick);
