@@ -1,4 +1,5 @@
 #include "../includes/lib.h"
+#include <sys/time.h>
 
 /**
    @brief nick.
