@@ -484,12 +484,10 @@ void part(char *string, int sock, char *userNick) {
       //clientes del canal
 
       IRCTAD_ListNicksOnChannel(channel, &list, &nUsers);
-      syslog(LOG_INFO, "Numero de Usuarios en Canal: %ld", nUsers);
 
       for(i = 0; i < nUsers; i++){
-        syslog(LOG_INFO, "Nick[%d]: %s", i, &list[i]);
         socket = getsocket(&list[i]);
-        syslog(LOG_INFO, "Socket: %d", socket);
+        send(socket, command, strlen(command), 0);
       }
 
     }
@@ -696,7 +694,7 @@ int getsocket(char *nick) {
 
   return -1;
 }
-int setNick(char *nick, char *userNick) {
+void setNick(char *nick, char *userNick) {
   long id = 0, creationTS = 0, actionTS = 0;
   char *user = NULL, *real = NULL, *host = NULL, *IP = NULL, *away = NULL;
   int socket = 0;
@@ -708,6 +706,5 @@ int setNick(char *nick, char *userNick) {
       userNick = (char *)malloc(sizeof(strlen(nick) + 1));
       strcpy(userNick, nick);
     }
-  return IRC_OK;
 }
 // LIBERAR ESTRUCTURAS
