@@ -471,7 +471,6 @@ void part(char *string, int sock, char *userNick) {
     if (parser == IRC_OK) {
 
       //IRCMsg_Part() construye el comando de respuesta
-      //Devuelve parser, TODO que puede dar ERRROR
       parser = IRCMsg_Part(&command, userNick, channel, msg);
 
       //Elimina un usuario de la lista de usuarios de un canal
@@ -510,13 +509,77 @@ void part(char *string, int sock, char *userNick) {
       syslog(LOG_INFO, "***Error - %s", command);
     }
 
-    syslog(LOG_INFO, "PART CORRECTO: Canal: %s, Mensaje: %s", channel, msg);
+    syslog(LOG_INFO, "PART FIN: Canal: %s, Mensaje: %s", channel, msg);
+  }
+}
+
+
+// El operador del canal expulsa a un usuario, otro usuario, sin privilegios no
+// puede expulsar
+void kick(char *string, int sock, char *userNick) {
+
+  char *prefix, *channel, *msg, *user, *command, *list;
+  long parser, nUsers;
+  int i, socket;
+
+  //IRCParse_Kick() realiza el parseo del string
+  //Se pasa string de ella devuelve:
+  // prefix = (null) ???
+  // channel = el canal que se le pasa, si no obtiene el canal actual (auto)
+  // msg = el mensaje que indica el motivo del PART, default es Leaving
+  // user = usuario al que se hace kick
+  if(IRCParse_Kick (string, &prefix, &channel, &user, &msg) == IRC_OK){
+
+    //TODO Comprueba que el usuario tiene privilegios
+
+    parser = IRCTAD_KickUserFromChannel (channel, user);
+
+    // Expulsa al Usuario
+    if(parser == IRC_OK){
+
+      //IRCMsg_Kick() construye el comando de respuesta
+      parser = IRCMsg_Kick (&command, "REDES 2", channel, user, msg);
+
+      //Envía el comando de respuesta del servidor al socket
+      send(sock, command, strlen(command), 0);
+
+      //Envía un mesnaje de que el cliente ha abandonado el canal a todos los
+      //clientes del canal
+      IRCTAD_ListNicksOnChannel(channel, &list, &nUsers);
+
+      for(i = 0; i < nUsers; i++){
+        socket = getsocket(&list[i]);
+        send(socket, command, strlen(command), 0);
+      }
+
+    }
+    //No existe el usuario en el canal
+    else if(parser == IRCERR_NOVALIDUSER){
+      IRCMsg_ErrNotOnChannel (&command, "REDES2", userNick, user, channel);
+      send(sock, command, strlen(command), 0);
+      syslog(LOG_INFO, "***Error - %s", command);
+    }
+    //No existe el canal indicado
+    else if(parser == IRCERR_NOVALIDCHANNEL){
+      IRCMsg_ErrNoSuchChannel (&command, "REDES2", userNick, channel);
+      send(sock, command, strlen(command), 0);
+      syslog(LOG_INFO, "***Error - %s", command);
+    }
+    //No se puede eliminar el canal porque es permanente
+    else if(parser == IRCERR_UNDELETABLECHANNEL){
+      IRCMsg_ErrNoChanModes (&command, "REDES2", userNick, channel);
+      send(sock, command, strlen(command), 0);
+      syslog(LOG_INFO, "***Error - %s", command);
+    }
+
+    // TODO Comprobar user destino
+    syslog(LOG_INFO, "KICK FIN: Canal: %s, Mensaje: %s", channel, msg);
   }
 }
 
 
 
-void kick(char *string, int sock, char *userNick) {}
+
 void away(char *string, int sock, char *userNick) {}
 void quit(char *string, int sock, char *userNick) {
   //   /QUIT reason
