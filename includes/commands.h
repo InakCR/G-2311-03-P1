@@ -14,7 +14,8 @@
 /**
    @brief ping.
 
-   Descripcion:
+   Descripcion: Responde el servidor a una peticion de ping con un pong al
+    cliente
 
    @param string: Cadena que contiene el comando NICK y su informacion.
    @param sock: Puerto en el que se encuentra el usuario.
@@ -24,7 +25,8 @@ void ping(char *string, int sock, char *userNick);
 /**
    @brief join.
 
-   Descripcion:
+   Descripcion: Crea un nuevo canal y/o se une el usuario al canal, mostrando
+   la informacion del canal.
 
    @param string: Cadena que contiene el comando PING y su informacion.
    @param sock: Puerto en el que se encuentra el usuario.
