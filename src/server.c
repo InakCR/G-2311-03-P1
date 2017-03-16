@@ -59,12 +59,13 @@ int main(int argc, char *argv[]) {
 }
 void *deal_cliente(void *sock) {
   int socket;
+  char *userNick = NULL;
 
   socket = *((int *)(&sock));
 
   while (1) {
 
-    if (recibir(socket) == -1) {
+    if (recibir(socket, &userNick) == -1) {
       break;
     }
   }
@@ -73,7 +74,7 @@ void *deal_cliente(void *sock) {
 /*Función que recibe un comando del cliente y realiza la acción
    correspondiente
    Recibe el socket al que escuchar como argumento*/
-int recibir(int sock) {
+int recibir(int sock, char **userNick) {
 
   char command[BUFFER_SIZE] = "";
   char *pipe, *pipeCommand;
@@ -94,19 +95,19 @@ int recibir(int sock) {
 
     syslog(LOG_INFO, "Llega Bloque de Comandos:");
     syslog(LOG_INFO, "Comando nº%d", n_command++);
-    doCommand(pipeCommand, sock);
+    doCommand(pipeCommand, sock, userNick);
 
     while ((pipe = IRC_UnPipelineCommands(pipe, &pipeCommand)) != NULL) {
 
       syslog(LOG_INFO, "Comando nº%d", n_command++);
-      doCommand(pipeCommand, sock);
+      doCommand(pipeCommand, sock, userNick);
     }
 
     if (pipe == NULL) {
 
       bzero(command, BUFFER_SIZE);
       syslog(LOG_INFO, "Comando nº%d", n_command++);
-      doCommand(pipeCommand, sock);
+      doCommand(pipeCommand, sock, userNick);
     }
 
   } else {
@@ -118,7 +119,7 @@ int recibir(int sock) {
     } else {
 
       syslog(LOG_INFO, "Comando simple:");
-      doCommand(pipeCommand, sock);
+      doCommand(pipeCommand, sock, userNick);
     }
   }
 

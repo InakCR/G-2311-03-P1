@@ -88,10 +88,11 @@ void nick(char *string, int sock, char **userNick) {
   syslog(LOG_INFO, "VALOR DE userNick ANTES DE SER ACTUALIZADO => %s", *userNick);
 
   //userNickES VARIABLE GLOBAL POR TANTO SALVO AL PRINCIPIO SIEMPRE ES != NULL
-  if (userNick == NULL) {
+  /*if (*userNick == NULL) {*/
     *userNick = (char *)malloc(sizeof(strlen(nick) + 1));
     strcpy(*userNick, nick);
-  }
+    syslog(LOG_INFO, "userNick = %s || nick = %s", *userNick, nick);
+  /*}*/
 
   if (parser == IRCERR_NOSTRING) {
     free(prefix);
@@ -187,6 +188,7 @@ void user(char *string, int sock, char *userNick) {
 
   syslog(LOG_INFO, "ip = %s", hi->ip);
   syslog(LOG_INFO, "host = %s", hi->name);
+  syslog(LOG_INFO, "userNick = %s", userNick);
 
   if (parser == IRCERR_NOSTRING) {
     free(prefix);
@@ -423,6 +425,7 @@ void whois(char *string, int sock, char *userNick) {
   }
 }
 
+//TODO Controlar cuando solo se manda NAMES sin ningún argumento
 void names(char *string, int sock, char *userNick) {
   char *prefix, *channel, *key, *command, *topic, *list, *target;
   long parser, num;
@@ -448,9 +451,9 @@ void names(char *string, int sock, char *userNick) {
 // Si no se le pasa un canal entonces abandona el canal actual
 // Debe borrar de la lista de usuarios del canal al usuario
 void part(char *string, int sock, char *userNick) {
-  char *prefix, *channel, *key, *command, *topic, **list, *msg;
-  long parser;
-  int i;
+  char *prefix, *channel, *key, *command, *topic, *list, *msg;
+  long parser, nUsers;
+  int i, socket;
 
   //IRCParse_Part() realiza el parseo del string
   //Se pasa string de ella devuelve:
@@ -476,33 +479,40 @@ void part(char *string, int sock, char *userNick) {
 
       //Envía el comando de respuesta del servidor al socket
       send(sock, command, strlen(command), 0);
+
+      //Envía un mesnaje de que el cliente ha abandonado el canal a todos los
+      //clientes del canal
+
+      IRCTAD_ListNicksOnChannel(channel, &list, &nUsers);
+      syslog(LOG_INFO, "Numero de Usuarios en Canal: %ld", nUsers);
+
+      for(i = 0; i < nUsers; i++){
+        syslog(LOG_INFO, "Nick[%d]: %s", i, &list[i]);
+        socket = getsocket(&list[i]);
+        syslog(LOG_INFO, "Socket: %d", socket);
+      }
+
     }
     //No existe el usuario en el canal
     else if(parser == IRCERR_NOVALIDUSER){
       IRCMsg_ErrNotOnChannel (&command, "REDES2", userNick, userNick, channel);
       send(sock, command, strlen(command), 0);
-      syslog(LOG_INFO, "%s", command);
+      syslog(LOG_INFO, "***Error - %s", command);
     }
     //No existe el canal indicado
     else if(parser == IRCERR_NOVALIDCHANNEL){
       IRCMsg_ErrNoSuchChannel (&command, "REDES2", userNick, channel);
       send(sock, command, strlen(command), 0);
-      syslog(LOG_INFO, "%s", command);
+      syslog(LOG_INFO, "***Error - %s", command);
     }
     //No se puede eliminar el canal porque es permanente
     else if(parser == IRCERR_UNDELETABLECHANNEL){
       IRCMsg_ErrNoChanModes (&command, "REDES2", userNick, channel);
       send(sock, command, strlen(command), 0);
-      syslog(LOG_INFO, "%s", command);
+      syslog(LOG_INFO, "***Error - %s", command);
     }
 
-
-    //No existe el canal
-    //No estas en el canal
-    //usuario no existe
-
-
-    syslog(LOG_INFO, "%s channel,%s prefix, %s target", channel, prefix, msg);
+    syslog(LOG_INFO, "PART CORRECTO: Canal: %s, Mensaje: %s", channel, msg);
   }
 }
 
@@ -548,9 +558,8 @@ void msg(char *string, int sock, char *userNick) {
   free(nickorchannel);
   free(msg);
 }
-void doCommand(char *string, int sock) {
+void doCommand(char *string, int sock, char **userNick) {
 
-  char *userNick = NULL;
 
   if (string == NULL)
     return;
@@ -559,62 +568,62 @@ void doCommand(char *string, int sock) {
 
   case NICK:
     syslog(LOG_INFO, "NICK");
-    nick(string, sock, &userNick);
+    nick(string, sock, userNick);
     break;
   case USER:
     syslog(LOG_INFO, "USER");
-    user(string, sock, userNick);
+    user(string, sock, *userNick);
     break;
   case PING:
     syslog(LOG_INFO, "PING");
-    ping(string, sock, userNick);
+    ping(string, sock, *userNick);
     break;
   case TOPIC:
     syslog(LOG_INFO, "TOPIC");
     break;
   case LIST:
     syslog(LOG_INFO, "LIST");
-    list(string, sock, userNick);
+    list(string, sock, *userNick);
     break;
   case JOIN:
     syslog(LOG_INFO, "JOIN");
-    join(string, sock, userNick);
+    join(string, sock, *userNick);
     break;
   case WHOIS:
     syslog(LOG_INFO, "WHO IS");
-    whois(string, sock, userNick);
+    whois(string, sock, *userNick);
     break;
   case WHO:
     syslog(LOG_INFO, "WHO");
-    who(string, sock, userNick);
+    who(string, sock, *userNick);
     break;
   case NAMES:
     syslog(LOG_INFO, "NAMES");
-    names(string, sock, userNick);
+    names(string, sock, *userNick);
     break;
   case PART:
     syslog(LOG_INFO, "PART");
-    part(string, sock, userNick);
+    part(string, sock, *userNick);
     break;
   case KICK:
     syslog(LOG_INFO, "KICK");
-    kick(string, sock, userNick);
+    kick(string, sock, *userNick);
     break;
   case AWAY:
     syslog(LOG_INFO, "AWAY");
-    away(string, sock, userNick);
+    away(string, sock, *userNick);
     break;
   case QUIT:
     syslog(LOG_INFO, "QUIT");
-    quit(string, sock, userNick);
+    quit(string, sock, *userNick);
     break;
   case MOTD:
     syslog(LOG_INFO, "MOTD");
-    motd(string, sock, userNick);
+    motd(string, sock, *userNick);
     break;
   case PRIVMSG:
     syslog(LOG_INFO, "MSG");
-    msg(string, sock, userNick);
+    msg(string, sock, *userNick);
     break;
   }
 }
