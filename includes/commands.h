@@ -1,3 +1,14 @@
+/**
+ * @brief Modulo de funciones para el reconocimiento y ejecucion
+ *  de comandos en el servidor IRC.
+ *
+ * @file commands.h
+ * @author Iñaki Cadalso <innaki.cadalso@estudiante.uam.es>,
+ * Enrique Aracil <enrique.aracil@estudiante.uam.es>
+ * Grupo 2311
+ * @version 1.0
+ * @date 13-02-2017
+ */
 #include "../includes/lib.h"
 #include <sys/time.h>
 /**
