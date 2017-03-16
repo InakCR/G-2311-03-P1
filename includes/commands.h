@@ -163,7 +163,7 @@ void msg(char *string, int sock, char *userNick);
    @param string: Cadena que contiene el comando a identificar.
    @param sock: Puerto en el que se encuentra el usuario.
  */
-void doCommand(char *string, int sock);
+void doCommand(char *string, int sock, char **userNick);
 /**
   @brief getNumeroClientesActuales.
 

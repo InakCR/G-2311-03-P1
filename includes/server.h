@@ -17,7 +17,7 @@ Descripcion: Recibe un comman do por parte del cliente y lo realiza ne el servid
 @param sock: socket del servidor.
 @return int: socket de conexion al cliente si todo fue correcto, EXIT_FAILURE en caso de error.
 */
-int recibir(int sock);
+int recibir(int sock, char** userNick);
 /**
 @brief getNumeroClientes.
 
