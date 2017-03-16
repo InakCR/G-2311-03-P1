@@ -1,8 +1,6 @@
 #include "../includes/commands.h"
 
-char *userNick = NULL;
-
-void ping(char *string, int sock) {
+void ping(char *string, int sock, char *userNick) {
   char *prefix, *server, *server2, *msg, *command;
   if (IRCParse_Ping(string, &prefix, &server, &server2, &msg) == IRC_OK) {
 
@@ -18,7 +16,7 @@ void ping(char *string, int sock) {
   free(server);
   free(server2);
 }
-void join(char *string, int sock) {
+void join(char *string, int sock, char *userNick) {
   char *prefix, *msg, *channel, *key, *command, *topic;
   long parser;
   parser = IRCParse_Join(string, &prefix, &channel, &key, &msg);
@@ -72,12 +70,13 @@ void join(char *string, int sock) {
   free(channel);
   free(key);
 }
-void nick(char *string, int sock) {
+void nick(char *string, int sock, char **userNick) {
   char *prefix, *nick, *msg, *command, **nicks;
   long parser, num;
   int *sockets, i;
 
   syslog(LOG_INFO, "Comienza Funcion NICK");
+  syslog(LOG_INFO, "%d", sock);
 
   // Changes your online nick name. Alerts others to the change of your nick
   parser = IRCParse_Nick(string, &prefix, &nick, &msg);
@@ -86,12 +85,12 @@ void nick(char *string, int sock) {
     return;
   }
 
-  syslog(LOG_INFO, "VALOR DE userNick ANTES DE SER ACTUALIZADO => %s", userNick);
+  syslog(LOG_INFO, "VALOR DE userNick ANTES DE SER ACTUALIZADO => %s", *userNick);
 
   //userNickES VARIABLE GLOBAL POR TANTO SALVO AL PRINCIPIO SIEMPRE ES != NULL
   if (userNick == NULL) {
-    userNick = (char *)malloc(sizeof(strlen(nick) + 1));
-    strcpy(userNick, nick);
+    *userNick = (char *)malloc(sizeof(strlen(nick) + 1));
+    strcpy(*userNick, nick);
   }
 
   if (parser == IRCERR_NOSTRING) {
@@ -120,7 +119,7 @@ void nick(char *string, int sock) {
         nicks = getNickUsuarios();
         int s = getsocket(nicks[0]);
 
-        if (setNick(nick) == IRC_OK) {
+        if (setNick(nick, userNick) == IRC_OK) {
 
           syslog(LOG_INFO, "setNick Dentro");
 
@@ -165,14 +164,14 @@ void nick(char *string, int sock) {
       syslog(LOG_INFO, "Nick nº%d -> %s", i, nicklist[i]);
     }
 
-    syslog(LOG_INFO, "Nick pasado correctamente como %s.", userNick);
+    syslog(LOG_INFO, "Nick pasado correctamente como %s.", *userNick);
     free(prefix);
     free(nick);
     free(msg);
   }
 }
 
-void user(char *string, int sock) {
+void user(char *string, int sock, char *userNick) {
   char *prefix, *msg, *user, *modehost, *serverother, *realname, *command;
   long parser;
   struct timeval tv;
@@ -303,7 +302,7 @@ void user(char *string, int sock) {
   free(serverother);
   free(realname);
 }
-void list(char *string, int sock) {
+void list(char *string, int sock, char *userNick) {
   char *prefix, *channel, *key, *command, *topic, **list, *target;
   long parser;
   int i;
@@ -346,7 +345,7 @@ void list(char *string, int sock) {
   free(command);
   free(target);
 }
-void who(char *string, int sock) {
+void who(char *string, int sock, char *userNick) {
   char *prefix, *target, *mask, *oppar, *command, *list;
   long num = 0;
   if (IRCParse_Who(string, &prefix, &mask, &oppar) == IRC_OK) {
@@ -363,7 +362,7 @@ void who(char *string, int sock) {
     }
   }
 }
-void whois(char *string, int sock) {
+void whois(char *string, int sock, char *userNick) {
   char *prefix, *target, *maskarray, *command;
   char *user = NULL, *real = NULL, *host = NULL, *IP = NULL, *away = NULL;
   char *listChan;
@@ -424,7 +423,7 @@ void whois(char *string, int sock) {
   }
 }
 
-void names(char *string, int sock) {
+void names(char *string, int sock, char *userNick) {
   char *prefix, *channel, *key, *command, *topic, *list, *target;
   long parser, num;
 
@@ -448,7 +447,7 @@ void names(char *string, int sock) {
 // Abandona el canal.
 // Si no se le pasa un canal entonces abandona el canal actual
 // Debe borrar de la lista de usuarios del canal al usuario
-void part(char *string, int sock) {
+void part(char *string, int sock, char *userNick) {
   char *prefix, *channel, *key, *command, *topic, **list, *msg;
   long parser;
   int i;
@@ -509,22 +508,22 @@ void part(char *string, int sock) {
 
 
 
-void kick(char *string, int sock) {}
-void away(char *string, int sock) {}
-void quit(char *string, int sock) {
+void kick(char *string, int sock, char *userNick) {}
+void away(char *string, int sock, char *userNick) {}
+void quit(char *string, int sock, char *userNick) {
   //   /QUIT reason
   //
   // Causes you to disconnect from the server.
   // If you include a reason, it will be displayed on all channels as you quit
 }
-void motd(char *string, int sock) {}
-void topic(char *string, int sock) {
+void motd(char *string, int sock, char *userNick) {}
+void topic(char *string, int sock, char *userNick) {
   //   /TOPIC topic
   //
   // Topic <channel> will display the current topic of the given channel.
   //  Topic <channel> <topic> will change the topic of the given channel.
 }
-void msg(char *string, int sock) {
+void msg(char *string, int sock, char *userNick) {
   char *command, *nickorchannel, *msg, **arraylist;
   long nUsers;
   if (IRCUserParse_Msg(string, &nickorchannel, &msg) == IRC_OK) {
@@ -551,6 +550,8 @@ void msg(char *string, int sock) {
 }
 void doCommand(char *string, int sock) {
 
+  char *userNick = NULL;
+
   if (string == NULL)
     return;
 
@@ -558,62 +559,62 @@ void doCommand(char *string, int sock) {
 
   case NICK:
     syslog(LOG_INFO, "NICK");
-    nick(string, sock);
+    nick(string, sock, &userNick);
     break;
   case USER:
     syslog(LOG_INFO, "USER");
-    user(string, sock);
+    user(string, sock, userNick);
     break;
   case PING:
     syslog(LOG_INFO, "PING");
-    ping(string, sock);
+    ping(string, sock, userNick);
     break;
   case TOPIC:
     syslog(LOG_INFO, "TOPIC");
     break;
   case LIST:
     syslog(LOG_INFO, "LIST");
-    list(string, sock);
+    list(string, sock, userNick);
     break;
   case JOIN:
     syslog(LOG_INFO, "JOIN");
-    join(string, sock);
+    join(string, sock, userNick);
     break;
   case WHOIS:
     syslog(LOG_INFO, "WHO IS");
-    whois(string, sock);
+    whois(string, sock, userNick);
     break;
   case WHO:
     syslog(LOG_INFO, "WHO");
-    who(string, sock);
+    who(string, sock, userNick);
     break;
   case NAMES:
     syslog(LOG_INFO, "NAMES");
-    names(string, sock);
+    names(string, sock, userNick);
     break;
   case PART:
     syslog(LOG_INFO, "PART");
-    part(string, sock);
+    part(string, sock, userNick);
     break;
   case KICK:
     syslog(LOG_INFO, "KICK");
-    kick(string, sock);
+    kick(string, sock, userNick);
     break;
   case AWAY:
     syslog(LOG_INFO, "AWAY");
-    away(string, sock);
+    away(string, sock, userNick);
     break;
   case QUIT:
     syslog(LOG_INFO, "QUIT");
-    quit(string, sock);
+    quit(string, sock, userNick);
     break;
   case MOTD:
     syslog(LOG_INFO, "MOTD");
-    motd(string, sock);
+    motd(string, sock, userNick);
     break;
   case PRIVMSG:
     syslog(LOG_INFO, "MSG");
-    msg(string, sock);
+    msg(string, sock, userNick);
     break;
   }
 }
@@ -686,7 +687,7 @@ int getsocket(char *nick) {
 
   return -1;
 }
-int setNick(char *nick) {
+int setNick(char *nick, char *userNick) {
   long id = 0, creationTS = 0, actionTS = 0;
   char *user = NULL, *real = NULL, *host = NULL, *IP = NULL, *away = NULL;
   int socket = 0;

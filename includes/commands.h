@@ -8,7 +8,7 @@
    @param string: Cadena que contiene el comando NICK y el nick.
    @param sock: Puerto en el que se encuentra el usuario.
  */
-void nick(char *string, int sock);
+void nick(char *string, int sock, char **userNick);
 /**
    @brief doCommand.
 
@@ -18,16 +18,16 @@ void nick(char *string, int sock);
    @param string: Cadena que contiene el comando User y sus parametros necesarios.
    @param sock: Puerto en el que se encuentra el usuario.
  */
-void user(char *string, int sock);
-void whois(char *string, int sock);
-void names(char *string, int sock);
-void part(char *string, int sock);
-void kick(char *string, int sock);
-void away(char *string, int sock);
-void quit(char *string, int sock);
-void motd(char *string, int sock);
-void topic(char *string, int sock);
-void msg(char *string, int sock);
+void user(char *string, int sock, char *userNick);
+void whois(char *string, int sock, char *userNick);
+void names(char *string, int sock, char *userNick);
+void part(char *string, int sock, char *userNick);
+void kick(char *string, int sock, char *userNick);
+void away(char *string, int sock, char *userNick);
+void quit(char *string, int sock, char *userNick);
+void motd(char *string, int sock, char *userNick);
+void topic(char *string, int sock, char *userNick);
+void msg(char *string, int sock, char *userNick);
 /**
    @brief doCommand.
 
@@ -55,4 +55,4 @@ char **getNickUsuarios();
 char *getUsuariosCanal(char * channel);
 char **getListaCanales();
 int getsocket(char *nick);
-int setNick(char *nick);
+int setNick(char *nick, char *userNick);
