@@ -1,3 +1,14 @@
+/**
+ * @brief Libreria de funciones para la gestion de comandos Dentro
+ * del servidor IRC.
+ *
+ * @file commands.h
+ * @author Iñaki Cadalso <innaki.cadalso@estudiante.uam.es>,
+ * Enrique Aracil <enrique.aracil@estudiante.uam.es>
+ * Grupo 2311
+ * @version 1.0
+ * @date 13-02-2017
+ */
 #include "../includes/lib.h"
 #include <sys/time.h>
 /**
@@ -152,60 +163,60 @@ void msg(char *string, int sock, char *userNick);
  */
 void doCommand(char *string, int sock, char **userNick);
 /**
-  @brief getNumeroClientesActuales.
+   @brief getNumeroClientesActuales.
 
-  Descripcion: Devuelve el número de clintes conectados actualmente al servidor.
-  @return int: nClientes.
-*/
+   Descripcion: Devuelve el número de clintes conectados actualmente al servidor.
+   @return int: nClientes.
+ */
 long getNumeroClientesActuales();
 /**
-  @brief getNumeroCanales.
+   @brief getNumeroCanales.
 
-  Descripcion: Devuelve el número de canales activos actualmente en el servidor.
-  @return long: num, numero de canales en el servidor.
-*/
+   Descripcion: Devuelve el número de canales activos actualmente en el servidor.
+   @return long: num, numero de canales en el servidor.
+ */
 long getNumeroCanales();
 /**
-  @brief getSocketsUsuarios.
+   @brief getSocketsUsuarios.
 
-  Descripcion: Devuelve los sockets de todos los usuarios.
-  @return int*: array de int con los sockets de todos los usuarios.
-*/
+   Descripcion: Devuelve los sockets de todos los usuarios.
+   @return int*: array de int con los sockets de todos los usuarios.
+ */
 int *getSocketsUsuarios();
 /**
-  @brief getNickUsuarios.
+   @brief getNickUsuarios.
 
-  Descripcion: Devuelve los nicks de los usuarios registrados en el servidor.
-  @return char**: array de char con los nicks de usuarios.
-*/
+   Descripcion: Devuelve los nicks de los usuarios registrados en el servidor.
+   @return char**: array de char con los nicks de usuarios.
+ */
 char **getNickUsuarios();
 /**
-  @brief getUsuariosCanal.
+   @brief getUsuariosCanal.
 
-  Descripcion: Devuelve los nicks de los usuarios conectados a un canal.
-  @param channel: Nombre del canal a buscar.
-  @return char**: array de char con los nicks de usuarios.
-*/
+   Descripcion: Devuelve los nicks de los usuarios conectados a un canal.
+   @param channel: Nombre del canal a buscar.
+   @return char**: array de char con los nicks de usuarios.
+ */
 char *getUsuariosCanal(char * channel);
 /**
-  @brief getListaCanales.
+   @brief getListaCanales.
 
-  Descripcion: Devuelve la lista de canales registrados en el servidor.
-  @return char**: array de char con los nombres de los canales.
-*/
+   Descripcion: Devuelve la lista de canales registrados en el servidor.
+   @return char**: array de char con los nombres de los canales.
+ */
 char **getListaCanales();
 /**
-  @brief getsocket.
+   @brief getsocket.
 
-  Descripcion: Devuelve el socket asociado al nick del usuario.
-  @return int: socket del usuario.
-*/
+   Descripcion: Devuelve el socket asociado al nick del usuario.
+   @return int: socket del usuario.
+ */
 int getsocket(char *nick);
 /**
-  @brief setNick.
+   @brief setNick.
 
-  Descripcion: Cambia el nick de un usuario.
-  @param nick: Nuevo nick del usuario.
-  @param userNick: Antiguo nick del usuario.
-*/
+   Descripcion: Cambia el nick de un usuario.
+   @param nick: Nuevo nick del usuario.
+   @param userNick: Antiguo nick del usuario.
+ */
 void setNick(char *nick, char *userNick);
