@@ -1,8 +1,5 @@
 #include "../includes/server.h"
 
-#define STIEMPO 30
-#define MSTIEMPO 30000
-
 long ncliente = 0;
 
 int main(int argc, char *argv[]) {

@@ -1,6 +1,8 @@
 #include "../includes/commands.h"
 
 #define PORT 6667
+#define STIEMPO 30
+#define MSTIEMPO 30000
 /**
 @brief deal_cliente.
 
