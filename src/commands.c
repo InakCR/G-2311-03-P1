@@ -60,174 +60,108 @@ void join(char *string, int sock, char *userNick) {
 }
 void nick(char *string, int sock, char **userNick) {
         char *prefix, *nick, *msg, *command, **nicks,**nicklist;
-        long parser, num,nelements;
-        int *sockets, i;
+        long parser,num,nelements;
+        int socket, i;
 
         syslog(LOG_INFO, "Comienza Funcion NICK");
         syslog(LOG_INFO, "%d", sock);
 
         // Changes your online nick name. Alerts others to the change of your nick
-        parser = IRCParse_Nick(string, &prefix, &nick, &msg);
-
-        if (parser < 0) {
+        if(IRCParse_Nick(string, &prefix, &nick, &msg)!= IRC_OK) {
+                //TODO mensaje de error al cliente
+                syslog(LOG_ERR, "***Error No existe una cadena para usar como Nick.");
                 return;
         }
 
         syslog(LOG_INFO, "VALOR DE userNick ANTES DE SER ACTUALIZADO => %s", *userNick);
 
         //userNickES VARIABLE GLOBAL POR TANTO SALVO AL PRINCIPIO SIEMPRE ES != NULL
-        /*if (*userNick == NULL) {*/
-        *userNick = (char *)malloc(sizeof(strlen(nick) + 1));
-        strcpy(*userNick, nick);
-        syslog(LOG_INFO, "userNick = %s || nick = %s", *userNick, nick);
-        /*}*/
-
-        if (parser == IRCERR_NOSTRING) {
-                free(prefix);
-                free(nick);
-                free(msg);
-                //TODO mensaje de error al cliente
-                syslog(LOG_ERR, "***Error No existe una cadena para usar como Nick.");
-                return;
+        if (*userNick == NULL) {
+                *userNick = (char *)malloc(sizeof(strlen(nick) + 1));
+                strcpy(*userNick, nick);
         }
-        else if (parser == IRC_OK) {
+        syslog(LOG_INFO, "userNick = %s || nick = %s", *userNick, nick);
 
-                if (UTestNick(nick)) {
-                        syslog(LOG_INFO, "!!!!!!!!!! Ya existe el nick: %s", nick);
-                        // TODO MAndar mensaje error
-                }
-                else {
+        if (UTestNick(nick)) {
+                syslog(LOG_INFO, "!!!!!!!!!! Ya existe el nick: %s", nick);
+                // TODO MAndar mensaje error
+        }
+        else {
 
-                        syslog(LOG_INFO, "UTestNick->else Dentro");
+                syslog(LOG_INFO, "UTestNick->else Dentro");
 
-                        if (IRCTADUser_Test(0, NULL, userNick) == IRC_OK) {
+                if (IRCTADUser_Test(0, NULL, userNick) == IRC_OK) {
 
-                                syslog(LOG_INFO, "IRCTADUser_Test Dentro");
+                        syslog(LOG_INFO, "IRCTADUser_Test Dentro");
+                        if (setNick(nick, userNick) == IRC_OK) {
 
-                                sockets = getSocketsUsuarios();
-                                nicks = getNickUsuarios();
-                                int s = getsocket(nicks[0]);
-
-                                if (setNick(nick, userNick) == IRC_OK) {
-
-                                        syslog(LOG_INFO, "setNick Dentro");
-                                        if (IRCMsg_Nick(&command, "REDES2", userNick, "cambio nick"
-                                                        ) == IRC_OK) {
-
-                                                syslog(LOG_INFO, "IRCMsg_Nikc Dentro");
-
-                                                num = getNumeroClientesActuales();
-
-                                                syslog(LOG_INFO, "numClientes = %ld", num);
-
-                                                for (i = 0; i < num; i++) {
-                                                        syslog(LOG_INFO, "Sockect 1 %d", sock);
-                                                        syslog(LOG_INFO, "Sockect 3 %d", s);
-                                                        syslog(LOG_INFO, "Sockect 2 %d", sockets[i]);
-                                                        send(sock, command, strlen(command), 0);
-                                                        syslog(LOG_INFO, "Comando %s", command);
-                                                }
+                                syslog(LOG_INFO, "setNick Dentro");
+                                if (IRCMsg_Nick(&command, nick, userNick, "Ahora se llama"
+                                                ) == IRC_OK) {
+                                        IRCTADUser_GetNickList (&nicklist, &nelements);
+                                        // se manda al usuario que lo camabia
+                                        send(sock, command, strlen(command), 0);
+                                        // se manda al resto de usuarios
+                                        for (i = 0; i < num; i++) {
+                                                socket = getsocket(nicklist[i]);
+                                                if(socket != sock)
+                                                        send(socket, command, strlen(command), 0);
+                                                syslog(LOG_INFO, "Comando %s", command);
                                         }
                                 }
-                                syslog(LOG_INFO, " No existe el nick: %s", nick);
                         }
+                        syslog(LOG_INFO, " No existe el nick: %s", nick);
                 }
-
-                //TODO PROBANDO
-                //Lista de Usuarios en el servidor
-
-
-                IRCTADUser_GetUserList (&nicklist, &nelements);
-
-                for(i = 0; i < nelements; i++) {
-                        syslog(LOG_INFO, "Usuario nº%d -> %s", i, nicklist[i]);
-                }
-
-                //Lista de Nicks en el servidor
-
-                IRCTADUser_GetNickList (&nicklist, &nelements);
-
-                for(i = 0; i < nelements; i++) {
-                        syslog(LOG_INFO, "Nick nº%d -> %s", i, nicklist[i]);
-                }
-
-                syslog(LOG_INFO, "Nick pasado correctamente como %s.", *userNick);
-                free(prefix);
-                free(nick);
-                free(msg);
         }
+
+        //TODO PROBANDO
+        //Lista de Usuarios en el servidor
+
+
+        IRCTADUser_GetUserList (&nicklist, &nelements);
+
+        for(i = 0; i < nelements; i++) {
+                syslog(LOG_INFO, "Usuario nº%d -> %s", i, nicklist[i]);
+        }
+
+        //Lista de Nicks en el servidor
+
+        IRCTADUser_GetNickList (&nicklist, &nelements);
+
+        for(i = 0; i < nelements; i++) {
+                syslog(LOG_INFO, "Nick nº%d -> %s", i, nicklist[i]);
+        }
+
+        syslog(LOG_INFO, "Nick pasado correctamente como %s.", *userNick);
+        free(prefix);
+        free(nick);
+        free(msg);
+
 }
 
 void user(char *string, int sock, char *userNick) {
         char *prefix, *msg, *user, *modehost, *serverother, *realname, *command;
         long parser;
-        struct timeval tv;
+        time_t rawtime;
+
         int i = 0;
         HostNameIp *hi;
         hi = hostIp(sock);
 
-        parser =
-                IRCParse_User(string, &prefix, &user, &modehost, &serverother, &realname);
 
-        if (parser < 0) // TODO Controlar este error con una MACRO
-                return;
-
-        syslog(LOG_INFO, "ip = %s", hi->ip);
-        syslog(LOG_INFO, "host = %s", hi->name);
-        syslog(LOG_INFO, "userNick = %s", userNick);
-
-        if (parser == IRCERR_NOSTRING) {
+        if(IRCParse_User(string, &prefix, &user, &modehost, &serverother, &realname)!=IRC_OK) {
                 syslog(LOG_ERR, "***Error No existe una cadena para usar como User.");
                 return;
-
-        } else if (parser == IRC_OK) {
-
-                parser = IRCTADUser_New(
-                        user, userNick, realname, NULL, hi->name, hi->ip, sock);
-
-                if (parser == IRC_OK) {
-                        syslog(LOG_INFO, "Creado Usuario: %s (Nick: %s)", user, userNick);
-                        syslog(LOG_INFO, "En Socket %d", sock);
-
-                } else {
-                        //ERRORES
-                        if(parser == IRCERR_NOENOUGHMEMORY) {
-                                syslog(LOG_INFO, "IRCERR_NOENOUGHMEMORY");
-                        }
-                        else if(parser == IRCERR_NICKUSED) {
-                                syslog(LOG_INFO, "IRCERR_NICKUSED");
-                        }
-                        else if(parser == IRCERR_INVALIDUSER) {
-                                syslog(LOG_INFO, "IRCERR_INVALIDUSER");
-                        }
-                        else if(parser == IRCERR_INVALIDNICK) {
-                                syslog(LOG_INFO, "IRCERR_INVALIDNICK");
-                        }
-                        else if(parser == IRCERR_INVALIDREALNAME) {
-                                syslog(LOG_INFO, "IRCERR_INVALIDREALNAME");
-                        }
-                        else if(parser == IRCERR_INVALIDHOST) {
-                                syslog(LOG_INFO, "IRCERR_INVALIDHOST");
-                        }
-                        else if(parser == IRCERR_INVALIDIP) {
-                                syslog(LOG_INFO, "IRCERR_INVALIDIP");
-                        }
-                        else if(parser == IRCERR_INVALIDID) {
-                                syslog(LOG_INFO, "IRCERR_INVALIDID");
-                        }
-                        else if(parser == IRCERR_INVALIDSOCKET) {
-                                syslog(LOG_INFO, "IRCERR_INVALIDSOCKET");
-                        }
-                        else if(parser == IRCERR_NOMUTEX) {
-                                syslog(LOG_INFO, "IRCERR_NOMUTEX");
-                        }
-                        else{
-                                syslog(LOG_INFO, "¿OTRO ERROR?");
-                        }
-
-                        syslog(LOG_INFO, "************Usuario no creado");
-                }
         }
+
+        if(IRCTADUser_New(user, userNick, realname, NULL, hi->name, hi->ip, sock)!=IRC_OK) {
+                syslog(LOG_INFO, "************Usuario no creado");
+                return;
+        }
+
+
+        syslog(LOG_INFO, "Creado Usuario: %s (Nick: %s)", user, userNick);
+        syslog(LOG_INFO, "En Socket %d", sock);
 
         //Lista de Usuarios en el servidor
         char **nicklist;
@@ -254,8 +188,8 @@ void user(char *string, int sock, char *userNick) {
         IRCMsg_RplYourHost(&command, "REDES2", userNick, serverother, "1.0");
         send(sock, command, strlen(command), 0);
         syslog(LOG_INFO, "%s", command);
-
-        IRCMsg_RplCreated(&command, "REDES2", userNick, gettimeofday(&tv, NULL));
+        time ( &rawtime );
+        IRCMsg_RplCreated(&command, "REDES2", userNick,&rawtime);
         send(sock, command, strlen(command), 0);
         syslog(LOG_INFO, "%s", command);
 
@@ -286,6 +220,7 @@ void user(char *string, int sock, char *userNick) {
         free(serverother);
         free(realname);
 }
+
 void list(char *string, int sock, char *userNick) {
         char *prefix, *channel, *key, *command, *topic, **list, *target;
         long parser;
@@ -294,7 +229,7 @@ void list(char *string, int sock, char *userNick) {
         if (IRCParse_List(string, &prefix, &channel, &target) == IRC_OK) {
                 // Miramos que haya canales
                 if (getNumeroCanales() > 0) {
-                        // Si nos epecifican el canal O MASCARA
+                        // Si nos epecifican el canal O MASCARA  search_string
                         if (channel != NULL) {
                                 syslog(LOG_INFO, "Canal encontrado");
                                 IRCTAD_GetTopic(channel, &topic);
@@ -333,6 +268,7 @@ void list(char *string, int sock, char *userNick) {
 void who(char *string, int sock, char *userNick) {
         char *prefix, *target, *mask, *oppar, *command, *list;
         long num = 0;
+
         if (IRCParse_Who(string, &prefix, &mask, &oppar) == IRC_OK) {
 
                 if (IRCTAD_ListNicksOnChannel(mask, &list, &num) == IRC_OK) {
@@ -353,10 +289,9 @@ void whois(char *string, int sock, char *userNick) {
         char *listChan;
         long id = 0, actionTS = 0, creationTS = 0, num = 0;
         int socket = 0;
+
         if (IRCParse_Whois(string, &prefix, &target, &maskarray) == IRC_OK) {
-                syslog(LOG_INFO, "%s prefix", prefix);
-                syslog(LOG_INFO, "%s target", target);
-                syslog(LOG_INFO, "%s maskarray", maskarray);
+
                 if (UTestNick(maskarray)) {
                         syslog(LOG_INFO, "Existe el nick: %s", maskarray);
 
@@ -374,10 +309,6 @@ void whois(char *string, int sock, char *userNick) {
                         send(sock, command, strlen(command), 0);
                         syslog(LOG_INFO, "%s", command);
                         // // 313
-                        // IRCMsg_RplWhoIsOperator(&command, "REDES2", userNick, maskarray);
-                        // send(sock, command, strlen(command), 0);
-                        // syslog(LOG_INFO, "%s", command);
-
                         if (IRCTAD_ListChannelsOfUser(user, maskarray, &listChan, &num) ==
                             IRC_OK) {
                                 if (num > 0) {
@@ -391,10 +322,6 @@ void whois(char *string, int sock, char *userNick) {
                                 syslog(LOG_INFO, "%ld", num);
                         }
                         // 317
-                        // IRCMsg_RplWhoIsIdle(&command, "REDES2", userNick, maskarray,
-                        //                     (int)actionTS, "seconds idle");
-                        // send(sock, command, strlen(command), 0);
-                        // syslog(LOG_INFO, "%s", command);
 
                         // 318
                         IRCMsg_RplEndOfWhoIs(&command, "REDES2", userNick, maskarray);
@@ -425,7 +352,6 @@ void names(char *string, int sock, char *userNick) {
                 send(sock, command, strlen(command), 0);
                 syslog(LOG_INFO, "%s", command);
         }
-        syslog(LOG_INFO, "%s channel,%s prefix, %s target", channel, prefix, target);
 }
 
 
@@ -468,7 +394,7 @@ void part(char *string, int sock, char *userNick) {
                         IRCTAD_ListNicksOnChannel(channel, &list, &nUsers);
 
                         for(i = 0; i < nUsers; i++) {
-                                socket = getsocket(&list[i]);
+                                socket = getsocket(&list[i]); // & mandar msg tb?
                                 send(socket, command, strlen(command), 0);
                         }
 
@@ -517,7 +443,7 @@ void kick(char *string, int sock, char *userNick) {
 
                 parser = IRCTAD_KickUserFromChannel (channel, user);
 
-                // Expulsa al Usuario
+                // Expulsa al Usuario . SOLO prodria explusar el dueño del canal?
                 if(parser == IRC_OK) {
 
                         //IRCMsg_Kick() construye el comando de respuesta
@@ -531,7 +457,7 @@ void kick(char *string, int sock, char *userNick) {
                         IRCTAD_ListNicksOnChannel(channel, &list, &nUsers);
 
                         for(i = 0; i < nUsers; i++) {
-                                socket = getsocket(&list[i]);
+                                socket = getsocket(&list[i]); /// &
                                 send(socket, command, strlen(command), 0);
                         }
 
@@ -560,24 +486,108 @@ void kick(char *string, int sock, char *userNick) {
         }
 }
 
-
-
-
 void away(char *string, int sock, char *userNick) {
+        char *strin,**reason,**command,*prefix;
+        if(IRCParse_Away (string,&prefix, &reason) != IRC_OK) {
+                syslog(LOG_ERR, "Error Away");
+                return;
+        }
+        if(setAway(userNick,reason)!=IRC_OK) {
+                syslog(LOG_ERR, "Error setaway");
+                return;
+        }
+        //are sent when the client removes and sets an AWAY message.
+        if(IRCMsg_RplNowAway (&commnad,"REDES2",userNick)==IRC_OK) {
+                send(sock, command, strlen(command), 0);
+                syslog(LOG_INFO, "%s", command);
+        }
+        if(IRCMsg_RplUnaway (&command, "REDES2",userNick)==IRC_OK) {
+                send(sock, command, strlen(command), 0);
+                syslog(LOG_INFO, "%s", command);
+        }
+        syslog(LOG_INFO, "setaway");
 }
+//   /QUIT reason
+//
+// Causes you to disconnect from the server.
+// If you include a reason, it will be displayed on all channels as you quit
 void quit(char *string, int sock, char *userNick) {
-        //   /QUIT reason
-        //
-        // Causes you to disconnect from the server.
-        // If you include a reason, it will be displayed on all channels as you quit
+        char *strin,**reason,***arraylist,**prefix;
+        long num;
+        int i;
+
+        if(IRCParse_Quit (string, &prefix, &reason)!=IRC_OK) {
+                syslog(LOG_ERR, "Error Quit");
+                return;
+        }
+        if(IRCTAD_ListChannelsOfUser (NULL, userNick, &arraylist, &num)!=IRC_OK) {
+                syslog(LOG_ERR, "Error ListChanUser");
+                return;
+        }
+        //mandar mensajr channel
+        if(num>0) {
+                for(i = 0; i < num; i++) {
+                        send(socket, command, strlen(command), 0);
+                }
+        }
+        IRCTAD_Quit (userNick);
 }
+
 void motd(char *string, int sock, char *userNick) {
+        char **prefix,**target;
+
+        if(IRCParse_Motd (string, &prefix, &target)!=IRC_OK) {
+                syslog(LOG_ERR, "Error Motd");
+                return;
+        }
+
+        if(IRCMsg_RplMotdStart (&command, "REDES2", userNick, target)==IRC_OK) {
+                send(sock, command, strlen(command), 0);
+                syslog(LOG_INFO, "%s", command);
+        }
+        if(IRCMsg_RplMotd (&command, "REDES2", userNick, "****BIENVENIDO****\n")==IRC_OK) {
+                send(sock, command, strlen(command), 0);
+                syslog(LOG_INFO, "%s", command);
+        }
+        if(IRCMsg_RplEndOfMotd (&command, "REDES2", userNick)==IRC_OK) {
+                send(sock, command, strlen(command), 0);
+                syslog(LOG_INFO, "%s", command);
+        }
 }
+//   /TOPIC topic
+//
+// Topic <channel> will display the current topic of the given channel.
+//  Topic <channel> <topic> will change the topic of the given channel.
 void topic(char *string, int sock, char *userNick) {
-        //   /TOPIC topic
-        //
-        // Topic <channel> will display the current topic of the given channel.
-        //  Topic <channel> <topic> will change the topic of the given channel.
+        char **channel,**prefix,**topic,**topicActual,**command;
+
+        if(IRCParse_Topic (string,&prefix, &channel, &topic)!=IRC_OK) {
+                syslog(LOG_ERR, "Error Topic");
+                return;
+        }
+
+        if(topic !=NULL) {
+                if(IRCTAD_SetTopic (channel, userNick,topic)==IRC_OK) { //Comprueba internamente si puede le usuario
+                        syslog(LOG_ERR, "Error SetTopic");
+                        return;
+                }
+        }
+        if(IRCTAD_GetTopic (channel, &topic)!=IRC_OK) {
+                syslog(LOG_ERR, "Error Topic");
+                return;
+        }
+        else if(topicActual!=NULL) {
+
+                if(IRCMsg_RplTopic (&command, "REDES2", userNick,channel,topic)==IRC_OK) {
+                        send(sock, command, strlen(command), 0);
+                        syslog(LOG_INFO, "%s", command);
+                }
+        }else{
+                if(IRCMsg_RplNoTopic (&command, "REDES2", userNick,channel)==IRC_OK) {
+                        send(sock, command, strlen(command), 0);
+                        syslog(LOG_INFO, "%s", command);
+                }
+        }
 }
 void msg(char *string, int sock, char *userNick) {
         char *command, *nickorchannel, *msg, **arraylist;
@@ -587,6 +597,8 @@ void msg(char *string, int sock, char *userNick) {
                         if (IRCMsg_Privmsg(&command, "REDES2", nickorchannel, msg) == IRC_OK)
                                 send(getsocket(nickorchannel), command, strlen(command), 0);
                 } else if (IRCTAD_TestUserOnChannel(nickorchannel, userNick) == IRC_OK) {
+                        // Si el usuario tiene mensaje away
+                        //IRCMsg_RplAway (char **command, char *prefix, char * nick, char *nick2, char *msg);
                         // if (IRCTAD_ListNicksOnChannelArray(nickorchannel, &arraylist,
                         // &nUsers)
                         // ==
@@ -604,8 +616,16 @@ void msg(char *string, int sock, char *userNick) {
         free(nickorchannel);
         free(msg);
 }
-void doCommand(char *string, int sock, char **userNick) {
+void nocommand(char *string, int sock, char *userNick){
+        char **command;
+        if(IRCMsg_RplTryAgain (&command, "REDES2", userNick, "Comando no reconocido")!=IRC_OK) {
+                syslog(LOG_ERR,"ERROR noCommand");
+                return;
+        }
+        send(sock, command, strlen(command), 0);
+}
 
+void doCommand(char *string, int sock, char **userNick) {
 
         if (string == NULL)
                 return;
@@ -671,7 +691,21 @@ void doCommand(char *string, int sock, char **userNick) {
                 syslog(LOG_INFO, "MSG");
                 msg(string, sock, *userNick);
                 break;
+        default:
+                syslog(LOG_INFO, "No command reconozaice");
+                nocommand(string, sock, *userNick);
+                break
         }
+}
+int setAway(char* nick,char * reason){
+        char **user,**real,**host,**IP,**away;
+        long *id,*actionTS,*creationTS;
+        int *socket;
+        if(IRCTADUser_GetData (&id, &user, &nick,&real,&host, &IP, &socket, &creationTS, &actionTS, &away) ==IRC_OK) {
+
+                return IRCTADUser_SetAway (id, user, nick, real,reason);
+        }
+        return 0;
 }
 long getNumeroClientesActuales() {
         long nelements = 0;

@@ -154,6 +154,17 @@ void topic(char *string, int sock, char *userNick);
  */
 void msg(char *string, int sock, char *userNick);
 /**
+   @brief nocommand.
+
+   Descripcion: Informa al cliente de que el servidor no ha reconocido el
+    comando.
+
+   @param string: Cadena que contiene el comando MSG y su informacion.
+   @param sock: Puerto en el que se encuentra el usuario.
+   @param userNick: nick que usa el usuario conectado en el server.
+ */
+void nocommand(char *string, int sock, char *userNick);
+/**
    @brief doCommand.
 
    Descripcion: Identifica el commando correcto del servidor.
@@ -165,8 +176,17 @@ void doCommand(char *string, int sock, char **userNick);
 /**
    @brief getNumeroClientesActuales.
 
+   Descripcion: Cambia el mensaje away del usuario.
+   @param nick: nick que usa el usuario conectado en el server.
+   @param reason: mensaje de away.
+   @return int: error.
+ */
+int setAway(char* nick,char * reason);
+/**
+   @brief getNumeroClientesActuales.
+
    Descripcion: Devuelve el número de clintes conectados actualmente al servidor.
-   @return int: nClientes.
+   @return long: nClientes.
  */
 long getNumeroClientesActuales();
 /**
