@@ -583,6 +583,9 @@ void topic(char *string, int sock, char *userNick) {
     }
   }
 }
+void mode(char *string, int sock, char *userNick){
+  
+}
 void msg(char *string, int sock, char *userNick) {
   char *command, *nickorchannel, *msg, **arraylist;
   long nUsers;
@@ -683,6 +686,10 @@ void doCommand(char *string, int sock, char **userNick) {
     syslog(LOG_INFO, "MOTD");
     motd(string, sock, *userNick);
     break;
+  case MODE:
+      syslog(LOG_INFO, "MOTD");
+      mode(string, sock, *userNick);
+      break;
   case PRIVMSG:
     syslog(LOG_INFO, "MSG");
     msg(string, sock, *userNick);

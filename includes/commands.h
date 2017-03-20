@@ -150,6 +150,16 @@ void motd(char *string, int sock, char *userNick);
  */
 void topic(char *string, int sock, char *userNick);
 /**
+   @brief mode.
+
+   Descripcion:  Cambia la proteccion de un canal.
+
+   @param string: Cadena que contiene el comando TOPIC y su informacion.
+   @param sock: Puerto en el que se encuentra el usuario.
+   @param userNick: nick que usa el usuario conectado en el server.
+ */
+void mode(char *string, int sock, char *userNick);
+/**
    @brief msg.
 
    Descripcion:Envio de mensajes privados entre usuarios o al canal
