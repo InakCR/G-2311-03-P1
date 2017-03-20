@@ -318,7 +318,7 @@ void whois(char *string, int sock, char *userNick) {
         syslog(LOG_INFO, "%ld", num);
       }
       // 317
-
+      //AÑADIR AWAY
       // 318
       IRCMsg_RplEndOfWhoIs(&command, "REDES2", userNick, maskarray);
       send(sock, command, strlen(command), 0);
@@ -526,6 +526,7 @@ void quit(char *string, int sock, char *userNick) {
     }
   }
   IRCTAD_Quit(userNick);
+  close(sock);
 }
 
 void motd(char *string, int sock, char *userNick) {
@@ -584,7 +585,7 @@ void topic(char *string, int sock, char *userNick) {
   }
 }
 void mode(char *string, int sock, char *userNick){
-  
+
 }
 void msg(char *string, int sock, char *userNick) {
   char *command, *nickorchannel, *msg, **arraylist;
