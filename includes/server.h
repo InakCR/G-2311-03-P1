@@ -1,5 +1,25 @@
+/**
+ * @brief Libreria de funciones para la gestion del servidor IRC
+ *
+ * @file server.h
+ * @author Iñaki Cadalso <innaki.cadalso@estudiante.uam.es>,
+ * Enrique Aracil <enrique.aracil@estudiante.uam.es>
+ * Grupo 2311
+ * @version 1.0
+ * @date 13-02-2017
+ */
 #include "../includes/commands.h"
-
+/**
+   @brief tiempo maximo de alarma en segundos
+ */
+#define STIEMPO 30
+/**
+   @brief tiempo maximo de alarma en milisegundos
+ */
+#define MSTIEMPO 30000
+/**
+   @brief puerto de escucha del servidor
+ */
 #define PORT 6667
 #define STIEMPO 30
 #define MSTIEMPO 30000

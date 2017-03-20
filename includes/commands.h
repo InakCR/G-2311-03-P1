@@ -1,6 +1,11 @@
 /**
+<<<<<<< HEAD
  * @brief Modulo de funciones para el reconocimiento y ejecucion
  *  de comandos en el servidor IRC.
+=======
+ * @brief Libreria de funciones para la gestion de comandos Dentro
+ * del servidor IRC.
+>>>>>>> 618dea6db2ea5a9951924705b71418b0a2590d2e
  *
  * @file commands.h
  * @author Iñaki Cadalso <innaki.cadalso@estudiante.uam.es>,
@@ -156,6 +161,17 @@ void topic(char *string, int sock, char *userNick);
  */
 void msg(char *string, int sock, char *userNick);
 /**
+   @brief nocommand.
+
+   Descripcion: Informa al cliente de que el servidor no ha reconocido el
+    comando.
+
+   @param string: Cadena que contiene el comando MSG y su informacion.
+   @param sock: Puerto en el que se encuentra el usuario.
+   @param userNick: nick que usa el usuario conectado en el server.
+ */
+void nocommand(char *string, int sock, char *userNick);
+/**
    @brief doCommand.
 
    Descripcion: Identifica el commando correcto del servidor.
@@ -165,60 +181,69 @@ void msg(char *string, int sock, char *userNick);
  */
 void doCommand(char *string, int sock, char **userNick);
 /**
-  @brief getNumeroClientesActuales.
+   @brief getNumeroClientesActuales.
 
-  Descripcion: Devuelve el número de clintes conectados actualmente al servidor.
-  @return int: nClientes.
-*/
+   Descripcion: Cambia el mensaje away del usuario.
+   @param nick: nick que usa el usuario conectado en el server.
+   @param reason: mensaje de away.
+   @return int: error.
+ */
+int setAway(char* nick,char * reason);
+/**
+   @brief getNumeroClientesActuales.
+
+   Descripcion: Devuelve el número de clintes conectados actualmente al servidor.
+   @return long: nClientes.
+ */
 long getNumeroClientesActuales();
 /**
-  @brief getNumeroCanales.
+   @brief getNumeroCanales.
 
-  Descripcion: Devuelve el número de canales activos actualmente en el servidor.
-  @return long: num, numero de canales en el servidor.
-*/
+   Descripcion: Devuelve el número de canales activos actualmente en el servidor.
+   @return long: num, numero de canales en el servidor.
+ */
 long getNumeroCanales();
 /**
-  @brief getSocketsUsuarios.
+   @brief getSocketsUsuarios.
 
-  Descripcion: Devuelve los sockets de todos los usuarios.
-  @return int*: array de int con los sockets de todos los usuarios.
-*/
+   Descripcion: Devuelve los sockets de todos los usuarios.
+   @return int*: array de int con los sockets de todos los usuarios.
+ */
 int *getSocketsUsuarios();
 /**
-  @brief getNickUsuarios.
+   @brief getNickUsuarios.
 
-  Descripcion: Devuelve los nicks de los usuarios registrados en el servidor.
-  @return char**: array de char con los nicks de usuarios.
-*/
+   Descripcion: Devuelve los nicks de los usuarios registrados en el servidor.
+   @return char**: array de char con los nicks de usuarios.
+ */
 char **getNickUsuarios();
 /**
-  @brief getUsuariosCanal.
+   @brief getUsuariosCanal.
 
-  Descripcion: Devuelve los nicks de los usuarios conectados a un canal.
-  @param channel: Nombre del canal a buscar.
-  @return char**: array de char con los nicks de usuarios.
-*/
+   Descripcion: Devuelve los nicks de los usuarios conectados a un canal.
+   @param channel: Nombre del canal a buscar.
+   @return char**: array de char con los nicks de usuarios.
+ */
 char *getUsuariosCanal(char * channel);
 /**
-  @brief getListaCanales.
+   @brief getListaCanales.
 
-  Descripcion: Devuelve la lista de canales registrados en el servidor.
-  @return char**: array de char con los nombres de los canales.
-*/
+   Descripcion: Devuelve la lista de canales registrados en el servidor.
+   @return char**: array de char con los nombres de los canales.
+ */
 char **getListaCanales();
 /**
-  @brief getsocket.
+   @brief getsocket.
 
-  Descripcion: Devuelve el socket asociado al nick del usuario.
-  @return int: socket del usuario.
-*/
+   Descripcion: Devuelve el socket asociado al nick del usuario.
+   @return int: socket del usuario.
+ */
 int getsocket(char *nick);
 /**
-  @brief setNick.
+   @brief setNick.
 
-  Descripcion: Cambia el nick de un usuario.
-  @param nick: Nuevo nick del usuario.
-  @param userNick: Antiguo nick del usuario.
-*/
+   Descripcion: Cambia el nick de un usuario.
+   @param nick: Nuevo nick del usuario.
+   @param userNick: Antiguo nick del usuario.
+ */
 void setNick(char *nick, char *userNick);

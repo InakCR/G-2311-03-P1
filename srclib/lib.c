@@ -5,6 +5,7 @@ void on_error(int logPri, char *err) {
   syslog(logPri, "%s", err);
   exit(EXIT_FAILURE);
 }
+
 int ini_server(int port) {
   struct sockaddr_in server;
   int sockserv, opt_val = 1;
@@ -95,12 +96,13 @@ int accept_conex(int sock) {
   return socketClient;
 }
 HostNameIp *hostIp(int sock) {
-  int err;
+  char hbuf[1024], sbuf[20];
   struct sockaddr_in addr;
   struct hostent *he;
-  socklen_t addr_len = sizeof(addr);
   HostNameIp *hi = NULL;
-  char hbuf[1024], sbuf[20];
+  int err;
+
+  socklen_t addr_len = sizeof(addr);
 
   hi = (HostNameIp *)malloc(sizeof(HostNameIp));
   if (hi == NULL)
@@ -111,19 +113,15 @@ HostNameIp *hostIp(int sock) {
     return NULL;
 
   hi->ip = inet_ntoa(addr.sin_addr);
-  // syslog(LOG_INFO, "%s\n", hi->ip);
 
   struct in_addr ipv4addr;
   inet_pton(AF_INET, hi->ip, &ipv4addr); // Google  "74.125.196.105"
   he = gethostbyaddr(&ipv4addr, sizeof ipv4addr, AF_INET);
 
-  // he = gethostbyaddr(&addr.sin_addr, addr_len, AF_INET);
   if (he == NULL || h_errno == HOST_NOT_FOUND) {
 
     if (getnameinfo((struct sockaddr *)&addr, addr_len, hbuf, sizeof(hbuf),
                     sbuf, sizeof(sbuf), NI_NUMERICHOST | NI_NUMERICSERV) == 0)
-
-      //  syslog(LOG_INFO, "host=%s, serv=%s\n", hbuf, sbuf);
       hi->name = hbuf;
     return hi;
   }
