@@ -246,4 +246,4 @@ int getsocket(char *nick);
    @param nick: Nuevo nick del usuario.
    @param userNick: Antiguo nick del usuario.
  */
-void setNick(char *nick, char *userNick);
+void setNick(char *nick, char **userNick);

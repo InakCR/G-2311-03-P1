@@ -94,22 +94,20 @@ void nick(char *string, int sock, char **userNick) {
 
     if (IRCTADUser_Test(0, NULL, *userNick) == IRC_OK) {
 
-      syslog(LOG_INFO, "IRCTADUser_Test Dentro");
-      setNick(nick, *userNick);
-
       syslog(LOG_INFO, "setNick Dentro");
-      if (IRCMsg_Nick(&command, nick, *userNick, "Ahora se llama") == IRC_OK) {
+      if (IRCMsg_Nick(&command, *userNick, nick, msg) == IRC_OK) {
         IRCTADUser_GetNickList(&nicklist, &nelements);
         // se manda al usuario que lo camabia
         send(sock, command, strlen(command), 0);
         // se manda al resto de usuarios
-        for (i = 0; i < num; i++) {
+        for (i = 0; i < nelements; i++) {
           socket = getsocket(nicklist[i]);
-          if (socket != sock)
-            send(socket, command, strlen(command), 0);
-          syslog(LOG_INFO, "Comando %s", command);
+          send(socket, command, strlen(command), 0);
         }
+        syslog(LOG_INFO, "Comando %s socket: %d", command, socket);
       }
+      syslog(LOG_INFO, "IRCTADUser_Test Dentro");
+      setNick(nick, userNick);
       syslog(LOG_INFO, " No existe el nick: %s", nick);
     }
   }
@@ -359,6 +357,8 @@ void part(char *string, int sock, char *userNick) {
   long parser, nUsers;
   int i, socket;
 
+  // Al salir el dueño peta
+
   // IRCParse_Part() realiza el parseo del string
   // Se pasa string de ella devuelve:
   // prefix = (null) ???
@@ -481,7 +481,7 @@ void kick(char *string, int sock, char *userNick) {
 }
 
 void away(char *string, int sock, char *userNick) {
-  char *reason, *command, *prefix;
+  char *reason = NULL, *command, *prefix;
   if (IRCParse_Away(string, &prefix, &reason) != IRC_OK) {
     syslog(LOG_ERR, "Error Away");
     return;
@@ -490,15 +490,18 @@ void away(char *string, int sock, char *userNick) {
     syslog(LOG_ERR, "Error setaway");
     return;
   }
+  //  long IRCMsg_Privmsg (char **command, char *prefix, char * msgtarget, char
+  //  *msg) a ca da usuario
+  if (IRCMsg_RplUnaway(&command, userNick, userNick) == IRC_OK) {
+    send(sock, command, strlen(command), 0);
+    syslog(LOG_INFO, "%s", command);
+  }
   // are sent when the client removes and sets an AWAY message.
-  if (IRCMsg_RplNowAway(&command, "REDES2", userNick) == IRC_OK) {
+  if (IRCMsg_RplNowAway(&command, userNick, userNick) == IRC_OK) {
     send(sock, command, strlen(command), 0);
     syslog(LOG_INFO, "%s", command);
   }
-  if (IRCMsg_RplUnaway(&command, "REDES2", userNick) == IRC_OK) {
-    send(sock, command, strlen(command), 0);
-    syslog(LOG_INFO, "%s", command);
-  }
+
   syslog(LOG_INFO, "setaway");
 }
 //   /QUIT reason
@@ -592,7 +595,8 @@ void msg(char *string, int sock, char *userNick) {
         send(getsocket(nickorchannel), command, strlen(command), 0);
     } else if (IRCTAD_TestUserOnChannel(nickorchannel, userNick) == IRC_OK) {
       // Si el usuario tiene mensaje away
-      // IRCMsg_RplAway (char **command, char *prefix, char * nick, char *nick2,
+      // IRCMsg_RplAway (char **command, char *prefix, char * nick, char
+      // *nick2,
       // char *msg);
       // if (IRCTAD_ListNicksOnChannelArray(nickorchannel, &arraylist,
       // &nUsers)
@@ -773,17 +777,17 @@ int getsocket(char *nick) {
 
   return -1;
 }
-void setNick(char *nick, char *userNick) {
+void setNick(char *nick, char **userNick) {
   long id = 0, creationTS = 0, actionTS = 0;
   char *user = NULL, *real = NULL, *host = NULL, *IP = NULL, *away = NULL;
   int socket = 0;
 
-  if (IRCTADUser_GetData(&id, &user, &userNick, &real, &host, &IP, &socket,
+  if (IRCTADUser_GetData(&id, &user, userNick, &real, &host, &IP, &socket,
                          &creationTS, &actionTS, &away) == IRC_OK)
-    if (IRCTADUser_Set(id, user, userNick, real, user, nick, real) == IRC_OK) {
-      free(userNick);
-      userNick = (char *)malloc(sizeof(strlen(nick) + 1));
-      strcpy(userNick, nick);
+    if (IRCTADUser_Set(id, user, *userNick, real, user, nick, real) == IRC_OK) {
+      free(*userNick);
+      *userNick = (char *)malloc(sizeof(strlen(nick) + 1));
+      strcpy(*userNick, nick);
     }
 }
 // LIBERAR ESTRUCTURAS
