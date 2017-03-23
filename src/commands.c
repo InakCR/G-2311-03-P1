@@ -316,7 +316,7 @@ void whois(char *string, int sock, char *userNick) {
         syslog(LOG_INFO, "%ld", num);
       }
       // 317
-
+      //AÑADIR AWAY
       // 318
       IRCMsg_RplEndOfWhoIs(&command, "REDES2", userNick, maskarray);
       send(sock, command, strlen(command), 0);
@@ -529,6 +529,7 @@ void quit(char *string, int sock, char *userNick) {
     }
   }
   IRCTAD_Quit(userNick);
+  close(sock);
 }
 
 void motd(char *string, int sock, char *userNick) {
@@ -585,6 +586,9 @@ void topic(char *string, int sock, char *userNick) {
       syslog(LOG_INFO, "%s", command);
     }
   }
+}
+void mode(char *string, int sock, char *userNick){
+
 }
 void msg(char *string, int sock, char *userNick) {
   char *command, *nickorchannel, *msg, **arraylist;
@@ -687,6 +691,10 @@ void doCommand(char *string, int sock, char **userNick) {
     syslog(LOG_INFO, "MOTD");
     motd(string, sock, *userNick);
     break;
+  case MODE:
+      syslog(LOG_INFO, "MOTD");
+      mode(string, sock, *userNick);
+      break;
   case PRIVMSG:
     syslog(LOG_INFO, "MSG");
     msg(string, sock, *userNick);
