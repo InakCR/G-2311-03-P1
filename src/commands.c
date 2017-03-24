@@ -495,6 +495,14 @@ void away(char *string, int sock, char *userNick) {
     syslog(LOG_ERR, "Error setaway");
     return;
   }
+  IRCTADUser_GetNickList(&nicklist, &nelements);
+  // se manda al usuario que lo camabia
+  send(sock, command, strlen(command), 0);
+  // se manda al resto de usuarios
+  for (i = 0; i < nelements; i++) {
+    socket = getsocket(nicklist[i]);
+    send(socket, command, strlen(command), 0);
+  }
   IRCMsg_Privmsg (char **command, char *prefix, char * msgtarget, char
   //  *msg) a ca da usuario
   // if (IRCMsg_RplUnaway(&command, userNick, userNick) == IRC_OK) {
