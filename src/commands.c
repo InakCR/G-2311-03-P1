@@ -95,7 +95,7 @@ void nick(char *string, int sock, char **userNick) {
     if (IRCTADUser_Test(0, NULL, *userNick) == IRC_OK) {
 
       syslog(LOG_INFO, "setNick Dentro");
-      if (IRCMsg_Nick(&command, *userNick, nick, msg) == IRC_OK) {
+      if (IRCMsg_Nick(&command, *userNick, msg, nick) == IRC_OK) {
         IRCTADUser_GetNickList(&nicklist, &nelements);
         // se manda al usuario que lo camabia
         send(sock, command, strlen(command), 0);
@@ -316,7 +316,12 @@ void whois(char *string, int sock, char *userNick) {
         syslog(LOG_INFO, "%ld", num);
       }
       // 317
-      //AÑADIR AWAY
+      // AÑADIR AWAY
+      if (away != NULL) {
+        IRCMsg_RplAway(&command, "REDES2", userNick, maskarray, away);
+        send(sock, command, strlen(command), 0);
+        syslog(LOG_INFO, "%s", command);
+      }
       // 318
       IRCMsg_RplEndOfWhoIs(&command, "REDES2", userNick, maskarray);
       send(sock, command, strlen(command), 0);
@@ -490,12 +495,12 @@ void away(char *string, int sock, char *userNick) {
     syslog(LOG_ERR, "Error setaway");
     return;
   }
-  //  long IRCMsg_Privmsg (char **command, char *prefix, char * msgtarget, char
+  IRCMsg_Privmsg (char **command, char *prefix, char * msgtarget, char
   //  *msg) a ca da usuario
-  if (IRCMsg_RplUnaway(&command, userNick, userNick) == IRC_OK) {
-    send(sock, command, strlen(command), 0);
-    syslog(LOG_INFO, "%s", command);
-  }
+  // if (IRCMsg_RplUnaway(&command, userNick, userNick) == IRC_OK) {
+  //   send(sock, command, strlen(command), 0);
+  //   syslog(LOG_INFO, "%s", command);
+  // }
   // are sent when the client removes and sets an AWAY message.
   if (IRCMsg_RplNowAway(&command, userNick, userNick) == IRC_OK) {
     send(sock, command, strlen(command), 0);
@@ -587,9 +592,7 @@ void topic(char *string, int sock, char *userNick) {
     }
   }
 }
-void mode(char *string, int sock, char *userNick){
-
-}
+void mode(char *string, int sock, char *userNick) {}
 void msg(char *string, int sock, char *userNick) {
   char *command, *nickorchannel, *msg, **arraylist;
   long nUsers;
@@ -692,9 +695,9 @@ void doCommand(char *string, int sock, char **userNick) {
     motd(string, sock, *userNick);
     break;
   case MODE:
-      syslog(LOG_INFO, "MOTD");
-      mode(string, sock, *userNick);
-      break;
+    syslog(LOG_INFO, "MOTD");
+    mode(string, sock, *userNick);
+    break;
   case PRIVMSG:
     syslog(LOG_INFO, "MSG");
     msg(string, sock, *userNick);
@@ -797,5 +800,11 @@ void setNick(char *nick, char **userNick) {
       *userNick = (char *)malloc(sizeof(strlen(nick) + 1));
       strcpy(*userNick, nick);
     }
+}
+char *isAway(char *nick) {
+  char *user = NULL, *real = NULL, *away;
+  int id = -1;
+  IRCTADUser_GetAway(id, user, nick, real, &away);
+  return away;
 }
 // LIBERAR ESTRUCTURAS

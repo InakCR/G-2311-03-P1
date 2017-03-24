@@ -257,3 +257,4 @@ int getsocket(char *nick);
    @param userNick: Antiguo nick del usuario.
  */
 void setNick(char *nick, char **userNick);
+char* isAway(char *nick) ;
