@@ -52,14 +52,6 @@
  */
 #define NUM_BYTES 8192
 /**
-   @brief estructura con hostaname e ipv4
- */
-typedef struct hostnameip {
-        char *name;
-        char *ip;
-} HostNameIp;
-
-/**
    @brief on_error.
 
    Descripcion: Imprime el mensaje dado en el syslog y finaliza el proceso.
@@ -99,4 +91,4 @@ int accept_conex(int sock);
    @param sock: Puerto en el que se encuentra el usuario.
    @return HostNameIp: encaso de acierto la estructura rellena sino, NULL.
  */
-HostNameIp *hostIp(int sock);
+void hostIp(int sock, char ** host,char** ip);

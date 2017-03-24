@@ -95,36 +95,31 @@ int accept_conex(int sock) {
     on_error(LOG_ERR, "Error accept conexion cliente");
   return socketClient;
 }
-HostNameIp *hostIp(int sock) {
+void hostIp(int sock, char **host, char **ip) {
   char hbuf[1024], sbuf[20];
   struct sockaddr_in addr;
   struct hostent *he;
-  HostNameIp *hi = NULL;
   int err;
 
   socklen_t addr_len = sizeof(addr);
 
-  hi = (HostNameIp *)malloc(sizeof(HostNameIp));
-  if (hi == NULL)
-    return NULL;
-
   err = getpeername(sock, (struct sockaddr *)&addr, &addr_len);
   if (err != 0)
-    return NULL;
+    return;
 
-  hi->ip = inet_ntoa(addr.sin_addr);
+  *ip = inet_ntoa(addr.sin_addr);
 
   struct in_addr ipv4addr;
-  inet_pton(AF_INET, hi->ip, &ipv4addr); // Google  "74.125.196.105"
+  inet_pton(AF_INET, *ip, &ipv4addr); // Google  "74.125.196.105"
   he = gethostbyaddr(&ipv4addr, sizeof ipv4addr, AF_INET);
 
   if (he == NULL || h_errno == HOST_NOT_FOUND) {
 
     if (getnameinfo((struct sockaddr *)&addr, addr_len, hbuf, sizeof(hbuf),
                     sbuf, sizeof(sbuf), NI_NUMERICHOST | NI_NUMERICSERV) == 0)
-      hi->name = hbuf;
-    return hi;
+      *host = hbuf;
+    return;
   }
-  hi->name = he->h_name;
-  return hi;
+  *host = he->h_name;
+  return;
 }

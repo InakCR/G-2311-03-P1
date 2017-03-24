@@ -27,7 +27,7 @@ $(LIB)lib.a: $(OBJ)lib.o
 	ar -rv $@ $^
 	@echo "Libreria lib.a generada"
 
-$(EXEC): $(OBJ)server.o $(OBJ)commands.o $(LIB)lib.a
+$(EXEC): $(OBJ)server.o $(OBJ)commands.o $(OBJ)canal.o $(OBJ)user.o $(OBJ)utilidadesTAD.o $(LIB)lib.a
 	$(CC) $(CCFLAGS) $^ -o  $@ -lircredes -lirctad
 	@echo "Ejecutable servidor creado"
 
@@ -35,6 +35,15 @@ $(OBJ)server.o: $(SRC)server.c
 	$(CC) $(CCFLAGS) -o $@ -c $^
 
 $(OBJ)commands.o: $(SRC)commands.c
+	$(CC) $(CCFLAGS) -o $@ -c $^
+
+$(OBJ)canal.o: $(SRC)canal.c
+	$(CC) $(CCFLAGS) -o $@ -c $^
+
+$(OBJ)user.o: $(SRC)user.c
+	$(CC) $(CCFLAGS) -o $@ -c $^
+
+$(OBJ)utilidadesTAD.o: $(SRC)utilidadesTAD.c
 	$(CC) $(CCFLAGS) -o $@ -c $^
 
 $(OBJ)lib.o: $(SRCLIB)lib.c
