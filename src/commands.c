@@ -155,12 +155,16 @@ void msg(char *string, int sock, char *userNick) {
 }
 void nocommand(char *string, int sock, char *userNick) {
   char *command;
-  if (IRCMsg_RplTryAgain(&command, "REDES2", userNick,
-                         "Comando no reconocido") != IRC_OK) {
-    syslog(LOG_ERR, "ERROR noCommand");
-    return;
+  if (IRCMsg_ErrUnKnownCommand(&command, "REDES2", userNick, string) ==
+      IRC_OK) {
+    send(sock, command, strlen(command), 0);
+    syslog(LOG_INFO, "%s", command);
   }
-  send(sock, command, strlen(command), 0);
+  if (IRCMsg_RplTryAgain(&command, "REDES2", userNick,
+                         "Comando no reconocido") == IRC_OK) {
+    send(sock, command, strlen(command), 0);
+    syslog(LOG_INFO, "%s", command);
+  }
 }
 
 void doCommand(char *string, int sock, char **userNick) {
