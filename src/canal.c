@@ -2,7 +2,7 @@
 
 void join(char *string, int sock, char *userNick) {
   char *prefix, *msg, *channel, *key, *command, *topic;
-  long parser;
+  long parser, mode;
 
   parser = IRCParse_Join(string, &prefix, &channel, &key, &msg);
 
@@ -11,9 +11,7 @@ void join(char *string, int sock, char *userNick) {
     return;
   } else if (parser == IRC_OK) {
 
-    parser = IRCTADChan_New(channel, "m", userNick, key, MAX_CLIENTS,
-                            "Nueva creacion");
-    parser = IRCTAD_Join(channel, userNick, NULL, key);
+    parser = IRCTAD_Join(channel, userNick, "o", key);
     // Usermoden o va haber administradores
     if (parser == IRC_OK) {
       if (IRCMsg_Join(&command, userNick, NULL, NULL, channel) == IRC_OK) {
@@ -136,12 +134,13 @@ void kick(char *string, int sock, char *userNick) {
   if (IRCParse_Kick(string, &prefix, &channel, &user, &msg) == IRC_OK) {
 
     mode = IRCTAD_GetUserModeOnChannel(channel, userNick);
-    // if(parser) {
-    //   IRCMsg_ErrChanOPrivsNeeded(&command, userNick, userNick, channel);
-    //   send(socket, command, strlen(command), 0);
-    //   syslog(LOG_INFO, "%s", command);
-    //   return;
-    // }
+
+    if (mode < IRCUMODE_CREATOR) {
+      IRCMsg_ErrChanOPrivsNeeded(&command, userNick, userNick, channel);
+      send(sock, command, strlen(command), 0);
+      syslog(LOG_INFO, "%s", command);
+      return;
+    }
 
     parser = IRCTAD_KickUserFromChannel(channel, user);
     if (parser == IRC_OK) {
@@ -154,12 +153,12 @@ void kick(char *string, int sock, char *userNick) {
       //  Envía un mesnaje de que el cliente ha abandonado el canal a todos
       //  los
       //  clientes del canal
-      // IRCTAD_ListNicksOnChannelArray(channel, &list, &nUsers);
-      // IRCMsg_Part(&command, user, channel, msg);
-      // for (i = 0; i < nUsers; i++) {
-      //   socket = getsocket(list[i]); /// &
-      //   send(socket, command, strlen(command), 0);
-      // }
+      IRCMsg_Part(&command, user, channel, msg);
+      IRCTAD_ListNicksOnChannelArray(channel, &list, &nUsers);
+      for (i = 0; i < nUsers; i++) {
+        socket = getsocket(list[i]); /// &
+        send(socket, command, strlen(command), 0);
+      }
 
       // No existe el usuario en el canal
     } else if (parser == IRCERR_NOVALIDUSER) {

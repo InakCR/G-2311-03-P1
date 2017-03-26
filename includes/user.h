@@ -56,3 +56,4 @@ void whois(char *string, int sock, char *userNick);
  */
 void away(char *string, int sock, char *userNick);
 void msgUser(char* nick,char* userNick,char* msg);
+void setMotdUser(char *motd);

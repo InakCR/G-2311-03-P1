@@ -73,3 +73,4 @@ void nocommand(char *string, int sock, char *userNick);
    @param sock: Puerto en el que se encuentra el usuario.
  */
 void doCommand(char *string, int sock, char **userNick);
+void setMotd(char* motd);

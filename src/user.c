@@ -1,7 +1,10 @@
 #include "../includes/user.h"
+
+char motdServerUser[50] = "**BIENVENIDO AL SERVIDOR**";
+
 void nick(char *string, int sock, char **userNick) {
   char *prefix, *nick, *msg, *command, **nicklist;
-  long num, nelements;
+  long nelements;
   int socket, i;
 
   syslog(LOG_INFO, "Comienza Funcion NICK");
@@ -112,7 +115,8 @@ void user(char *string, int sock, char *userNick) {
   for (i = 0; i < nelements; i++) {
     syslog(LOG_INFO, "Nick nº%d -> %s", i, nicklist[i]);
   }
-
+  syslog(LOG_INFO, "%s", prefix);
+  syslog(LOG_INFO, "%s", serverother);
   IRCMsg_RplWelcome(&command, "REDES2", userNick, user, realname, modehost);
   send(sock, command, strlen(command), 0);
   syslog(LOG_INFO, "%s", command);
@@ -134,16 +138,16 @@ void user(char *string, int sock, char *userNick) {
   send(sock, command, strlen(command), 0);
   syslog(LOG_INFO, "%s", command);
 
-  IRCMsg_RplMotdStart(&command, "REDES2", userNick, serverother);
+  IRCMsg_RplMotdStart(&command, "REDES2", userNick, "REDES2");
   send(sock, command, strlen(command), 0);
   syslog(LOG_INFO, "%s", command);
 
-  IRCMsg_RplMotd(&command, "REDES2", userNick, "****BIENVENIDO****\n");
+  IRCMsg_RplMotd(&command, "REDES2", userNick, motdServerUser);
   send(sock, command, strlen(command), 0);
   syslog(LOG_INFO, "%s", command);
 
   IRCMsg_RplEndOfMotd(&command, "REDES2", userNick);
-
+  send(sock, command, strlen(command), 0);
   syslog(LOG_INFO, "%s", command);
 
   free(prefix);
@@ -261,4 +265,8 @@ void msgUser(char *nick, char *userNick, char *msg) {
       send(socket, command, strlen(command), 0);
     }
   }
+}
+void setMotdUser(char *motd) {
+  // motdServer = (char *)malloc(strlen(motd + 1) * sizeof(char));
+  // strcpy(motdServer, motd);
 }

@@ -1,5 +1,7 @@
 #include "../includes/commands.h"
 
+char motdServer[50] = "**BIENVENIDO AL SERVIDOR**";
+
 void ping(char *string, int sock, char *userNick) {
   char *prefix, *server, *server2, *msg, *command;
 
@@ -92,18 +94,22 @@ void quit(char *string, int sock, char *userNick) {
     syslog(LOG_ERR, "Error Quit");
     return;
   }
+
   if (IRCTAD_ListChannelsOfUserArray(NULL, userNick, &arraylist, &num) !=
       IRC_OK) {
     syslog(LOG_ERR, "Error ListChanUser");
     return;
   }
-  // mandar mensajr channel
-  if (num > 0) {
+  IRCTAD_Quit(userNick);
+  if (reason != NULL && num > 0) {
     for (i = 0; i < num; i++) {
-      send(sock, command, strlen(command), 0);
+      msgCanal(arraylist[i], userNick, reason);
     }
   }
-  IRCTAD_Quit(userNick);
+  if (IRCMsg_Kill(&command, prefix, userNick, "Desconectado") == IRC_OK) {
+    send(sock, command, strlen(command), 0);
+    syslog(LOG_INFO, "%s", command);
+  }
   close(sock);
 }
 
@@ -115,12 +121,12 @@ void motd(char *string, int sock, char *userNick) {
     return;
   }
 
-  if (IRCMsg_RplMotdStart(&command, "REDES2", userNick, target) == IRC_OK) {
+  if (IRCMsg_RplMotdStart(&command, "REDES2", userNick, "REDES2") == IRC_OK) {
     send(sock, command, strlen(command), 0);
     syslog(LOG_INFO, "%s", command);
   }
-  if (IRCMsg_RplMotd(&command, "REDES2", userNick, "****BIENVENIDO****\n") ==
-      IRC_OK) {
+
+  if (IRCMsg_RplMotd(&command, "REDES2", userNick, motdServer) == IRC_OK) {
     send(sock, command, strlen(command), 0);
     syslog(LOG_INFO, "%s", command);
   }
@@ -233,4 +239,9 @@ void doCommand(char *string, int sock, char **userNick) {
     nocommand(string, sock, *userNick);
     break;
   }
+}
+void setMotd(char *motd) {
+  // motdServer = (char *)malloc(strlen(motd + 1) * sizeof(char));
+  // strcpy(motdServer, motd);
+  // setMotdUser(motd);
 }
