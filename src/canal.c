@@ -6,9 +6,13 @@ void join(char *string, int sock, char *userNick) {
 
   parser = IRCParse_Join(string, &prefix, &channel, &key, &msg);
 
-  if (parser == IRCERR_NOSTRING || parser == IRCERR_ERRONEUSCOMMAND) {
-    syslog(LOG_ERR, "***Error No existe una cadena para usar como User.");
-    return;
+  if (channel == NULL && key == NULL && msg == NULL) {
+
+    if (IRCMsg_ErrNeedMoreParams(&command, userNick, userNick, string) ==
+        IRC_OK) {
+      send(sock, command, strlen(command), 0);
+      return;
+    }
   } else if (parser == IRC_OK) {
 
     parser = IRCTAD_Join(channel, userNick, "o", key);
@@ -18,9 +22,18 @@ void join(char *string, int sock, char *userNick) {
         send(sock, command, strlen(command), 0);
       }
       IRCTAD_GetTopic(channel, &topic);
-      if (IRCMsg_RplTopic(&command, "REDES2", userNick, channel, topic) ==
-          IRC_OK) {
-        send(sock, command, strlen(command), 0);
+      if (topic != NULL) {
+        if (IRCMsg_RplTopic(&command, "REDES2", userNick, channel, topic) ==
+            IRC_OK) {
+          send(sock, command, strlen(command), 0);
+          syslog(LOG_INFO, "%s", command);
+        }
+      } else {
+        if (IRCMsg_RplNoTopic(&command, "REDES2", userNick, channel) ==
+            IRC_OK) {
+          send(sock, command, strlen(command), 0);
+          syslog(LOG_INFO, "%s", command);
+        }
       }
       if (IRCMsg_RplNamReply(&command, "REDES2", userNick, "=", channel,
                              getUsuariosCanal(channel)) == IRC_OK) {
@@ -135,7 +148,7 @@ void kick(char *string, int sock, char *userNick) {
 
     mode = IRCTAD_GetUserModeOnChannel(channel, userNick);
 
-    if (mode < IRCUMODE_CREATOR) {
+    if (mode < IRCUMODE_CREATOR) { //== (IRCUMODE_CREATOR | IRCUMODE_OPERATOR
       IRCMsg_ErrChanOPrivsNeeded(&command, userNick, userNick, channel);
       send(sock, command, strlen(command), 0);
       syslog(LOG_INFO, "%s", command);
@@ -226,8 +239,10 @@ void msgCanal(char *channel, char *userNick, char *msg) {
   if (IRCTAD_ListNicksOnChannelArray(channel, &list, &nUsers) == IRC_OK) {
     if (IRCMsg_Privmsg(&command, userNick, channel, msg) == IRC_OK) {
       for (i = 0; i < nUsers; i++) {
-        socket = getsocket(list[i]);
-        send(socket, command, strlen(command), 0);
+        if (strcmp(list[i], userNick) != 0) {
+          socket = getsocket(list[i]);
+          send(socket, command, strlen(command), 0);
+        }
       }
     }
   }

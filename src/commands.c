@@ -137,7 +137,7 @@ void motd(char *string, int sock, char *userNick) {
 }
 
 void msg(char *string, int sock, char *userNick) {
-  char *nickorchannel, *prefix, *msg;
+  char *nickorchannel, *prefix, *msg, *command;
 
   if (IRCParse_Privmsg(string, &prefix, &nickorchannel, &msg) == IRC_OK) {
     if (IRCTADUser_Test(0, NULL, nickorchannel) == IRC_OK) {
@@ -147,7 +147,11 @@ void msg(char *string, int sock, char *userNick) {
       syslog(LOG_INFO, "Canal");
       msgCanal(nickorchannel, userNick, msg);
     } else {
-      // ERROR
+      if (IRCMsg_ErrNoSuchNick(&command, userNick, userNick, nickorchannel) ==
+          IRC_OK) {
+        send(sock, command, strlen(command), 0);
+        syslog(LOG_INFO, "%s", command);
+      }
     }
   }
   free(nickorchannel);

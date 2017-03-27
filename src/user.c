@@ -207,9 +207,14 @@ void whois(char *string, int sock, char *userNick) {
       send(sock, command, strlen(command), 0);
       syslog(LOG_INFO, "%s", command);
     } else {
+
       syslog(LOG_INFO, " No existe el nick: %s", maskarray);
     }
   } else {
+    if (IRCMsg_ErrNoNickNameGiven(&command, userNick, userNick) == IRC_OK) {
+      send(sock, command, strlen(command), 0);
+      syslog(LOG_INFO, "%s", command);
+    }
     syslog(LOG_ERR, "Error Parseo Whois");
   }
 }
