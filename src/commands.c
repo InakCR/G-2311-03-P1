@@ -20,8 +20,8 @@ void ping(char *string, int sock, char *userNick) {
 }
 
 void list(char *string, int sock, char *userNick) {
-  char *prefix, *channel, *command, *topic, **list, *target;
-  int i;
+  char *prefix, *channel, *command, *topic, **list, *target, mode[1];
+  int i, modei;
 
   if (IRCParse_List(string, &prefix, &channel, &target) == IRC_OK) {
     // Miramos que haya canales
@@ -31,10 +31,11 @@ void list(char *string, int sock, char *userNick) {
         syslog(LOG_INFO, "Canal encontrado");
         IRCTAD_GetTopic(channel, &topic);
         if (topic != NULL) {
-          IRCMsg_RplList(&command, "REDES2", userNick, channel, "2-3", topic);
-          send(sock, command, strlen(command), 0);
-
-          free(command);
+          modei = IRCTADChan_GetModeInt(channel);
+          if (IRCTADChan_GetModeInt(channel) < 127) {
+            IRCMsg_RplList(&command, "REDES2", userNick, channel, "2-3", topic);
+            send(sock, command, strlen(command), 0);
+          }
         }
         free(channel);
       } else {
@@ -42,11 +43,10 @@ void list(char *string, int sock, char *userNick) {
         list = getListaCanales();
         for (i = 0; i < getNumeroCanales(); i++) {
           IRCTAD_GetTopic(list[i], &topic);
-          // Mirar Nivel "2-3"
-          IRCMsg_RplList(&command, "REDES2", userNick, list[i], "2-3", topic);
-          send(sock, command, strlen(command), 0);
-          free(topic);
-          free(command);
+          if (IRCTADChan_GetModeInt(list[i]) < 127) {
+            IRCMsg_RplList(&command, "REDES2", userNick, list[i], "2-3", topic);
+            send(sock, command, strlen(command), 0);
+          }
         }
       }
 
@@ -72,7 +72,6 @@ void who(char *string, int sock, char *userNick) {
       if (num > 0) {
         // 319
         IRCMsg_RplWhoIsChannels(&command, "REDES2", userNick, mask, list);
-
         send(sock, command, strlen(command), 0);
         syslog(LOG_INFO, "%s", command);
       }
@@ -235,7 +234,7 @@ void doCommand(char *string, int sock, char **userNick) {
     motd(string, sock, *userNick);
     break;
   case MODE:
-    syslog(LOG_INFO, "MOTD");
+    syslog(LOG_INFO, "MODE");
     mode(string, sock, *userNick);
     break;
   case PRIVMSG:

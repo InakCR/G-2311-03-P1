@@ -42,7 +42,7 @@
    @brief numero de clientes maximo
    que soporta el servidor.
  */
-#define MAX_CLIENTS 20
+#define MAX_CLIENTS 100
 /**
    @brief numero maximo de milisegundos.
  */
