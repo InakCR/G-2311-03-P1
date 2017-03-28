@@ -85,9 +85,9 @@ void who(char *string, int sock, char *userNick) {
 // Causes you to disconnect from the server.
 // If you include a reason, it will be displayed on all channels as you quit
 void quit(char *string, int sock, char *userNick) {
-  char *reason, *prefix, **arraylist, *command;
-  long num;
-  int i;
+  char *reason, *prefix, **arraylist, **arraylistNicks, *command;
+  long num, numNicks;
+  int i, j, socket;
 
   if (IRCParse_Quit(string, &prefix, &reason) != IRC_OK) {
     syslog(LOG_ERR, "Error Quit");
@@ -99,10 +99,27 @@ void quit(char *string, int sock, char *userNick) {
     syslog(LOG_ERR, "Error ListChanUser");
     return;
   }
+
   IRCTAD_Quit(userNick);
   if (reason != NULL && num > 0) {
     for (i = 0; i < num; i++) {
-      msgCanal(arraylist[i], userNick, reason);
+
+      if (IRCTAD_ListNicksOnChannelArray(arraylist[i], &arraylistNicks,
+          &numNicks) != IRC_OK){
+        syslog(LOG_ERR, "Error ListNickChan en %s", arraylist[i]);
+        return;
+      }
+
+      if (IRCMsg_Quit (&command, userNick, reason) == IRC_OK){
+
+        for (j = 0; j < numNicks; j++){
+
+          socket = getsocket(arraylistNicks[i]);
+          send(socket, command, strlen(command), 0);
+        }
+      }
+
+      //msgCanal(arraylist[i], userNick, reason);
     }
   }
   if (IRCMsg_Kill(&command, prefix, userNick, "Desconectado") == IRC_OK) {
