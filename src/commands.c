@@ -70,7 +70,7 @@ void who(char *string, int sock, char *userNick) {
 
     if (IRCTAD_ListNicksOnChannel(mask, &list, &num) == IRC_OK) {
       if (num > 0) {
-        // 319
+        // 319 Añadir @ a mano en cada nick si es operador y
         IRCMsg_RplWhoIsChannels(&command, "REDES2", userNick, mask, list);
         send(sock, command, strlen(command), 0);
         syslog(LOG_INFO, "%s", command);

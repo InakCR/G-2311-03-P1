@@ -219,33 +219,27 @@ void whois(char *string, int sock, char *userNick) {
   }
 }
 void away(char *string, int sock, char *userNick) {
-  char *reason = NULL, *command, *prefix, **nicklist;
-  long nelements;
-  int socket, i;
+  char *reason = NULL, *command, *prefix;
 
   if (IRCParse_Away(string, &prefix, &reason) != IRC_OK) {
     syslog(LOG_ERR, "Error Away");
     return;
   }
-
-  if (setAway(userNick, reason) != IRC_OK) {
-    syslog(LOG_ERR, "Error setaway");
-    return;
-  }
   if (reason != NULL) {
+    if (setAway(userNick, reason) != IRC_OK) {
+      syslog(LOG_ERR, "Error setaway");
+      return;
+    }
+
     if (IRCMsg_RplNowAway(&command, userNick, userNick) == IRC_OK) {
       send(sock, command, strlen(command), 0);
       syslog(LOG_INFO, "%s", command);
     }
 
-    IRCTADUser_GetNickList(&nicklist, &nelements);
-    // se manda al usuario que lo camabia
-    send(sock, command, strlen(command), 0);
-    // se manda al resto de usuarios
-    for (i = 0; i < nelements; i++) {
-      IRCMsg_RplAway(&command, userNick, userNick, nicklist[i], reason);
-      socket = getsocket(nicklist[i]);
-      send(socket, command, strlen(command), 0);
+    if (IRCMsg_RplAway(&command, userNick, userNick, userNick, reason) ==
+        IRC_OK) {
+      send(sock, command, strlen(command), 0);
+      syslog(LOG_INFO, "%s", command);
     }
   } else {
     if (IRCMsg_RplUnaway(&command, userNick, userNick) == IRC_OK) {
@@ -259,7 +253,6 @@ void msgUser(char *nick, char *userNick, char *msg) {
   char *command, *reason;
   int socket;
   reason = isAway(nick);
-  syslog(LOG_INFO, "%s es %s", nick, reason);
   if (reason != NULL) {
     IRCMsg_RplAway(&command, userNick, userNick, nick, reason);
     socket = getsocket(userNick);
