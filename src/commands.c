@@ -20,8 +20,9 @@ void ping(char *string, int sock, char *userNick) {
 }
 
 void list(char *string, int sock, char *userNick) {
-  char *prefix, *channel, *command, *topic, **list, *target, mode[1];
+  char *prefix, *channel, *command, *topic, **list, *target, numc[10] = "%ld";
   int i, modei;
+  long num;
 
   if (IRCParse_List(string, &prefix, &channel, &target) == IRC_OK) {
     // Miramos que haya canales
@@ -31,7 +32,9 @@ void list(char *string, int sock, char *userNick) {
         syslog(LOG_INFO, "Canal encontrado");
         IRCTAD_GetTopic(channel, &topic);
         if (topic != NULL) {
-          modei = IRCTADChan_GetModeInt(channel);
+
+          num = getNumUsuariosCanal(list[i]);
+          sprintf(numc, numc, num);
           if (IRCTADChan_GetModeInt(channel) < 127) {
             IRCMsg_RplList(&command, "REDES2", userNick, channel, "2-3", topic);
             send(sock, command, strlen(command), 0);
@@ -43,8 +46,10 @@ void list(char *string, int sock, char *userNick) {
         list = getListaCanales();
         for (i = 0; i < getNumeroCanales(); i++) {
           IRCTAD_GetTopic(list[i], &topic);
+          num = getNumUsuariosCanal(list[i]);
+          sprintf(numc, numc, num);
           if (IRCTADChan_GetModeInt(list[i]) < 127) {
-            IRCMsg_RplList(&command, "REDES2", userNick, list[i], "2-3", topic);
+            IRCMsg_RplList(&command, "REDES2", userNick, list[i], numc, topic);
             send(sock, command, strlen(command), 0);
           }
         }
@@ -63,19 +68,21 @@ void list(char *string, int sock, char *userNick) {
   free(target);
 }
 void who(char *string, int sock, char *userNick) {
-  char *prefix, *mask, *oppar, *command, *list;
+  char *prefix, *mask, *oppar, *command, *list, **listArray;
+  char *lista = NULL;
   long num = 0;
+  int i;
 
   if (IRCParse_Who(string, &prefix, &mask, &oppar) == IRC_OK) {
+    if (mask != NULL) {
+      if (IRCTAD_ListNicksOnChannel(mask, &list, &num) == IRC_OK) {
+        if (num > 0) {
 
-    if (IRCTAD_ListNicksOnChannel(mask, &list, &num) == IRC_OK) {
-      if (num > 0) {
-        // 319 Añadir @ a mano en cada nick si es operador y
-        IRCMsg_RplWhoIsChannels(&command, "REDES2", userNick, mask, list);
-        send(sock, command, strlen(command), 0);
-        syslog(LOG_INFO, "%s", command);
+          IRCMsg_RplWhoIsChannels(&command, "REDES2", userNick, mask, list);
+          send(sock, command, strlen(command), 0);
+          syslog(LOG_INFO, "%s", command);
+        }
       }
-      syslog(LOG_INFO, "%ld", num);
     }
   }
 }

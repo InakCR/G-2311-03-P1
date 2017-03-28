@@ -1,8 +1,9 @@
 #include "../includes/canal.h"
-
+char prefixS[10] = "REDES2";
 void join(char *string, int sock, char *userNick) {
-  char *prefix, *msg, *channel, *key, *command, *topic, **list;
-  long parser, nUsers;
+  char *prefix, *msg, *channel, *key, *command, *topic, *list, **listArray,
+      *lista;
+  long parser, nUsers, num;
   int i, socket;
 
   parser = IRCParse_Join(string, &prefix, &channel, &key, &msg);
@@ -16,7 +17,7 @@ void join(char *string, int sock, char *userNick) {
     }
   } else if (parser == IRC_OK) {
     if (IRCTADChan_TestPassword(channel, key) == IRCERR_FAIL) {
-      IRCMsg_ErrBadChannelKey(&command, "REDES2", userNick, channel);
+      IRCMsg_ErrBadChannelKey(&command, prefixS, userNick, channel);
       send(sock, command, strlen(command), 0);
       return;
     }
@@ -28,29 +29,41 @@ void join(char *string, int sock, char *userNick) {
       }
       IRCTAD_GetTopic(channel, &topic);
       if (topic != NULL) {
-        if (IRCMsg_RplTopic(&command, "REDES2", userNick, channel, topic) ==
+        if (IRCMsg_RplTopic(&command, prefixS, userNick, channel, topic) ==
             IRC_OK) {
           send(sock, command, strlen(command), 0);
           syslog(LOG_INFO, "%s", command);
         }
       } else {
-        if (IRCMsg_RplNoTopic(&command, "REDES2", userNick, channel) ==
-            IRC_OK) {
+        if (IRCMsg_RplNoTopic(&command, prefixS, userNick, channel) == IRC_OK) {
           send(sock, command, strlen(command), 0);
           syslog(LOG_INFO, "%s", command);
         }
       }
+      IRCTAD_ListNicksOnChannel(channel, &list, &num);
+      lista = (char *)malloc(strlen(list + num) * sizeof(char));
+      strcpy(lista, "");
+      IRCTAD_ListNicksOnChannelArray(channel, &listArray, &num);
+      for (i = 0; i < num; i++) {
 
-      if (IRCMsg_RplNamReply(&command, "REDES2", userNick, "=", channel,
-                             getUsuariosCanal(channel)) == IRC_OK) {
-        if (IRCTAD_ListNicksOnChannelArray(channel, &list, &nUsers) == IRC_OK) {
+        if (IRCTAD_GetUserModeOnChannel(channel, listArray[i]) >=
+            IRCUMODE_OPERATOR) {
+          strcat(lista, "@");
+        }
+        strcat(lista, listArray[i]);
+        strcat(lista, " ");
+      }
+      if (IRCMsg_RplNamReply(&command, prefixS, userNick, "=", channel,
+                             lista) == IRC_OK) {
+        if (IRCTAD_ListNicksOnChannelArray(channel, &listArray, &nUsers) ==
+            IRC_OK) {
           for (i = 0; i < nUsers; i++) {
-            socket = getsocket(list[i]);
+            socket = getsocket(listArray[i]);
             send(socket, command, strlen(command), 0);
           }
         }
       }
-      if (IRCMsg_RplEndOfNames(&command, "REDES2", userNick, channel) ==
+      if (IRCMsg_RplEndOfNames(&command, prefixS, userNick, channel) ==
           IRC_OK) {
         send(sock, command, strlen(command), 0);
       }
@@ -73,16 +86,14 @@ void names(char *string, int sock, char *userNick) {
   long num;
 
   if (IRCParse_Names(string, &prefix, &channel, &target) == IRC_OK) {
-    syslog(LOG_ERR, "NAMES 1");
     if (IRCTAD_ListNicksOnChannel(channel, &list, &num) == IRC_OK) {
-      syslog(LOG_ERR, "NAMES 2");
       if (num > 0) {
-        IRCMsg_RplNamReply(&command, "REDES2", userNick, "=", channel, list);
+        IRCMsg_RplNamReply(&command, prefixS, userNick, "=", channel, list);
         send(sock, command, strlen(command), 0);
         syslog(LOG_INFO, "%s", command);
       }
     }
-    IRCMsg_RplEndOfNames(&command, "REDES2", userNick, channel);
+    IRCMsg_RplEndOfNames(&command, prefixS, userNick, channel);
     send(sock, command, strlen(command), 0);
     syslog(LOG_INFO, "%s", command);
   }
@@ -127,19 +138,19 @@ void part(char *string, int sock, char *userNick) {
     }
     // No existe el usuario en el canal
     else if (parser == IRCERR_NOVALIDUSER) {
-      IRCMsg_ErrNotOnChannel(&command, "REDES2", userNick, userNick, channel);
+      IRCMsg_ErrNotOnChannel(&command, prefixS, userNick, userNick, channel);
       send(sock, command, strlen(command), 0);
       syslog(LOG_INFO, "***Error - %s", command);
     }
     // No existe el canal indicado
     else if (parser == IRCERR_NOVALIDCHANNEL) {
-      IRCMsg_ErrNoSuchChannel(&command, "REDES2", userNick, channel);
+      IRCMsg_ErrNoSuchChannel(&command, prefixS, userNick, channel);
       send(sock, command, strlen(command), 0);
       syslog(LOG_INFO, "***Error - %s", command);
     }
     // No se puede eliminar el canal porque es permanente
     else if (parser == IRCERR_UNDELETABLECHANNEL) {
-      IRCMsg_ErrNoChanModes(&command, "REDES2", userNick, channel);
+      IRCMsg_ErrNoChanModes(&command, prefixS, userNick, channel);
       send(sock, command, strlen(command), 0);
       syslog(LOG_INFO, "***Error - %s", command);
     }
@@ -187,19 +198,19 @@ void kick(char *string, int sock, char *userNick) {
 
       // No existe el usuario en el canal
     } else if (parser == IRCERR_NOVALIDUSER) {
-      IRCMsg_ErrNotOnChannel(&command, "REDES2", userNick, user, channel);
+      IRCMsg_ErrNotOnChannel(&command, prefixS, userNick, user, channel);
       send(sock, command, strlen(command), 0);
       syslog(LOG_INFO, "***Error - %s", command);
     }
     // No existe el canal indicado
     else if (parser == IRCERR_NOVALIDCHANNEL) {
-      IRCMsg_ErrNoSuchChannel(&command, "REDES2", userNick, channel);
+      IRCMsg_ErrNoSuchChannel(&command, prefixS, userNick, channel);
       send(sock, command, strlen(command), 0);
       syslog(LOG_INFO, "***Error - %s", command);
     }
     // No se puede eliminar el canal porque es permanente
     else if (parser == IRCERR_UNDELETABLECHANNEL) {
-      IRCMsg_ErrNoChanModes(&command, "REDES2", userNick, channel);
+      IRCMsg_ErrNoChanModes(&command, prefixS, userNick, channel);
       send(sock, command, strlen(command), 0);
       syslog(LOG_INFO, "***Error - %s", command);
     }
@@ -209,7 +220,7 @@ void kick(char *string, int sock, char *userNick) {
   }
 }
 void topic(char *string, int sock, char *userNick) {
-  char *channel, *prefix, *topic, *command, **list;
+  char *channel, *prefix, *topic, *topicActual, *command, **list;
   long nUsers;
   int i, socket;
 
@@ -220,17 +231,11 @@ void topic(char *string, int sock, char *userNick) {
   if (topic != NULL) {
     if (IRCTAD_SetTopic(channel, userNick, topic) !=
         IRC_OK) { // Comprueba internamente si puede le usuario
-      IRCMsg_ErrChanOPrivsNeeded(&command, "REDES2", userNick, channel);
+      IRCMsg_ErrChanOPrivsNeeded(&command, prefixS, userNick, channel);
       send(sock, command, strlen(command), 0);
       syslog(LOG_ERR, "Error SetTopic");
       return;
     }
-  }
-  if (IRCTAD_GetTopic(channel, &topic) != IRC_OK) {
-    syslog(LOG_ERR, "Error Topic");
-    return;
-  }
-  if (topic != NULL) {
     if (IRCMsg_Topic(&command, userNick, channel, topic) == IRC_OK) {
       if (IRCTAD_ListNicksOnChannelArray(channel, &list, &nUsers) == IRC_OK) {
         for (i = 0; i < nUsers; i++) {
@@ -240,22 +245,29 @@ void topic(char *string, int sock, char *userNick) {
       }
       syslog(LOG_INFO, "%s", command);
     }
-    if (IRCMsg_RplTopic(&command, "REDES2", userNick, channel, topic) ==
-        IRC_OK) {
-      send(sock, command, strlen(command), 0);
-      syslog(LOG_INFO, "%s", command);
-    }
   } else {
-    if (IRCMsg_RplNoTopic(&command, "REDES2", userNick, channel) == IRC_OK) {
-      send(sock, command, strlen(command), 0);
-      syslog(LOG_INFO, "%s", command);
+    if (IRCTAD_GetTopic(channel, &topicActual) != IRC_OK) {
+      syslog(LOG_ERR, "Error Topic");
+      return;
+    }
+    if (topicActual != NULL) {
+
+      if (IRCMsg_RplTopic(&command, prefixS, userNick, channel, topicActual) ==
+          IRC_OK) {
+        send(sock, command, strlen(command), 0);
+        syslog(LOG_INFO, "%s", command);
+      }
+    } else {
+      if (IRCMsg_RplNoTopic(&command, prefixS, userNick, channel) == IRC_OK) {
+        send(sock, command, strlen(command), 0);
+        syslog(LOG_INFO, "%s", command);
+      }
     }
   }
 }
 void mode(char *string, int sock, char *userNick) {
   char *prefix, *channeluser, *mode, *user, *command, *modeChannel;
   if (IRCParse_Mode(string, &prefix, &channeluser, &mode, &user) == IRC_OK) {
-    syslog(LOG_INFO, "chU %s,mode %s,user %s", channeluser, mode, user);
     if (mode == NULL && user == NULL) {
       if (IRCTADUser_Test(0, NULL, channeluser) == IRC_OK) {
 
@@ -263,7 +275,7 @@ void mode(char *string, int sock, char *userNick) {
         modeChannel = IRCTADChan_GetModeChar(channeluser);
         if (modeChannel != NULL) {
 
-          IRCMsg_RplChannelModeIs(&command, "REDES2", userNick, channeluser,
+          IRCMsg_RplChannelModeIs(&command, prefixS, userNick, channeluser,
                                   modeChannel);
           send(sock, command, strlen(command), 0);
           syslog(LOG_INFO, "%s", command);
@@ -271,22 +283,19 @@ void mode(char *string, int sock, char *userNick) {
       }
     } else if (user == NULL) {
       IRCTAD_Mode(channeluser, userNick, mode);
-      IRCMsg_Mode(&command, "REDES2", channeluser, mode, NULL);
-
+      IRCMsg_Mode(&command, prefixS, channeluser, mode, NULL);
       send(sock, command, strlen(command), 0);
       syslog(LOG_INFO, "%s", command);
-      syslog(LOG_INFO, "chU %s,mode %s,user %s", channeluser, mode, user);
     } else {
       IRCTAD_Mode(channeluser, userNick, mode);
       if (strcmp(mode, "\\+k") == 0) {
         IRCTADChan_SetPassword(channeluser, user);
-      }
-      IRCMsg_Mode(&command, "REDES2", channeluser, mode, user);
+        IRCMsg_Mode(&command, userNick, channeluser, mode, user);
 
-      send(sock, command, strlen(command), 0);
-      syslog(LOG_INFO, "%s", command);
+        send(sock, command, strlen(command), 0);
+        syslog(LOG_INFO, "%s", command);
+      }
     }
-    syslog(LOG_INFO, "MODE FIN");
   }
 }
 void msgCanal(char *channel, char *userNick, char *msg) {

@@ -57,6 +57,12 @@ char *getUsuariosCanal(char *channel) {
   IRCTAD_ListNicksOnChannel(channel, &list, &num);
   return list;
 }
+long getNumUsuariosCanal(char *channel) {
+  long num = 0;
+  char *list;
+  IRCTAD_ListNicksOnChannel(channel, &list, &num);
+  return num;
+}
 char **getListaCanales() {
   long num = 0;
   char **list;
