@@ -252,6 +252,19 @@ void away(char *string, int sock, char *userNick) {
 void msgUser(char *nick, char *userNick, char *msg) {
   char *command, *reason;
   int socket;
+
+  reason = isAway(userNick);
+  if (reason != NULL){
+    if (IRCTADUser_SetAway (0, NULL, userNick, NULL, NULL) != IRC_OK){
+      syslog(LOG_ERR, "Error unSetAway");
+      return;
+    }
+
+    IRCMsg_RplUnaway (&command, userNick, userNick);
+    socket = getsocket(userNick);
+    send(socket, command, strlen(command), 0);
+  }
+
   reason = isAway(nick);
   if (reason != NULL) {
     IRCMsg_RplAway(&command, userNick, userNick, nick, reason);
