@@ -118,8 +118,6 @@ void quit(char *string, int sock, char *userNick) {
           send(socket, command, strlen(command), 0);
         }
       }
-
-      //msgCanal(arraylist[i], userNick, reason);
     }
   }
   if (IRCMsg_Kill(&command, prefix, userNick, "Desconectado") == IRC_OK) {
