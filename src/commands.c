@@ -112,14 +112,14 @@ void quit(char *string, int sock, char *userNick) {
     for (i = 0; i < num; i++) {
 
       if (IRCTAD_ListNicksOnChannelArray(arraylist[i], &arraylistNicks,
-          &numNicks) != IRC_OK){
+                                         &numNicks) != IRC_OK) {
         syslog(LOG_ERR, "Error ListNickChan en %s", arraylist[i]);
         return;
       }
 
-      if (IRCMsg_Quit (&command, userNick, reason) == IRC_OK){
+      if (IRCMsg_Quit(&command, userNick, reason) == IRC_OK) {
 
-        for (j = 0; j < numNicks; j++){
+        for (j = 0; j < numNicks; j++) {
 
           socket = getsocket(arraylistNicks[i]);
           send(socket, command, strlen(command), 0);
@@ -168,7 +168,7 @@ void msg(char *string, int sock, char *userNick) {
       syslog(LOG_INFO, "Canal");
       msgCanal(nickorchannel, userNick, msg);
     } else {
-      if (IRCMsg_ErrNoSuchNick(&command, userNick, userNick, nickorchannel) ==
+      if (IRCMsg_ErrNoSuchNick(&command, "REDES2", userNick, nickorchannel) ==
           IRC_OK) {
         send(sock, command, strlen(command), 0);
         syslog(LOG_INFO, "%s", command);

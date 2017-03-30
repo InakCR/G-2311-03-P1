@@ -11,6 +11,7 @@
  * @date 13-02-2017
  */
 #include "../includes/lib.h"
+void sendAllUser(char *command);
 /**
    @brief getNumeroClientesActuales.
 
@@ -47,6 +48,7 @@ int *getSocketsUsuarios();
    Descripcion: Devuelve los nicks de los usuarios registrados en el servidor.
    @return char**: array de char con los nicks de usuarios.
  */
+
 char **getNickUsuarios();
 /**
    @brief getUsuariosCanal.

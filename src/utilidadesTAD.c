@@ -1,5 +1,16 @@
 #include "../includes/utilidadesTAD.h"
 
+void sendAllUser(char *command) {
+  char **nicklist;
+  long nelements;
+  int socket, i;
+
+  IRCTADUser_GetNickList(&nicklist, &nelements);
+  for (i = 0; i < nelements; i++) {
+    socket = getsocket(nicklist[i]);
+    send(socket, command, strlen(command), 0);
+  }
+}
 int setAway(char *nick, char *reason) {
   long id = 0, creationTS = 0, actionTS = 0, parser = 0;
   char *user = NULL, *real = NULL, *host = NULL, *IP = NULL, *away = NULL;
