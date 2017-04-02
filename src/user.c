@@ -1,6 +1,6 @@
 #include "../includes/user.h"
 
-char prefixU[10] = "REDE2S";
+char prefixU[10] = "REDES2";
 char motdServerUser[50] = "**BIENVENIDO AL SERVIDOR**";
 
 void nick(char *string, int sock, char **userNick) {
@@ -22,8 +22,6 @@ void nick(char *string, int sock, char **userNick) {
   } else {
 
     if (IRCTADUser_Test(0, NULL, *userNick) == IRC_OK) {
-
-      syslog(LOG_INFO, "setNick Dentro");
       if (IRCMsg_Nick(&command, *userNick, msg, nick) == IRC_OK) {
         sendAllUser(command);
       }
@@ -135,7 +133,6 @@ void whois(char *string, int sock, char *userNick) {
   if (IRCParse_Whois(string, &prefix, &target, &maskarray) == IRC_OK) {
 
     if (UTestNick(maskarray)) {
-      syslog(LOG_INFO, "Existe el nick: %s", maskarray);
 
       if (IRCTADUser_GetData(&id, &user, &maskarray, &real, &host, &IP, &socket,
                              &creationTS, &actionTS, &away) == IRC_OK) {
