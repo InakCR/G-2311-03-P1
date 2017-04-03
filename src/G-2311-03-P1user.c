@@ -1,4 +1,4 @@
-#include "../includes/user.h"
+#include "../includes/G-2311-03-P1user.h"
 
 char prefixU[10] = "REDES2";
 char motdServerUser[50] = "**BIENVENIDO AL SERVIDOR**";
@@ -210,18 +210,18 @@ void msgUser(char *nick, char *userNick, char *msg) {
   char *command, *reason;
   int socket;
 
-  reason = isAway(userNick);
-
-  if (reason != NULL) {
-    if (IRCTADUser_SetAway(0, NULL, userNick, NULL, NULL) != IRC_OK) {
-      syslog(LOG_ERR, "Error unSetAway");
-      return;
-    }
-
-    IRCMsg_RplUnaway(&command, userNick, userNick);
-    socket = getsocket(userNick);
-    send(socket, command, strlen(command), 0);
-  }
+  // reason = isAway(userNick);
+  //
+  // if (reason != NULL) {
+  //   if (IRCTADUser_SetAway(0, NULL, userNick, NULL, NULL) != IRC_OK) {
+  //     syslog(LOG_ERR, "Error unSetAway");
+  //     return;
+  //   }
+  //
+  //   IRCMsg_RplUnaway(&command, userNick, userNick);
+  //   socket = getsocket(userNick);
+  //   send(socket, command, strlen(command), 0);
+  // }
 
   reason = isAway(nick);
 

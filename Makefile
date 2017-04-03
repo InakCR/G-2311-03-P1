@@ -31,19 +31,19 @@ $(EXEC): $(OBJ)server.o $(OBJ)commands.o $(OBJ)canal.o $(OBJ)user.o $(OBJ)utilid
 	$(CC) $(CCFLAGS) $^ -o  $@ -lircredes -lirctad
 	@echo "Ejecutable servidor creado"
 
-$(OBJ)server.o: $(SRC)server.c
+$(OBJ)server.o: $(SRC)$(GROUP)server.c
 	$(CC) $(CCFLAGS) -o $@ -c $^
 
-$(OBJ)commands.o: $(SRC)commands.c
+$(OBJ)commands.o: $(SRC)$(GROUP)commands.c
 	$(CC) $(CCFLAGS) -o $@ -c $^
 
-$(OBJ)canal.o: $(SRC)canal.c
+$(OBJ)canal.o: $(SRC)$(GROUP)canal.c
 	$(CC) $(CCFLAGS) -o $@ -c $^
 
-$(OBJ)user.o: $(SRC)user.c
+$(OBJ)user.o: $(SRC)$(GROUP)user.c
 	$(CC) $(CCFLAGS) -o $@ -c $^
 
-$(OBJ)utilidadesTAD.o: $(SRC)utilidadesTAD.c
+$(OBJ)utilidadesTAD.o: $(SRC)$(GROUP)utilidadesTAD.c
 	$(CC) $(CCFLAGS) -o $@ -c $^
 
 $(OBJ)lib.o: $(SRCLIB)lib.c
@@ -54,12 +54,6 @@ clean:
 dox:
 		doxygen Doxyfile
 
-prueba:$(OBJ)prueba.o
-	$(CC) $(CCFLAGS) $^ -o  $@ -lircredes -lirctad
-	@echo "Ejecutable servidor creado"
-
-$(OBJ)prueba.o:$(SRC)prueba.c
-	$(CC) $(CCFLAGS) -o $@ -c $^
 
 tar:
 		@ echo "Comprimiendo el archivo"

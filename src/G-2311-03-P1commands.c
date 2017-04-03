@@ -1,13 +1,13 @@
-#include "../includes/commands.h"
+#include "../includes/G-2311-03-P1commands.h"
 
 char motdServer[50] = "**BIENVENIDO AL SERVIDOR**";
-char prefixU[10] = "REDES2";
+char prefixC[10] = "REDES2";
 
 void ping(char *string, int sock, char *userNick) {
   char *prefix, *server, *server2, *msg, *command;
 
   if (IRCParse_Ping(string, &prefix, &server, &server2, &msg) == IRC_OK) {
-    if (IRCMsg_Pong(&command, prefixU, prefixU, server2, server) = IRC_OK) {
+    if (IRCMsg_Pong(&command, prefixC, prefixC, server2, server) == IRC_OK) {
       send(sock, command, strlen(command), 0);
     }
     free(command);
@@ -19,7 +19,7 @@ void ping(char *string, int sock, char *userNick) {
 
 void list(char *string, int sock, char *userNick) {
   char *prefix, *channel, *command, *topic, **list, *target, numc[10] = "%ld";
-  int i, modei;
+  int i;
   long num;
 
   if (IRCParse_List(string, &prefix, &channel, &target) == IRC_OK) {
@@ -32,7 +32,7 @@ void list(char *string, int sock, char *userNick) {
           num = getNumUsuariosCanal(channel);
           sprintf(numc, numc, num);
           if (IRCTADChan_GetModeInt(channel) < 127) {
-            IRCMsg_RplList(&command, prefixU, userNick, channel,numc , topic);
+            IRCMsg_RplList(&command, prefixC, userNick, channel, numc, topic);
             send(sock, command, strlen(command), 0);
           }
         }
@@ -44,13 +44,13 @@ void list(char *string, int sock, char *userNick) {
           num = getNumUsuariosCanal(list[i]);
           sprintf(numc, numc, num);
           if (IRCTADChan_GetModeInt(list[i]) < 127) {
-            IRCMsg_RplList(&command, prefixU, userNick, list[i], numc, topic);
+            IRCMsg_RplList(&command, prefixC, userNick, list[i], numc, topic);
             send(sock, command, strlen(command), 0);
           }
         }
       }
 
-      IRCMsg_RplListEnd(&command, prefixU, userNick);
+      IRCMsg_RplListEnd(&command, prefixC, userNick);
       send(sock, command, strlen(command), 0);
     } else {
       syslog(LOG_INFO, "No hay canales");
@@ -64,15 +64,14 @@ void list(char *string, int sock, char *userNick) {
 }
 
 void who(char *string, int sock, char *userNick) {
-  char *prefix, *mask, *oppar, *command, *list, **listArray;
-  char *lista = NULL;
+  char *prefix, *mask, *oppar, *command, *list;
   long num = 0;
 
   if (IRCParse_Who(string, &prefix, &mask, &oppar) == IRC_OK) {
     if (mask != NULL) {
       if (IRCTAD_ListNicksOnChannel(mask, &list, &num) == IRC_OK) {
         if (num > 0) {
-          IRCMsg_RplWhoIsChannels(&command, prefixU, userNick, mask, list);
+          IRCMsg_RplWhoIsChannels(&command, prefixC, userNick, mask, list);
           send(sock, command, strlen(command), 0);
           syslog(LOG_INFO, "%s", command);
         }
@@ -98,25 +97,23 @@ void quit(char *string, int sock, char *userNick) {
   }
 
   IRCTAD_Quit(userNick);
-  if (reason != NULL && num > 0) {
-    for (i = 0; i < num; i++) {
-
-      if (IRCTAD_ListNicksOnChannelArray(arraylist[i], &arraylistNicks,
-                                         &numNicks) != IRC_OK) {
-        syslog(LOG_ERR, "Error ListNickChan en %s", arraylist[i]);
-        return;
-      }
-
-      if (IRCMsg_Quit(&command, userNick, reason) == IRC_OK) {
-
-        for (j = 0; j < numNicks; j++) {
-
-          socket = getsocket(arraylistNicks[i]);
-          send(socket, command, strlen(command), 0);
-        }
-      }
-    }
-  }
+  // if (reason != NULL && num > 0) {
+  //   for (i = 0; i < num; i++) {
+  //
+  //     if (IRCTAD_ListNicksOnChannelArray(arraylist[i], &arraylistNicks,
+  //                                        &numNicks) == IRC_OK) {
+  //
+  //       if (IRCMsg_Quit(&command, userNick, reason) == IRC_OK) {
+  //
+  //         for (j = 0; j < numNicks; j++) {
+  //
+  //           socket = getsocket(arraylistNicks[i]);
+  //           send(socket, command, strlen(command), 0);
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
   if (IRCMsg_Kill(&command, prefix, userNick, "Desconectado") == IRC_OK) {
     send(sock, command, strlen(command), 0);
   }
@@ -131,14 +128,14 @@ void motd(char *string, int sock, char *userNick) {
     return;
   }
 
-  if (IRCMsg_RplMotdStart(&command, prefixU, userNick, prefixU) == IRC_OK) {
+  if (IRCMsg_RplMotdStart(&command, prefixC, userNick, prefixC) == IRC_OK) {
     send(sock, command, strlen(command), 0);
   }
 
-  if (IRCMsg_RplMotd(&command, prefixU, userNick, motdServer) == IRC_OK) {
+  if (IRCMsg_RplMotd(&command, prefixC, userNick, motdServer) == IRC_OK) {
     send(sock, command, strlen(command), 0);
   }
-  if (IRCMsg_RplEndOfMotd(&command, prefixU, userNick) == IRC_OK) {
+  if (IRCMsg_RplEndOfMotd(&command, prefixC, userNick) == IRC_OK) {
     send(sock, command, strlen(command), 0);
   }
 }
@@ -152,7 +149,7 @@ void msg(char *string, int sock, char *userNick) {
     } else if (IRCTAD_TestChannelOfUser(nickorchannel, userNick) == IRC_OK) {
       msgCanal(nickorchannel, userNick, msg);
     } else {
-      if (IRCMsg_ErrNoSuchNick(&command, prefixU, userNick, nickorchannel) ==
+      if (IRCMsg_ErrNoSuchNick(&command, prefixC, userNick, nickorchannel) ==
           IRC_OK) {
         send(sock, command, strlen(command), 0);
       }
@@ -163,12 +160,11 @@ void msg(char *string, int sock, char *userNick) {
 }
 void nocommand(char *string, int sock, char *userNick) {
   char *command;
-  if (IRCMsg_ErrUnKnownCommand(&command, prefixU, userNick, string) ==
-      IRC_OK) {
+  if (IRCMsg_ErrUnKnownCommand(&command, prefixC, userNick, string) == IRC_OK) {
     send(sock, command, strlen(command), 0);
     syslog(LOG_INFO, "%s", command);
   }
-  if (IRCMsg_RplTryAgain(&command, prefixU, userNick,
+  if (IRCMsg_RplTryAgain(&command, prefixC, userNick,
                          "Comando no reconocido") == IRC_OK) {
     send(sock, command, strlen(command), 0);
     syslog(LOG_INFO, "%s", command);

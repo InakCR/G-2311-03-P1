@@ -1,4 +1,4 @@
-#include "../includes/canal.h"
+#include "../includes/G-2311-03-P1canal.h"
 
 char prefixS[10] = "REDES2";
 

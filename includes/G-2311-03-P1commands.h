@@ -9,8 +9,8 @@
  * @version 1.0
  * @date 13-02-2017
  */
-#include "../includes/user.h"
-#include "../includes/canal.h"
+#include "../includes/G-2311-03-P1user.h"
+#include "../includes/G-2311-03-P1canal.h"
 /**
    @brief ping.
 
