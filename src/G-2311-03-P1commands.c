@@ -3,7 +3,7 @@
 char motdServer[50] = "**BIENVENIDO AL SERVIDOR**";
 char prefixC[10] = "REDES2";
 
-// TODO Alarma
+// TODO Alarma, Memoria IRC_MFree();
 void ping(char *string, int sock, char *userNick) {
   char *prefix, *server, *server2, *msg, *command;
 
