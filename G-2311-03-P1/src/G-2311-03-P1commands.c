@@ -34,19 +34,19 @@ void list(char *string, int sock, char *userNick) {
 
         tadret = IRCTAD_GetTopic(channel, &topic);
 
-        if (tadret == IRCERR_INVALIDCHANNELNAME) {
+        if (tadret == IRCERR_INVALIDCHANNELNAME){
 
           IRCMsg_ErrNoSuchChannel(&command, prefixC, userNick, channel);
           send(sock, command, strlen(command), 0);
 
-          // IRC_MFree(5, &prefix, &channel, &target, &topic, &command);
+          //IRC_MFree(5, &prefix, &channel, &target, &topic, &command);
 
-        } else if (tadret == IRCERR_NOENOUGHMEMORY) {
+        } else if (tadret == IRCERR_NOENOUGHMEMORY){
 
           IRCMsg_ErrChannelIsFull(&command, prefixC, userNick, channel);
           send(sock, command, strlen(command), 0);
 
-          // IRC_MFree(5, &prefix, &channel, &target, &topic, &command);
+          //IRC_MFree(5, &prefix, &channel, &target, &topic, &command);
 
         } else {
 
@@ -60,10 +60,10 @@ void list(char *string, int sock, char *userNick) {
               send(sock, command, strlen(command), 0);
             }
 
-            // IRC_MFree(5, &prefix, &channel, &target, &topic, &command);
+            //IRC_MFree(5, &prefix, &channel, &target, &topic, &command);
           }
 
-          // IRC_MFree(4, &prefix, &channel, &target, &topic);
+          //IRC_MFree(4, &prefix, &channel, &target, &topic);
         }
 
       } else {
@@ -72,7 +72,7 @@ void list(char *string, int sock, char *userNick) {
 
         for (i = 0; i < getNumeroCanales(); i++) {
 
-          // No error
+          //No error
           IRCTAD_GetTopic(list[i], &topic);
 
           num = getNumUsuariosCanal(list[i]);
@@ -84,7 +84,7 @@ void list(char *string, int sock, char *userNick) {
           }
         }
 
-        // IRC_MFree(5, &prefix, &channel, &target, &topic, &command, &list);
+        //IRC_MFree(5, &prefix, &channel, &target, &topic, &command, &list);
       }
 
       IRCMsg_RplListEnd(&command, prefixC, userNick);
@@ -94,14 +94,16 @@ void list(char *string, int sock, char *userNick) {
 
       syslog(LOG_INFO, "No hay canales");
 
-      // IRC_MFree(3, &prefix, &channel, &target);
+      //IRC_MFree(3, &prefix, &channel, &target);
+
     }
 
   } else {
 
     syslog(LOG_ERR, "***Fallo en el Parseo. List");
 
-    // IRC_MFree(3, &prefix, &channel, &target);
+    //IRC_MFree(3, &prefix, &channel, &target);
+
   }
 }
 
@@ -125,23 +127,25 @@ void who(char *string, int sock, char *userNick) {
           syslog(LOG_INFO, "%s", command);
 
           IRC_MFree(5, &prefix, &mask, &oppar, &list, &command);
+
         }
 
         IRC_MFree(4, &prefix, &mask, &oppar, &list);
 
-      } else if (tadret == IRCERR_NOENOUGHMEMORY) {
+      } else if (tadret == IRCERR_NOENOUGHMEMORY){
 
         IRCMsg_ErrChannelIsFull(&command, prefixC, userNick, mask);
         send(sock, command, strlen(command), 0);
 
         IRC_MFree(5, &prefix, &mask, &oppar, &list, &command);
 
-      } else if (tadret == IRCERR_NOVALIDCHANNEL) {
+      } else if (tadret == IRCERR_NOVALIDCHANNEL){
 
         IRCMsg_ErrNoSuchChannel(&command, prefixC, userNick, mask);
         send(sock, command, strlen(command), 0);
 
         IRC_MFree(5, &prefix, &mask, &oppar, &list, &command);
+
       }
     }
 
@@ -150,6 +154,7 @@ void who(char *string, int sock, char *userNick) {
     syslog(LOG_ERR, "***Fallo en el Parseo. Who");
 
     IRC_MFree(3, &prefix, &mask, &oppar);
+
   }
 }
 
@@ -167,7 +172,7 @@ void quit(char *string, int sock, char *userNick) {
 
   tadret = IRCTAD_ListChannelsOfUserArray(NULL, userNick, &arraylist, &num);
 
-  if (tadret == IRCERR_NOVALIDUSER) {
+  if (tadret == IRCERR_NOVALIDUSER){
 
     IRCMsg_ErrNoNickNameGiven(&command, prefixC, userNick);
     send(sock, command, strlen(command), 0);
@@ -175,24 +180,25 @@ void quit(char *string, int sock, char *userNick) {
     IRC_MFree(4, &prefix, &reason, &arraylist, &command);
 
   } else {
+
     IRCTAD_Quit(userNick);
-    if (reason != NULL && num > 0) {
-      for (i = 0; i < num; i++) {
-
-        if (IRCTAD_ListNicksOnChannelArray(arraylist[i], &arraylistNicks,
-                                           &numNicks) == IRC_OK) {
-
-          if (IRCMsg_Quit(&command, userNick, reason) == IRC_OK) {
-
-            for (j = 0; j < numNicks; j++) {
-
-              socket = getsocket(arraylistNicks[i]);
-              send(socket, command, strlen(command), 0);
-            }
-          }
-        }
-      }
-    }
+    // if (reason != NULL && num > 0) {
+    //   for (i = 0; i < num; i++) {
+    //
+    //     if (IRCTAD_ListNicksOnChannelArray(arraylist[i], &arraylistNicks,
+    //                                        &numNicks) == IRC_OK) {
+    //
+    //       if (IRCMsg_Quit(&command, userNick, reason) == IRC_OK) {
+    //
+    //         for (j = 0; j < numNicks; j++) {
+    //
+    //           socket = getsocket(arraylistNicks[i]);
+    //           send(socket, command, strlen(command), 0);
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
 
     if (IRCMsg_Kill(&command, prefix, userNick, "Desconectado") == IRC_OK) {
 
