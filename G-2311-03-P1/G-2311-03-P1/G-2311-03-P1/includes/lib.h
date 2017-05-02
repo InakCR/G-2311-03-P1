@@ -37,7 +37,7 @@
 /**
    @brief tamaño maximo que puede tener un buffer.
  */
-#define BUFFER_SIZE 8192
+#define BUFFER_SIZE 1024
 /**
    @brief numero de clientes maximo
    que soporta el servidor.

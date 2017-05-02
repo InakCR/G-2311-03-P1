@@ -80,7 +80,7 @@ int recibir(int sock, char **userNick) {
   int n_command = 1;
 
   /*Recibimos el comando*/
-  if (recv(sock, command, BUFFER_SIZE, 0) == 0) {
+  if (recv(sock, command, BUFFER_SIZE, 0) == -1) {
     close(sock);
     return -1;
   }

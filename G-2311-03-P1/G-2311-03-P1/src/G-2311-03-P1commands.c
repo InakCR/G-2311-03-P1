@@ -155,43 +155,54 @@ void who(char *string, int sock, char *userNick) {
 
 void quit(char *string, int sock, char *userNick) {
   char *reason, *prefix, **arraylist, **arraylistNicks, *command;
-  long num, numNicks;
+  long num, numNicks, tadret;
   int i, j, socket;
 
   if (IRCParse_Quit(string, &prefix, &reason) != IRC_OK) {
-    syslog(LOG_ERR, "Error Quit");
-    return;
+
+    syslog(LOG_ERR, "***Fallo en el Parseo. Quit");
+
+    IRC_MFree(2, &prefix, &reason);
   }
 
-  if (IRCTAD_ListChannelsOfUserArray(NULL, userNick, &arraylist, &num) !=
-      IRC_OK) {
-    syslog(LOG_ERR, "Error ListChanUser");
-    return;
-  }
+  tadret = IRCTAD_ListChannelsOfUserArray(NULL, userNick, &arraylist, &num);
 
-  IRCTAD_Quit(userNick);
-  // if (reason != NULL && num > 0) {
-  //   for (i = 0; i < num; i++) {
-  //
-  //     if (IRCTAD_ListNicksOnChannelArray(arraylist[i], &arraylistNicks,
-  //                                        &numNicks) == IRC_OK) {
-  //
-  //       if (IRCMsg_Quit(&command, userNick, reason) == IRC_OK) {
-  //
-  //         for (j = 0; j < numNicks; j++) {
-  //
-  //           socket = getsocket(arraylistNicks[i]);
-  //           send(socket, command, strlen(command), 0);
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
-  if (IRCMsg_Kill(&command, prefix, userNick, "Desconectado") == IRC_OK) {
+  if (tadret == IRCERR_NOVALIDUSER) {
+
+    IRCMsg_ErrNoNickNameGiven(&command, prefixC, userNick);
     send(sock, command, strlen(command), 0);
+
+    IRC_MFree(4, &prefix, &reason, &arraylist, &command);
+
+  } else {
+    IRCTAD_Quit(userNick);
+    if (reason != NULL && num > 0) {
+      for (i = 0; i < num; i++) {
+
+        if (IRCTAD_ListNicksOnChannelArray(arraylist[i], &arraylistNicks,
+                                           &numNicks) == IRC_OK) {
+
+          if (IRCMsg_Quit(&command, userNick, reason) == IRC_OK) {
+
+            for (j = 0; j < numNicks; j++) {
+
+              socket = getsocket(arraylistNicks[i]);
+              send(socket, command, strlen(command), 0);
+            }
+          }
+        }
+      }
+    }
+
+    if (IRCMsg_Kill(&command, prefix, userNick, "Desconectado") == IRC_OK) {
+
+      send(sock, command, strlen(command), 0);
+
+      IRC_MFree(4, &prefix, &reason, &arraylist, &command);
+    }
+
+    close(sock);
   }
-  syslog(LOG_INFO, "QUITTT");
-  close(sock);
 }
 
 void motd(char *string, int sock, char *userNick) {

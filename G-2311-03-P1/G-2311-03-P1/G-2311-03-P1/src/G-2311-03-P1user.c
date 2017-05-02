@@ -16,34 +16,38 @@ void nick(char *string, int sock, char **userNick) {
 
   } else {
 
-    // Primera vez que llega NICK
     if (*userNick == NULL) {
-
       *userNick = (char *)malloc(sizeof(strlen(nick) + 1));
       strcpy(*userNick, nick);
+    }
+
+    if (UTestNick(nick)) {
+
+      IRCMsg_ErrAlreadyRegistred (&command, prefix, nick);
+      send(sock, command, strlen(command), 0);
+
+      IRC_MFree(4, &prefix, &nick, &msg, &command);
 
     } else {
 
-      if (UTestNick(nick)) {
+      tadret = IRCTADUser_Test(0, NULL, *userNick);
 
-        IRCMsg_ErrAlreadyRegistred(&command, prefix, nick);
-        send(sock, command, strlen(command), 0);
+      if (tadret == IRC_OK) {
+
+        if (IRCMsg_Nick(&command, *userNick, msg, nick) == IRC_OK) {
+          sendAllUser(command);
+        }
+
+        setNick(nick, userNick);
 
       } else {
 
-        // Para el cambio de Nick
+        IRCMsg_ErrErroneusNickName (&command, prefix, nick, nick);
+        send(sock, command, strlen(command), 0);
 
-        if (IRCTADUser_Test(0, NULL, *userNick) == IRC_OK) {
+        IRC_MFree(4, &prefix, &nick, &msg, &command);
 
-          if (IRCMsg_Nick(&command, *userNick, msg, nick) == IRC_OK) {
-            sendAllUser(command);
-          }
-
-          setNick(nick, userNick);
-        }
       }
-
-      IRC_MFree(4, &prefix, &nick, &msg, &command);
     }
   }
 }
@@ -64,15 +68,11 @@ void user(char *string, int sock, char *userNick) {
 
     IRC_MFree(5, &prefix, &user, &modehost, &serverother, &realname);
   }
-  if (UTestNick(userNick)) {
-    IRCTADUser_SetSocket(0, NULL, userNick, NULL, sock);
-  }
+
   tadret = IRCTADUser_New(user, userNick, realname, NULL, host, ip, sock);
 
-  if (tadret == IRC_OK || tadret == IRCERR_NICKUSED) {
-    if (UTestNick(userNick)) {
-      IRCTADUser_SetSocket(0, NULL, userNick, NULL, sock);
-    }
+  if (tadret == IRC_OK) {
+
     IRCMsg_RplWelcome(&command, prefixU, userNick, user, realname, modehost);
     send(sock, command, strlen(command), 0);
 
@@ -99,48 +99,49 @@ void user(char *string, int sock, char *userNick) {
     IRCMsg_RplEndOfMotd(&command, prefixU, userNick);
     send(sock, command, strlen(command), 0);
 
-  } else if (tadret == IRCERR_NOENOUGHMEMORY) {
+  } else if (tadret == IRCERR_NOENOUGHMEMORY){
 
-    // TODO
+    //TODO
 
-  } else if (tadret == IRCERR_NICKUSED) {
+  } else if (tadret == IRCERR_NICKUSED){
 
-    IRCMsg_ErrAlreadyRegistred(&command, prefix, userNick);
+    IRCMsg_ErrAlreadyRegistred (&command, prefix, userNick);
     send(sock, command, strlen(command), 0);
 
     IRC_MFree(6, &prefix, &user, &modehost, &serverother, &realname, &command);
 
-  } else if (tadret == IRCERR_INVALIDUSER) {
+  } else if (tadret == IRCERR_INVALIDUSER){
 
-    // TODO
+    //TODO
 
-  } else if (tadret == IRCERR_INVALIDNICK) {
+  } else if (tadret == IRCERR_INVALIDNICK){
 
-    // TODO
+    //TODO
 
-  } else if (tadret == IRCERR_INVALIDREALNAME) {
+  } else if (tadret == IRCERR_INVALIDREALNAME){
 
-    // TODO
+    //TODO
 
-  } else if (tadret == IRCERR_INVALIDHOST) {
+  } else if (tadret == IRCERR_INVALIDHOST	){
 
-    // TODO
+    //TODO
 
-  } else if (tadret == IRCERR_INVALIDIP) {
+  } else if (tadret == IRCERR_INVALIDIP){
 
-    // TODO
+    //TODO
 
-  } else if (tadret == IRCERR_INVALIDID) {
+  } else if (tadret == IRCERR_INVALIDID){
 
-    // TODO
+    //TODO
 
-  } else if (tadret == IRCERR_INVALIDSOCKET) {
+  } else if (tadret == IRCERR_INVALIDSOCKET){
 
-    // TODO
+    //TODO
 
-  } else if (tadret == IRCERR_NOMUTEX) {
+  } else if (tadret == IRCERR_NOMUTEX){
 
-    // TODO
+    //TODO
+
   }
 }
 
@@ -157,7 +158,7 @@ void whois(char *string, int sock, char *userNick) {
     if (UTestNick(maskarray)) {
 
       IRCTADUser_GetData(&id, &user, &maskarray, &real, &host, &IP, &socket,
-                         &creationTS, &actionTS, &away);
+                             &creationTS, &actionTS, &away);
       // 311
       IRCMsg_RplWhoIsUser(&command, prefixU, userNick, maskarray, user, host,
                           real);
@@ -174,7 +175,7 @@ void whois(char *string, int sock, char *userNick) {
         if (num > 0) {
           // 319
           IRCMsg_RplWhoIsChannels(&command, prefixU, userNick, maskarray,
-                                  listChan);
+            listChan);
 
           send(sock, command, strlen(command), 0);
         }
@@ -189,17 +190,16 @@ void whois(char *string, int sock, char *userNick) {
       IRCMsg_RplEndOfWhoIs(&command, prefixU, userNick, maskarray);
       send(sock, command, strlen(command), 0);
 
-      // IRC_MFree(5, &prefix, &target, &maskarray, &id, &user, &maskarray,
-      // &real,
-      //&host, &IP, &socket, &creationTS, &actionTS, &away, &command);
+      //IRC_MFree(5, &prefix, &target, &maskarray, &id, &user, &maskarray, &real,
+        //&host, &IP, &socket, &creationTS, &actionTS, &away, &command);
 
     } else {
 
-      // TODO error del nick. No lo encuentro
+      //TODO error del nick. No lo encuentro
 
       syslog(LOG_INFO, " No existe el nick: %s", maskarray);
 
-      // IRC_MFree(4, &prefix, &target, &maskarray, &command);
+      //IRC_MFree(4, &prefix, &target, &maskarray, &command);
     }
   } else {
 
@@ -209,7 +209,7 @@ void whois(char *string, int sock, char *userNick) {
 
     syslog(LOG_ERR, "***Fallo en el Parseo. WhoIs");
 
-    // IRC_MFree(3, &prefix, &target, &maskarray);
+    //IRC_MFree(3, &prefix, &target, &maskarray);
   }
 }
 
@@ -226,7 +226,7 @@ void away(char *string, int sock, char *userNick) {
 
   if (reason != NULL) {
     if (setAway(userNick, reason) != IRC_OK) {
-      // TODO error nick, no lo encuentro
+      //TODO error nick, no lo encuentro
       syslog(LOG_ERR, "Error setaway");
       return;
     }
@@ -246,7 +246,7 @@ void away(char *string, int sock, char *userNick) {
   }
 }
 
-// TODO
+//TODO
 void msgUser(char *nick, char *userNick, char *msg) {
   char *command, *reason;
   int socket;
