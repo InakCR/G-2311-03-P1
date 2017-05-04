@@ -1,5 +1,4 @@
 /**
-<<<<<<< HEAD
  * @brief Modulo de funciones axuliares para el manejo de los
  * TADs que gestionan canales y usuarios.
  *
@@ -80,5 +79,19 @@ int getsocket(char *nick);
    @param userNick: Antiguo nick del usuario.
  */
 void setNick(char *nick, char **userNick);
+/**
+  @brief isAway.
+
+  Descripcion: consulta el mensaje away de un usuario.
+  @param nick: Nick del usuario.
+  @return char*: mensaje de away.
+*/
 char* isAway(char *nick) ;
+/**
+  @brief getNumUsuariosCanal.
+
+  Descripcion: consulta el numero de usuarios en un canal.
+  @param channel: Nombre del canal.
+  @return long: numero de usuarios del canal.
+*/
 long getNumUsuariosCanal(char *channel);

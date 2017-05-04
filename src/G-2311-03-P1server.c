@@ -1,7 +1,11 @@
 #include "../includes/G-2311-03-P1server.h"
 
 long ncliente = 0;
-
+int port = 0;
+static struct option long_options[] = {{"help", no_argument, NULL, 'h'},
+                                       {"ssl", no_argument, NULL, 's'},
+                                       {"port", required_argument, NULL, 'p'},
+                                       {NULL, 0, NULL, 0}};
 int main(int argc, char *argv[]) {
 
   int socketServer, socketClient, err, max;
@@ -9,11 +13,31 @@ int main(int argc, char *argv[]) {
   struct timeval timeout;
   pthread_attr_t attr;
   fd_set readfds;
+  char ch;
 
+  while ((ch = getopt_long(argc, argv, "h:s:", long_options, NULL)) != -1) {
+    switch (ch) {
+    case 'h':
+      printf("Los argumentos reconocidos son:\n --ssl para activar la "
+             "seguridad SSL\n --help para informacion\n");
+      break;
+    case 's':
+      break;
+    case 'p':
+      port = atoi(optarg);
+      printf("Escuchando puerto %d\n", port);
+      break;
+    case '?':
+      printf(
+          "Argumento no reconocido, pruebe con --help paraa mas informacion\n");
+      break;
+    }
+  }
   // Crecion de proceso Daemon
   if (daemonizar("REDES2") < 0)
     on_error(LOG_ERR, "Error daemonizar");
-
+  if (port == 0)
+    port = PORT;
   socketServer = ini_server(PORT);
 
   // Apertura del socket

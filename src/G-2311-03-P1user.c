@@ -6,7 +6,6 @@ char motdServerUser[50] = "**BIENVENIDO AL SERVIDOR**";
 void nick(char *string, int sock, char **userNick) {
 
   char *prefix, *nick, *msg, *command;
-  long tadret;
 
   if (IRCParse_Nick(string, &prefix, &nick, &msg) != IRC_OK) {
 
@@ -51,9 +50,7 @@ void nick(char *string, int sock, char **userNick) {
 void user(char *string, int sock, char *userNick) {
   char *host, *ip, *prefix, *user, *modehost, *serverother, *realname, *command;
   time_t rawtime;
-  char **nicklist;
-  long nelements, tadret;
-  int i = 0;
+  long tadret;
 
   hostIp(sock, &host, &ip);
 
@@ -64,14 +61,12 @@ void user(char *string, int sock, char *userNick) {
 
     IRC_MFree(5, &prefix, &user, &modehost, &serverother, &realname);
   }
-  if (UTestNick(userNick)) {
-    IRCTADUser_SetSocket(0, NULL, userNick, NULL, sock);
-  }
+
   tadret = IRCTADUser_New(user, userNick, realname, NULL, host, ip, sock);
 
   if (tadret == IRC_OK || tadret == IRCERR_NICKUSED) {
     if (UTestNick(userNick)) {
-      IRCTADUser_SetSocket(0, NULL, userNick, NULL, sock);
+      // IRCTADUser_SetSocket(0, NULL, userNick, NULL, sock);
     }
     IRCMsg_RplWelcome(&command, prefixU, userNick, user, realname, modehost);
     send(sock, command, strlen(command), 0);
@@ -246,7 +241,6 @@ void away(char *string, int sock, char *userNick) {
   }
 }
 
-// TODO
 void msgUser(char *nick, char *userNick, char *msg) {
   char *command, *reason;
   int socket;
@@ -263,8 +257,4 @@ void msgUser(char *nick, char *userNick, char *msg) {
       send(socket, command, strlen(command), 0);
     }
   }
-}
-void setMotdUser(char *motd) {
-  // motdServer = (char *)malloc(strlen(motd + 1) * sizeof(char));
-  // strcpy(motdServer, motd);
 }

@@ -55,5 +55,13 @@ void whois(char *string, int sock, char *userNick);
    @param userNick: nick que usa el usuario conectado en el server.
  */
 void away(char *string, int sock, char *userNick);
+/**
+   @brief msgUser.
+
+   Descripcion: Envia un mensaje privado al usuario dado.
+
+   @param nick: Nick del usuario a enviar el mensaje.
+   @param userNick: nick que usa el usuario conectado en el server.
+   @param char*: mensaje a enviar.
+ */
 void msgUser(char* nick,char* userNick,char* msg);
-void setMotdUser(char *motd);

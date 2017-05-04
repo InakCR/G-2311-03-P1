@@ -154,43 +154,18 @@ void who(char *string, int sock, char *userNick) {
 }
 
 void quit(char *string, int sock, char *userNick) {
-  char *reason, *prefix, **arraylist, **arraylistNicks, *command;
-  long num, numNicks;
-  int i, j, socket;
+  char *reason, *prefix, *command;
 
   if (IRCParse_Quit(string, &prefix, &reason) != IRC_OK) {
     syslog(LOG_ERR, "Error Quit");
     return;
   }
 
-  if (IRCTAD_ListChannelsOfUserArray(NULL, userNick, &arraylist, &num) !=
-      IRC_OK) {
-    syslog(LOG_ERR, "Error ListChanUser");
-    return;
-  }
-
   IRCTAD_Quit(userNick);
-  // if (reason != NULL && num > 0) {
-  //   for (i = 0; i < num; i++) {
-  //
-  //     if (IRCTAD_ListNicksOnChannelArray(arraylist[i], &arraylistNicks,
-  //                                        &numNicks) == IRC_OK) {
-  //
-  //       if (IRCMsg_Quit(&command, userNick, reason) == IRC_OK) {
-  //
-  //         for (j = 0; j < numNicks; j++) {
-  //
-  //           socket = getsocket(arraylistNicks[i]);
-  //           send(socket, command, strlen(command), 0);
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
+
   if (IRCMsg_Kill(&command, prefix, userNick, "Desconectado") == IRC_OK) {
     send(sock, command, strlen(command), 0);
   }
-  syslog(LOG_INFO, "QUITTT");
   close(sock);
 }
 
@@ -350,9 +325,4 @@ void doCommand(char *string, int sock, char **userNick) {
     nocommand(string, sock, *userNick);
     break;
   }
-}
-void setMotd(char *motd) {
-  // motdServer = (char *)malloc(strlen(motd + 1) * sizeof(char));
-  // strcpy(motdServer, motd);
-  // setMotdUser(motd);
 }
