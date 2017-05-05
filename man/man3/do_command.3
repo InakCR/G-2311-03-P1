@@ -1,0 +1,30 @@
+.TH "do_command" 3 "Fri May 5 2017" "G-2311-03-P1" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+do_command \- () \fB\fP 
+do_command - Switch de comandos
+.SH "SINOPSIS"
+.PP
+\fB#include\fP \fB\fBG-2311-03-P1commands\&.h\fP\fP 
+.br
+\fBvoid\fP do_command(char *string, int sock, char **userNick); 
+.SH "Descripcion"
+.PP
+Identifica el commando correcto del servidor\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIstring\fP Cadena que contiene el comando a identificar\&. 
+.br
+\fIsock\fP Puerto en el que se encuentra el usuario\&. 
+.RE
+.PP
+.SH "RETORNO"
+.PP
+Retorno void 
+.SH "VER TAMBIEN"
+.PP
+.SH "AUTORES"
+.PP
+Iñaki Cadalso innaki.cadalso@estudiante.uam.es, Enrique Aracil enrique.aracil@estudiante.uam.es 

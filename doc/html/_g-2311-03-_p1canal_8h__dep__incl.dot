@@ -1,0 +1,10 @@
+digraph "includes/G-2311-03-P1canal.h"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="includes/G-2311-03\l-P1canal.h",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="includes/G-2311-03\l-P1commands.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_g-2311-03-_p1commands_8h.html",tooltip="Modulo de funciones para el reconocimiento y ejecucion de comandos en el servidor IRC..."];
+  Node2 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="includes/G-2311-03\l-P1server.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_g-2311-03-_p1server_8h.html",tooltip="Libreria de funciones para la gestion del servidor IRC. "];
+}

@@ -1,0 +1,32 @@
+.TH "motd" 3 "Fri May 5 2017" "G-2311-03-P1" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+motd \- () \fB\fP 
+motd - Mensaje del Servidor
+.SH "SINOPSIS"
+.PP
+\fB#include\fP \fB\fBG-2311-03-P1commands\&.h\fP\fP 
+.br
+\fBvoid\fP motd(char *string, int sock, char *userNick) 
+.SH "Descripcion"
+.PP
+Envia al usaurio la informacion motd del servidor\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIstring\fP Cadena que contiene el comando MOTD y su informacion\&. 
+.br
+\fIsock\fP Puerto en el que se encuentra el usuario\&. 
+.br
+\fIuserNick\fP nick que usa el usuario conectado en el server\&. 
+.RE
+.PP
+.SH "RETORNO"
+.PP
+Retorno void 
+.SH "VER TAMBIEN"
+.PP
+.SH "AUTORES"
+.PP
+Iñaki Cadalso innaki.cadalso@estudiante.uam.es, Enrique Aracil enrique.aracil@estudiante.uam.es 

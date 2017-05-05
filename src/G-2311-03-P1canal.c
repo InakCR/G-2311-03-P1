@@ -482,7 +482,7 @@ void mode(char *string, int sock, char *userNick) {
   }
 }
 
-void msgCanal(char *channel, char *userNick, char *msg) {
+void msg_canal(char *channel, char *userNick, char *msg) {
 
   char *command, **list;
   int i, socket, sock;

@@ -52,43 +52,88 @@
  */
 #define NUM_BYTES 8192
 /**
-   @brief on_error.
-
-   Descripcion: Imprime el mensaje dado en el syslog y finaliza el proceso.
-   @param log: Nivel de prioridad del log.
-   @param err: mensaje a imprimir.
-   @return void
- */
+@page on_error() \b
+@brief on_error - Notificacion error
+@section synopsis SINOPSIS
+\b #include \b lib.h
+\n\b void on_error(int log,char* err);
+@section description Descripcion
+Imprime el mensaje dado en el syslog y finaliza el proceso.
+@param log: Nivel de prioridad del log.
+@param err: mensaje a imprimir.
+@section return RETORNO
+@return void
+@section seealso VER TAMBIEN
+@section authors AUTORES
+Iñaki Cadalso <innaki.cadalso@estudiante.uam.es>,
+* Enrique Aracil <enrique.aracil@estudiante.uam.es>
+*/
 void on_error(int log,char* err);
 /**
-   @brief ini_server.
-
-   Descripcion: Inicializa un socket y lo deja escuchando
-   @param port: Puerto donde escucha el servidor.
-   @return int: EXIT_SUCCESS si todo fue correcto, EXIT_FAILURE en caso de error.
- */
+@page ini_server() \b
+@brief ini_server - Inicializacion Servidor
+@section synopsis SINOPSIS
+\b #include \b lib.h
+\n\b int ini_server(int port);
+@section description Descripcion
+Inicializa un socket y lo deja escuchando
+@param port: Puerto donde escucha el servidor.
+@section return RETORNO
+@return int: EXIT_SUCCESS si todo fue correcto, EXIT_FAILURE en caso de error.
+@section seealso VER TAMBIEN
+@section authors AUTORES
+Iñaki Cadalso <innaki.cadalso@estudiante.uam.es>,
+* Enrique Aracil <enrique.aracil@estudiante.uam.es>
+*/
 int ini_server(int port);
 /**
-   @brief daemonizar.
-
-   Descripcion: Convierte el proceso a depender de ini (daemon)
-   @param service: Nombre de servicion a daemonizar.
-   @return int: EXIT_SUCCESS si todo fue correcto, EXIT_FAILURE en caso de error.
- */
+@page daemonizar() \b
+@brief daemonizar - Creacion de un daemon
+@section synopsis SINOPSIS
+\b #include \b lib.h
+\n\b int daemonizar(char* service);
+@section description Descripcion
+ Convierte el proceso a depender de ini (daemon)
+@param service: Nombre de servicion a daemonizar.
+@section return RETORNO
+@return int: EXIT_SUCCESS si todo fue correcto, EXIT_FAILURE en caso de error.
+@section seealso VER TAMBIEN
+@section authors AUTORES
+Iñaki Cadalso <innaki.cadalso@estudiante.uam.es>,
+* Enrique Aracil <enrique.aracil@estudiante.uam.es>
+*/
 int daemonizar(char* service);
 /**
-   @brief accept_conex.
-
-   Descripcion: Acepta la conexion por parte de un cliente
-   @param sock: socket del servidor.
-   @return int: socket de conexion al cliente si todo fue correcto, EXIT_FAILURE en caso de error.
- */
+@page accept_conex() \b
+@brief accept_conex - Conexion con cliente
+@section synopsis SINOPSIS
+\b #include \b lib.h
+\n\b int accept_conex(int sock);
+@section description Descripcion
+Acepta la conexion por parte de un cliente
+@param sock: socket del servidor.
+@section return RETORNO
+@return int: socket de conexion al cliente si todo fue correcto, EXIT_FAILURE en caso de error.
+@section seealso VER TAMBIEN
+@section authors AUTORES
+Iñaki Cadalso <innaki.cadalso@estudiante.uam.es>,
+* Enrique Aracil <enrique.aracil@estudiante.uam.es>
+*/
 int accept_conex(int sock);
 /**
-   @brief hostIp.
-
-   Descripcion: Averigua la ip del socket cliente y su nombre de host.
-   @param sock: Puerto en el que se encuentra el usuario.
-   @return HostNameIp: encaso de acierto la estructura rellena sino, NULL.
- */
-void hostIp(int sock, char ** host,char** ip);
+@page host_Ip() \b
+@brief host_Ip- Conexion con cliente
+@section synopsis SINOPSIS
+\b #include \b lib.h
+\n\b void host_Ip(int sock, char ** host,char** ip);
+@section description Descripcion
+Averigua la ip del socket cliente y su nombre de host.
+@param sock: Puerto en el que se encuentra el usuario.
+@section return RETORNO
+@return HostNameIp: encaso de acierto la estructura rellena sino, NULL.
+@section seealso VER TAMBIEN
+@section authors AUTORES
+Iñaki Cadalso <innaki.cadalso@estudiante.uam.es>,
+* Enrique Aracil <enrique.aracil@estudiante.uam.es>
+*/
+void host_Ip(int sock, char ** host,char** ip);

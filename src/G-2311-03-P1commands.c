@@ -27,7 +27,7 @@ void list(char *string, int sock, char *userNick) {
   if (IRCParse_List(string, &prefix, &channel, &target) == IRC_OK) {
 
     // Miramos que haya canales
-    if (getNumeroCanales() > 0) {
+    if (get_numero_canales() > 0) {
 
       // Si nos epecifican el canal O MASCARA  search_string
       if (channel != NULL) {
@@ -52,7 +52,7 @@ void list(char *string, int sock, char *userNick) {
 
           if (topic != NULL) {
 
-            num = getNumUsuariosCanal(channel);
+            num = get_num_usuarios_canal(channel);
             sprintf(numc, numc, num);
 
             if (IRCTADChan_GetModeInt(channel) < 127) {
@@ -68,14 +68,14 @@ void list(char *string, int sock, char *userNick) {
 
       } else {
 
-        list = getListaCanales();
+        list = get_lista_canales();
 
-        for (i = 0; i < getNumeroCanales(); i++) {
+        for (i = 0; i < get_numero_canales(); i++) {
 
           // No error
           IRCTAD_GetTopic(list[i], &topic);
 
-          num = getNumUsuariosCanal(list[i]);
+          num = get_num_usuarios_canal(list[i]);
           sprintf(numc, numc, num);
 
           if (IRCTADChan_GetModeInt(list[i]) < 127) {
@@ -203,11 +203,11 @@ void msg(char *string, int sock, char *userNick) {
 
     if (IRCTADUser_Test(0, NULL, nickorchannel) == IRC_OK) {
 
-      msgUser(nickorchannel, userNick, msg);
+      msg_user(nickorchannel, userNick, msg);
 
     } else if (IRCTAD_TestChannelOfUser(nickorchannel, userNick) == IRC_OK) {
 
-      msgCanal(nickorchannel, userNick, msg);
+      msg_canal(nickorchannel, userNick, msg);
 
     } else {
 
@@ -249,7 +249,7 @@ void nocommand(char *string, int sock, char *userNick) {
   }
 }
 
-void doCommand(char *string, int sock, char **userNick) {
+void do_command(char *string, int sock, char **userNick) {
 
   if (string == NULL)
     return;

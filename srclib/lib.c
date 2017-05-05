@@ -95,7 +95,7 @@ int accept_conex(int sock) {
     on_error(LOG_ERR, "Error accept conexion cliente");
   return socketClient;
 }
-void hostIp(int sock, char **host, char **ip) {
+void host_Ip(int sock, char **host, char **ip) {
   char hbuf[1024], sbuf[20];
   struct sockaddr_in addr;
   struct hostent *he;

@@ -117,19 +117,19 @@ int recibir(int sock, char **userNick) {
 
     syslog(LOG_INFO, "Llega Bloque de Comandos:");
     syslog(LOG_INFO, "Comando nº%d", n_command++);
-    doCommand(pipeCommand, sock, userNick);
+    do_command(pipeCommand, sock, userNick);
 
     while ((pipe = IRC_UnPipelineCommands(pipe, &pipeCommand)) != NULL) {
 
       syslog(LOG_INFO, "Comando nº%d", n_command++);
-      doCommand(pipeCommand, sock, userNick);
+      do_command(pipeCommand, sock, userNick);
     }
 
     if (pipe == NULL) {
 
       bzero(command, BUFFER_SIZE);
       syslog(LOG_INFO, "Comando nº%d", n_command++);
-      doCommand(pipeCommand, sock, userNick);
+      do_command(pipeCommand, sock, userNick);
     }
 
   } else {
@@ -140,7 +140,7 @@ int recibir(int sock, char **userNick) {
     } else {
 
       syslog(LOG_INFO, "Comando simple:");
-      doCommand(pipeCommand, sock, userNick);
+      do_command(pipeCommand, sock, userNick);
     }
   }
 
@@ -150,4 +150,4 @@ int recibir(int sock, char **userNick) {
   return 1;
 }
 
-long getNumeroClientes() { return ncliente; }
+long get_numero_clientes() { return ncliente; }

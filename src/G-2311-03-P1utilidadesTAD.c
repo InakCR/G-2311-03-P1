@@ -1,6 +1,6 @@
 #include "../includes/G-2311-03-P1utilidadesTAD.h"
 
-void sendAllUser(char *command) {
+void send_all_user(char *command) {
   char **nicklist;
   long nelements;
   int socket, i;
@@ -11,7 +11,7 @@ void sendAllUser(char *command) {
     send(socket, command, strlen(command), 0);
   }
 }
-int setAway(char *nick, char *reason) {
+int set_away(char *nick, char *reason) {
   long id = 0, creationTS = 0, actionTS = 0, parser = 0;
   char *user = NULL, *real = NULL, *host = NULL, *IP = NULL, *away = NULL;
   int socket = 0;
@@ -23,14 +23,14 @@ int setAway(char *nick, char *reason) {
   return -1;
 }
 
-long getNumeroClientesActuales() {
+long get_numero_nlientes_actuales() {
   long nelements = 0;
   char **nicklist;
   IRCTADUser_GetUserList(&nicklist, &nelements);
   IRCTADUser_FreeList(nicklist, nelements);
   return nelements;
 }
-int *getSocketsUsuarios() {
+int *get_sockets_usuarios() {
   char **users = NULL, **nicks = NULL, **realnames = NULL, **passwords = NULL,
        **hosts = NULL, **IPs = NULL;
   int *sockets = NULL;
@@ -46,7 +46,7 @@ int *getSocketsUsuarios() {
   }
   return NULL;
 }
-char **getNickUsuarios() {
+char **get_nick_usuarios() {
   char **users = NULL, **nicks = NULL, **realnames = NULL, **passwords = NULL,
        **hosts = NULL, **IPs = NULL;
   int *sockets = NULL;
@@ -62,25 +62,25 @@ char **getNickUsuarios() {
   }
   return NULL;
 }
-char *getUsuariosCanal(char *channel) {
+char *get_usuarios_canal(char *channel) {
   long num = 0;
   char *list;
   IRCTAD_ListNicksOnChannel(channel, &list, &num);
   return list;
 }
-long getNumUsuariosCanal(char *channel) {
+long get_num_usuarios_canal(char *channel) {
   long num = 0;
   char *list;
   IRCTAD_ListNicksOnChannel(channel, &list, &num);
   return num;
 }
-char **getListaCanales() {
+char **get_lista_canales() {
   long num = 0;
   char **list;
   IRCTADChan_GetList(&list, &num, NULL);
   return list;
 }
-long getNumeroCanales() {
+long get_numero_canales() {
   char **list = NULL;
   long num = 0;
   IRCTADChan_GetList(&list, &num, NULL);
@@ -99,7 +99,7 @@ int getsocket(char *nick) {
 
   return -1;
 }
-void setNick(char *nick, char **userNick) {
+void set_nick(char *nick, char **userNick) {
   long id = 0, creationTS = 0, actionTS = 0;
   char *user = NULL, *real = NULL, *host = NULL, *IP = NULL, *away = NULL;
   int socket = 0;
@@ -113,7 +113,7 @@ void setNick(char *nick, char **userNick) {
     }
   }
 }
-char *isAway(char *nick) {
+char *is_away(char *nick) {
   char *away = NULL;
   IRCTADUser_GetAway(0, NULL, nick, NULL, &away);
   syslog(LOG_INFO, "Away es %s", away);

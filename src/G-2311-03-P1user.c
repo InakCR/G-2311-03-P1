@@ -35,10 +35,10 @@ void nick(char *string, int sock, char **userNick) {
         if (IRCTADUser_Test(0, NULL, *userNick) == IRC_OK) {
 
           if (IRCMsg_Nick(&command, *userNick, msg, nick) == IRC_OK) {
-            sendAllUser(command);
+            send_all_user(command);
           }
 
-          setNick(nick, userNick);
+          set_nick(nick, userNick);
         }
       }
 
@@ -52,7 +52,7 @@ void user(char *string, int sock, char *userNick) {
   time_t rawtime;
   long tadret;
 
-  hostIp(sock, &host, &ip);
+  host_Ip(sock, &host, &ip);
 
   if (IRCParse_User(string, &prefix, &user, &modehost, &serverother,
                     &realname) != IRC_OK) {
@@ -79,10 +79,10 @@ void user(char *string, int sock, char *userNick) {
     send(sock, command, strlen(command), 0);
 
     IRCMsg_RplLuserClient(&command, prefixU, userNick,
-                          getNumeroClientesActuales(), 0, 1);
+                          get_numero_nlientes_actuales(), 0, 1);
     send(sock, command, strlen(command), 0);
 
-    IRCMsg_RplLuserChannels(&command, prefixU, userNick, getNumeroCanales());
+    IRCMsg_RplLuserChannels(&command, prefixU, userNick, get_numero_canales());
     send(sock, command, strlen(command), 0);
 
     IRCMsg_RplMotdStart(&command, prefixU, userNick, prefixU);
@@ -220,9 +220,9 @@ void away(char *string, int sock, char *userNick) {
   }
 
   if (reason != NULL) {
-    if (setAway(userNick, reason) != IRC_OK) {
+    if (set_away(userNick, reason) != IRC_OK) {
       // TODO error nick, no lo encuentro
-      syslog(LOG_ERR, "Error setaway");
+      syslog(LOG_ERR, "Error set_away");
       return;
     }
 
@@ -241,11 +241,11 @@ void away(char *string, int sock, char *userNick) {
   }
 }
 
-void msgUser(char *nick, char *userNick, char *msg) {
+void msg_user(char *nick, char *userNick, char *msg) {
   char *command, *reason;
   int socket;
 
-  reason = isAway(nick);
+  reason = is_away(nick);
 
   if (reason != NULL) {
     IRCMsg_RplAway(&command, userNick, userNick, nick, reason);

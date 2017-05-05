@@ -1,0 +1,33 @@
+.TH "msg" 3 "Fri May 5 2017" "G-2311-03-P1" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+msg \- () \fB\fP 
+msg - Mensajes al Servidor
+.SH "SINOPSIS"
+.PP
+\fB#include\fP \fB\fBG-2311-03-P1commands\&.h\fP\fP 
+.br
+\fBvoid\fP msg(char *string, int sock, char *userNick) 
+.SH "Descripcion"
+.PP
+Envio de mensajes privados entre usuarios o al canal recibido en el string del comando\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIstring\fP Cadena que contiene el comando MSG y su informacion\&. 
+.br
+\fIsock\fP Puerto en el que se encuentra el usuario\&. 
+.br
+\fIuserNick\fP nick que usa el usuario conectado en el server\&. 
+.RE
+.PP
+.SH "RETORNO"
+.PP
+Retorno void 
+.SH "VER TAMBIEN"
+.PP
+\fBmsg_user()\fP msg_canal() 
+.SH "AUTORES"
+.PP
+Iñaki Cadalso innaki.cadalso@estudiante.uam.es, Enrique Aracil enrique.aracil@estudiante.uam.es 

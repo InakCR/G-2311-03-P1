@@ -1,0 +1,32 @@
+.TH "recibir" 3 "Fri May 5 2017" "G-2311-03-P1" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+recibir \- () \fB\fP 
+recibir\&. - Acepta Conexion Cliente
+.SH "SINOPSIS"
+.PP
+\fB#include\fP \fB\fBG-2311-03-P1server\&.h\fP\fP 
+.br
+\fBint\fP recibir(int sock, char** userNick); 
+.SH "Descripcion"
+.PP
+Recibe un comman do por parte del cliente y lo realiza ne el servidor 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsock\fP socket del servidor\&. 
+.RE
+.PP
+.SH "RETORNO"
+.PP
+\fBReturns:\fP
+.RS 4
+int: socket de conexion al cliente si todo fue correcto, EXIT_FAILURE en caso de error\&. 
+.RE
+.PP
+.SH "VER TAMBIEN"
+.PP
+.SH "AUTORES"
+.PP
+Iñaki Cadalso innaki.cadalso@estudiante.uam.es, Enrique Aracil enrique.aracil@estudiante.uam.es 

@@ -1,0 +1,73 @@
+.TH "includes/lib.h" 3 "Fri May 5 2017" "G-2311-03-P1" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+includes/lib.h \- Libreria de funciones para la creacion y uso de un servidor basado en IRC\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBBUFFER_SIZE\fP   8192"
+.br
+.RI "\fItamaño maximo que puede tener un buffer\&. \fP"
+.ti -1c
+.RI "#define \fBMAX_CLIENTS\fP   100"
+.br
+.RI "\fInumero de clientes maximo que soporta el servidor\&. \fP"
+.ti -1c
+.RI "#define \fBMAX_MNS\fP   2000"
+.br
+.RI "\fInumero maximo de milisegundos\&. \fP"
+.ti -1c
+.RI "#define \fBNUM_BYTES\fP   8192"
+.br
+.RI "\fItamaño maximo de bytes\&. \fP"
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBon_error\fP (int log, char *err)"
+.br
+.ti -1c
+.RI "int \fBini_server\fP (int port)"
+.br
+.ti -1c
+.RI "int \fBdaemonizar\fP (char *service)"
+.br
+.ti -1c
+.RI "int \fBaccept_conex\fP (int sock)"
+.br
+.ti -1c
+.RI "void \fBhost_Ip\fP (int sock, char **host, char **ip)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Libreria de funciones para la creacion y uso de un servidor basado en IRC\&. 
+
+
+.PP
+\fBAuthor:\fP
+.RS 4
+Iñaki Cadalso innaki.cadalso@estudiante.uam.es, Enrique Aracil enrique.aracil@estudiante.uam.es Grupo 2311 
+.RE
+.PP
+\fBVersion:\fP
+.RS 4
+1\&.0 
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+13-02-2017 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for G-2311-03-P1 from the source code\&.

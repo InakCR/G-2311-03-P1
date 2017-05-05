@@ -1,0 +1,32 @@
+.TH "nick" 3 "Fri May 5 2017" "G-2311-03-P1" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+nick \- () \fB\fP 
+nick - Registro y Cambio de Nick
+.SH "SINOPSIS"
+.PP
+\fB#include\fP \fB\fBG-2311-03-P1user\&.h\fP\fP 
+.br
+\fBvoid\fP nick(char *string, int sock, char **userNick); 
+.SH "Descripcion"
+.PP
+Registra el nick de un usuario\&.En caso de que exista comprueba que sea el mismo usuario que quiere cambiar el nick\&. Cambiara el nick del usuario o dara un error de nick usado\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIstring\fP Cadena que contiene el comando NICK y su informacion\&. 
+.br
+\fIsock\fP Puerto en el que se encuentra el usuario\&. 
+.br
+\fIuserNick\fP nick que usa el usuario conectado en el server\&. 
+.RE
+.PP
+.SH "RETORNO"
+.PP
+Retorno void 
+.SH "VER TAMBIEN"
+.PP
+.SH "AUTORES"
+.PP
+Iñaki Cadalso innaki.cadalso@estudiante.uam.es, Enrique Aracil enrique.aracil@estudiante.uam.es 

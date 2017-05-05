@@ -1,0 +1,32 @@
+.TH "join" 3 "Fri May 5 2017" "G-2311-03-P1" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+join \- () \fB\fP 
+join - Union a un Canal
+.SH "SINOPSIS"
+.PP
+\fB#include\fP \fB\fBG-2311-03-P1canal\&.h\fP\fP 
+.br
+\fBvoid\fP join(char *string, int sock, char *userNick) 
+.SH "Descripcion"
+.PP
+Crea un nuevo canal y/o se une el usuario al canal, mostrando la informacion del canal\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIstring\fP Cadena que contiene el comando JOIN y su informacion\&. 
+.br
+\fIsock\fP Puerto en el que se encuentra el usuario\&. 
+.br
+\fIuserNick\fP nick que usa el usuario conectado en el server\&. 
+.RE
+.PP
+.SH "RETORNO"
+.PP
+Retorno void 
+.SH "VER TAMBIEN"
+.PP
+.SH "AUTORES"
+.PP
+Iñaki Cadalso innaki.cadalso@estudiante.uam.es, Enrique Aracil enrique.aracil@estudiante.uam.es 

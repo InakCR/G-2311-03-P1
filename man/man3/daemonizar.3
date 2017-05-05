@@ -1,0 +1,32 @@
+.TH "daemonizar" 3 "Fri May 5 2017" "G-2311-03-P1" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+daemonizar \- () \fB\fP 
+daemonizar - Creacion de un daemon
+.SH "SINOPSIS"
+.PP
+\fB#include\fP \fB\fBlib\&.h\fP\fP 
+.br
+\fBint\fP daemonizar(char* service); 
+.SH "Descripcion"
+.PP
+Convierte el proceso a depender de ini (daemon) 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIservice\fP Nombre de servicion a daemonizar\&. 
+.RE
+.PP
+.SH "RETORNO"
+.PP
+\fBReturns:\fP
+.RS 4
+int: EXIT_SUCCESS si todo fue correcto, EXIT_FAILURE en caso de error\&. 
+.RE
+.PP
+.SH "VER TAMBIEN"
+.PP
+.SH "AUTORES"
+.PP
+Iñaki Cadalso innaki.cadalso@estudiante.uam.es, Enrique Aracil enrique.aracil@estudiante.uam.es 

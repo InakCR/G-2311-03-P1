@@ -1,0 +1,32 @@
+.TH "accept_conex" 3 "Fri May 5 2017" "G-2311-03-P1" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+accept_conex \- () \fB\fP 
+accept_conex - Conexion con cliente
+.SH "SINOPSIS"
+.PP
+\fB#include\fP \fB\fBlib\&.h\fP\fP 
+.br
+\fBint\fP accept_conex(int sock); 
+.SH "Descripcion"
+.PP
+Acepta la conexion por parte de un cliente 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsock\fP socket del servidor\&. 
+.RE
+.PP
+.SH "RETORNO"
+.PP
+\fBReturns:\fP
+.RS 4
+int: socket de conexion al cliente si todo fue correcto, EXIT_FAILURE en caso de error\&. 
+.RE
+.PP
+.SH "VER TAMBIEN"
+.PP
+.SH "AUTORES"
+.PP
+Iñaki Cadalso innaki.cadalso@estudiante.uam.es, Enrique Aracil enrique.aracil@estudiante.uam.es 

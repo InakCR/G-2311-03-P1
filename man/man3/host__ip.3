@@ -1,0 +1,32 @@
+.TH "host__ip" 3 "Fri May 5 2017" "G-2311-03-P1" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+host__ip \- () \fB\fP 
+host_Ip- Conexion con cliente
+.SH "SINOPSIS"
+.PP
+\fB#include\fP \fB\fBlib\&.h\fP\fP 
+.br
+\fBvoid\fP host_Ip(int sock, char ** host,char** ip); 
+.SH "Descripcion"
+.PP
+Averigua la ip del socket cliente y su nombre de host\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsock\fP Puerto en el que se encuentra el usuario\&. 
+.RE
+.PP
+.SH "RETORNO"
+.PP
+\fBReturns:\fP
+.RS 4
+HostNameIp: encaso de acierto la estructura rellena sino, NULL\&. 
+.RE
+.PP
+.SH "VER TAMBIEN"
+.PP
+.SH "AUTORES"
+.PP
+Iñaki Cadalso innaki.cadalso@estudiante.uam.es, Enrique Aracil enrique.aracil@estudiante.uam.es 
