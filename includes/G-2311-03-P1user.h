@@ -18,19 +18,19 @@
    \n\b void nick(char *string, int sock, char **userNick);
    @section description Descripcion
    Registra el nick de un usuario.En caso de que exista
-  comprueba que sea el mismo usuario que quiere cambiar el nick.
-  Cambiara el nick del usuario o dara un error de nick usado.
+   comprueba que sea el mismo usuario que quiere cambiar el nick.
+   Cambiara el nick del usuario o dara un error de nick usado.
 
-  @param string: Cadena que contiene el comando NICK y su informacion.
-  @param sock: Puerto en el que se encuentra el usuario.
-  @param userNick: nick que usa el usuario conectado en el server.
+   @param string: Cadena que contiene el comando NICK y su informacion.
+   @param sock: Puerto en el que se encuentra el usuario.
+   @param userNick: nick que usa el usuario conectado en el server.
    @section return RETORNO
    Retorno void
    @section seealso VER TAMBIEN
    @section authors AUTORES
    Iñaki Cadalso <innaki.cadalso@estudiante.uam.es>,
-   * Enrique Aracil <enrique.aracil@estudiante.uam.es>
-   */
+ * Enrique Aracil <enrique.aracil@estudiante.uam.es>
+ */
 void nick(char *string, int sock, char **userNick);
 /**
    @page user() \b
@@ -40,17 +40,17 @@ void nick(char *string, int sock, char **userNick);
    \n\b void user(char *string, int sock, char *userNick);
    @section description Descripcion
    Crea un nuevo usuario en el servidor, conectadolo al
-  servidor para que pueda hacer uso de los comandos.
-  @param string: Cadena que contiene el comando USER y su informacion.
-  @param sock: Puerto en el que se encuentra el usuario.
-  @param userNick: nick que usa el usuario conectado en el server.
+   servidor para que pueda hacer uso de los comandos.
+   @param string: Cadena que contiene el comando USER y su informacion.
+   @param sock: Puerto en el que se encuentra el usuario.
+   @param userNick: nick que usa el usuario conectado en el server.
    @section return RETORNO
    Retorno void
    @section seealso VER TAMBIEN
    @section authors AUTORES
    Iñaki Cadalso <innaki.cadalso@estudiante.uam.es>,
-   * Enrique Aracil <enrique.aracil@estudiante.uam.es>
-   */
+ * Enrique Aracil <enrique.aracil@estudiante.uam.es>
+ */
 
 void user(char *string, int sock, char *userNick);
 /**
@@ -70,8 +70,8 @@ void user(char *string, int sock, char *userNick);
    @section seealso VER TAMBIEN
    @section authors AUTORES
    Iñaki Cadalso <innaki.cadalso@estudiante.uam.es>,
-   * Enrique Aracil <enrique.aracil@estudiante.uam.es>
-   */
+ * Enrique Aracil <enrique.aracil@estudiante.uam.es>
+ */
 
 void whois(char *string, int sock, char *userNick);
 /**
@@ -91,8 +91,8 @@ void whois(char *string, int sock, char *userNick);
    @section seealso VER TAMBIEN
    @section authors AUTORES
    Iñaki Cadalso <innaki.cadalso@estudiante.uam.es>,
-   * Enrique Aracil <enrique.aracil@estudiante.uam.es>
-   */
+ * Enrique Aracil <enrique.aracil@estudiante.uam.es>
+ */
 
 void away(char *string, int sock, char *userNick);
 /**
@@ -111,7 +111,7 @@ void away(char *string, int sock, char *userNick);
    @section seealso VER TAMBIEN
    @section authors AUTORES
    Iñaki Cadalso <innaki.cadalso@estudiante.uam.es>,
-   * Enrique Aracil <enrique.aracil@estudiante.uam.es>
-   */
+ * Enrique Aracil <enrique.aracil@estudiante.uam.es>
+ */
 
 void msg_user(char* nick,char* userNick,char* msg);
